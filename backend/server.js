@@ -6,7 +6,11 @@ const OpenAI = require("openai");
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: '*',  // Be more specific in production
+  methods: ['POST', 'GET', 'OPTIONS'],
+  allowedHeaders: ['Content-Type']
+}));
 app.use(express.json());
 
 const openai = new OpenAI({
@@ -15,7 +19,14 @@ const openai = new OpenAI({
 
 app.post("/api/analyze", async (req, res) => {
   try {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OpenAI API key is not set');
+    }
+
     const { entry } = req.body;
+    if (!entry) {
+      throw new Error('No entry provided');
+    }
     
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -33,8 +44,8 @@ app.post("/api/analyze", async (req, res) => {
 
     res.json({ response: completion.choices[0].message.content });
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Failed to analyze journal entry" });
+    console.error("Error details:", error);
+    res.status(500).json({ error: error.message || "Failed to analyze journal entry" });
   }
 });
 
