@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const OpenAI = require("openai");
+const mongoose = require('mongoose');
+const DiaryEntry = require('./models/DiaryEntry');
 
 dotenv.config();
 
@@ -16,6 +18,10 @@ app.use(express.json());
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
+
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 app.post("/api/analyze", async (req, res) => {
   try {
@@ -46,6 +52,27 @@ app.post("/api/analyze", async (req, res) => {
   } catch (error) {
     console.error("Error details:", error);
     res.status(500).json({ error: error.message || "Failed to analyze journal entry" });
+  }
+});
+
+// Update the diary endpoint to save to MongoDB
+app.post("/api/diary", async (req, res) => {
+  try {
+    const { entry, date } = req.body;
+    
+    // Create new diary entry
+    const diaryEntry = new DiaryEntry({
+      entry,
+      date: new Date(date)
+    });
+
+    // Save to database
+    await diaryEntry.save();
+    
+    res.json({ message: "Entry saved successfully" });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to save diary entry" });
   }
 });
 
