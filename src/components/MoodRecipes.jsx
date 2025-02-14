@@ -48,11 +48,6 @@ function MoodRecipes({ onBack }) {
     }
   };
 
-  useEffect(() => {
-    // Load all recipes initially
-    fetchRecipes();
-  }, []); // Empty dependency array means this runs once on mount
-
   return (
     <Container maxW="container.xl" py={8}>
       <VStack spacing={6}>
@@ -78,44 +73,53 @@ function MoodRecipes({ onBack }) {
           ))}
         </HStack>
 
-        {/* Recipe grid */}
-        <SimpleGrid columns={[1, 2, 3]} spacing={6} w="100%">
-          {recipes.map((recipe) => (
-            <Box
-              key={recipe._id}
-              borderWidth={1}
-              borderRadius="lg"
-              overflow="hidden"
-              shadow="md"
-              cursor="pointer"
-              onClick={() => setSelectedRecipe(recipe)}
-              transition="transform 0.2s"
-              _hover={{ transform: 'scale(1.02)' }}
-            >
-              {recipe.imageUrl ? (
-                <Image src={recipe.imageUrl} alt={recipe.name} h="200px" w="100%" objectFit="cover" />
-              ) : (
-                <Box h="200px" bg="gray.100" display="flex" alignItems="center" justifyContent="center">
-                  <QuestionIcon w={10} h={10} color="gray.400" />
+        {/* Only show grid if a mood is selected */}
+        {selectedMood && (
+          <SimpleGrid columns={[1, 2, 3]} spacing={6} w="100%">
+            {recipes.map((recipe) => (
+              <Box
+                key={recipe._id}
+                borderWidth={1}
+                borderRadius="lg"
+                overflow="hidden"
+                shadow="md"
+                cursor="pointer"
+                onClick={() => setSelectedRecipe(recipe)}
+                transition="transform 0.2s"
+                _hover={{ transform: 'scale(1.02)' }}
+              >
+                {recipe.imageUrl ? (
+                  <Image src={recipe.imageUrl} alt={recipe.name} h="200px" w="100%" objectFit="cover" />
+                ) : (
+                  <Box h="200px" bg="gray.100" display="flex" alignItems="center" justifyContent="center">
+                    <QuestionIcon w={10} h={10} color="gray.400" />
+                  </Box>
+                )}
+                <Box p={4}>
+                  <Text fontSize="xl" fontWeight="bold">{recipe.name}</Text>
+                  <Badge colorScheme="blue" mt={2}>{recipe.mood}</Badge>
+                  <Text mt={2} noOfLines={2}>{recipe.description}</Text>
+                  <Text mt={2} color="gray.600">Prep time: {recipe.prepTime} mins</Text>
+                  <Button 
+                    mt={3} 
+                    colorScheme="teal" 
+                    size="sm" 
+                    w="100%"
+                  >
+                    View Recipe
+                  </Button>
                 </Box>
-              )}
-              <Box p={4}>
-                <Text fontSize="xl" fontWeight="bold">{recipe.name}</Text>
-                <Badge colorScheme="blue" mt={2}>{recipe.mood}</Badge>
-                <Text mt={2} noOfLines={2}>{recipe.description}</Text>
-                <Text mt={2} color="gray.600">Prep time: {recipe.prepTime} mins</Text>
-                <Button 
-                  mt={3} 
-                  colorScheme="teal" 
-                  size="sm" 
-                  w="100%"
-                >
-                  View Recipe
-                </Button>
               </Box>
-            </Box>
-          ))}
-        </SimpleGrid>
+            ))}
+          </SimpleGrid>
+        )}
+
+        {/* Show a prompt if no mood is selected */}
+        {!selectedMood && (
+          <Text color="gray.500" fontSize="lg" mt={8}>
+            Select a mood to see recommended recipes
+          </Text>
+        )}
 
         {/* Recipe Details Modal */}
         {selectedRecipe && (
