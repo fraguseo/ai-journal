@@ -61,21 +61,45 @@ app.post("/api/analyze", async (req, res) => {
   }
 });
 
-// Update the diary endpoint to save to MongoDB
+// Update the diary endpoint to include AI mood analysis
 app.post("/api/diary", async (req, res) => {
   try {
     const { entry, date } = req.body;
+
+    // First, get AI to analyze the mood
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a mood analyzer. Analyze the text and respond with only a JSON object containing: mood (one of: Happy, Calm, Sad, Anxious, Energetic, Tired) and intensity (1-5). Example: {\"mood\": \"Happy\", \"intensity\": 4}"
+        },
+        {
+          role: "user",
+          content: entry
+        }
+      ],
+    });
+
+    // Parse the AI response
+    const moodAnalysis = JSON.parse(completion.choices[0].message.content);
     
-    // Create new diary entry
+    // Create new diary entry with mood
     const diaryEntry = new DiaryEntry({
       entry,
-      date: new Date(date)
+      date: new Date(date),
+      mood: moodAnalysis.mood,
+      moodIntensity: moodAnalysis.intensity
     });
 
     // Save to database
     await diaryEntry.save();
     
-    res.json({ message: "Entry saved successfully" });
+    res.json({ 
+      message: "Entry saved successfully",
+      mood: moodAnalysis.mood,
+      intensity: moodAnalysis.intensity
+    });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Failed to save diary entry" });
