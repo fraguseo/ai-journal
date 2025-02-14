@@ -23,6 +23,7 @@ function Diary({ onBack }) {
   const toast = useToast();
   const [moodStats, setMoodStats] = useState([]);
   const [statsPeriod, setStatsPeriod] = useState('day');
+  const [showStats, setShowStats] = useState(false);
 
   const fetchEntries = async (selectedDate) => {
     try {
@@ -180,41 +181,53 @@ function Diary({ onBack }) {
 
         <DiaryCalendar entries={entries} onDateClick={handleDateClick} />
 
-        <HStack spacing={4} w="100%" justify="center">
-          <Button
-            size="sm"
-            colorScheme={statsPeriod === 'day' ? 'blue' : 'gray'}
-            onClick={() => {
-              setStatsPeriod('day');
-              fetchMoodStats('day');
-            }}
-          >
-            Daily Stats
-          </Button>
-          <Button
-            size="sm"
-            colorScheme={statsPeriod === 'week' ? 'blue' : 'gray'}
-            onClick={() => {
-              setStatsPeriod('week');
-              fetchMoodStats('week');
-            }}
-          >
-            Weekly Stats
-          </Button>
-          <Button
-            size="sm"
-            colorScheme={statsPeriod === 'month' ? 'blue' : 'gray'}
-            onClick={() => {
-              setStatsPeriod('month');
-              fetchMoodStats('month');
-            }}
-          >
-            Monthly Stats
-          </Button>
-        </HStack>
+        <Button
+          size="sm"
+          colorScheme="teal"
+          onClick={() => setShowStats(!showStats)}
+        >
+          {showStats ? 'Hide Mood Statistics' : 'Show Mood Statistics'}
+        </Button>
 
-        {moodStats && moodStats.length > 0 && (
-          <MoodStats stats={moodStats} period={statsPeriod} />
+        {showStats && (
+          <>
+            <HStack spacing={4} w="100%" justify="center">
+              <Button
+                size="sm"
+                colorScheme={statsPeriod === 'day' ? 'blue' : 'gray'}
+                onClick={() => {
+                  setStatsPeriod('day');
+                  fetchMoodStats('day');
+                }}
+              >
+                Daily Stats
+              </Button>
+              <Button
+                size="sm"
+                colorScheme={statsPeriod === 'week' ? 'blue' : 'gray'}
+                onClick={() => {
+                  setStatsPeriod('week');
+                  fetchMoodStats('week');
+                }}
+              >
+                Weekly Stats
+              </Button>
+              <Button
+                size="sm"
+                colorScheme={statsPeriod === 'month' ? 'blue' : 'gray'}
+                onClick={() => {
+                  setStatsPeriod('month');
+                  fetchMoodStats('month');
+                }}
+              >
+                Monthly Stats
+              </Button>
+            </HStack>
+
+            {moodStats && moodStats.length > 0 && (
+              <MoodStats stats={moodStats} period={statsPeriod} />
+            )}
+          </>
         )}
 
         <VStack spacing={4} w="100%" align="stretch">
