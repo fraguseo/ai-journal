@@ -82,10 +82,29 @@ app.post("/api/diary", async (req, res) => {
   }
 });
 
-// Add this new endpoint to get diary entries
+// Update the GET endpoint to accept a date query
 app.get("/api/diary", async (req, res) => {
   try {
-    const entries = await DiaryEntry.find().sort({ date: -1 });
+    const { date } = req.query;
+    let entries;
+    
+    if (date) {
+      // If date is provided, find entries for that date
+      const startOfDay = new Date(date);
+      const endOfDay = new Date(date);
+      endOfDay.setDate(endOfDay.getDate() + 1);
+      
+      entries = await DiaryEntry.find({
+        date: {
+          $gte: startOfDay,
+          $lt: endOfDay
+        }
+      }).sort({ date: -1 });
+    } else {
+      // If no date, return all entries
+      entries = await DiaryEntry.find().sort({ date: -1 });
+    }
+    
     res.json(entries);
   } catch (error) {
     console.error("Error:", error);

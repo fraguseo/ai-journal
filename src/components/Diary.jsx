@@ -21,9 +21,9 @@ function Diary({ onBack }) {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
-  const fetchEntries = async () => {
+  const fetchEntries = async (selectedDate) => {
     try {
-      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary');
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/diary?date=${selectedDate}`);
       if (!response.ok) {
         throw new Error('Failed to fetch entries');
       }
@@ -39,8 +39,8 @@ function Diary({ onBack }) {
   };
 
   useEffect(() => {
-    fetchEntries();
-  }, []);
+    fetchEntries(date);
+  }, [date]);
 
   const handleSubmit = async () => {
     if (!entry.trim()) {
@@ -84,8 +84,9 @@ function Diary({ onBack }) {
     }
   };
 
-  const handleDateClick = (date) => {
-    setDate(format(date, 'yyyy-MM-dd'));
+  const handleDateClick = (selectedDate) => {
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+    setDate(formattedDate);
   };
 
   return (
