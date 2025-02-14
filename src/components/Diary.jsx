@@ -9,6 +9,8 @@ import {
   Input,
   useToast,
 } from '@chakra-ui/react';
+import DiaryCalendar from './DiaryCalendar';
+import { format } from 'date-fns';
 
 function Diary() {
   const [entry, setEntry] = useState('');
@@ -80,6 +82,10 @@ function Diary() {
     }
   };
 
+  const handleDateClick = (date) => {
+    setDate(format(date, 'yyyy-MM-dd'));
+  };
+
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={6}>
@@ -111,6 +117,8 @@ function Diary() {
         >
           Save Entry
         </Button>
+
+        <DiaryCalendar entries={entries} onDateClick={handleDateClick} />
 
         <VStack spacing={4} w="100%" align="stretch">
           {entries.map((entry) => (
