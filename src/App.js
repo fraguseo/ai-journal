@@ -1,26 +1,28 @@
-import React from 'react';
-import { ChakraProvider, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { ChakraProvider, Box } from '@chakra-ui/react';
 import Journal from './components/Journal';
 import Diary from './components/Diary';
+import Home from './components/Home';
 
 function App() {
+  const [currentPage, setCurrentPage] = useState('home');
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'chat':
+        return <Journal onBack={() => setCurrentPage('home')} />;
+      case 'diary':
+        return <Diary onBack={() => setCurrentPage('home')} />;
+      default:
+        return <Home onNavigate={setCurrentPage} />;
+    }
+  };
+
   return (
     <ChakraProvider>
-      <Tabs isFitted variant="enclosed">
-        <TabList mb="1em">
-          <Tab>AI Chat</Tab>
-          <Tab>Daily Diary</Tab>
-        </TabList>
-        
-        <TabPanels>
-          <TabPanel>
-            <Journal />
-          </TabPanel>
-          <TabPanel>
-            <Diary />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+      <Box minH="100vh" bg="gray.50">
+        {renderPage()}
+      </Box>
     </ChakraProvider>
   );
 }
