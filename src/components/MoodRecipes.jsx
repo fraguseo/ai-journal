@@ -10,11 +10,22 @@ import {
   Badge,
   useToast,
   HStack,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  UnorderedList,
+  ListItem,
+  OrderedList,
 } from '@chakra-ui/react';
+import { QuestionIcon } from '@chakra-ui/icons';
 
 function MoodRecipes({ onBack }) {
   const [recipes, setRecipes] = useState([]);
   const [selectedMood, setSelectedMood] = useState(null);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
   const toast = useToast();
 
   const fetchRecipes = async (mood) => {
@@ -68,19 +79,73 @@ function MoodRecipes({ onBack }) {
               borderRadius="lg"
               overflow="hidden"
               shadow="md"
+              cursor="pointer"
+              onClick={() => setSelectedRecipe(recipe)}
+              transition="transform 0.2s"
+              _hover={{ transform: 'scale(1.02)' }}
             >
-              {recipe.imageUrl && (
-                <Image src={recipe.imageUrl} alt={recipe.name} />
+              {recipe.imageUrl ? (
+                <Image src={recipe.imageUrl} alt={recipe.name} h="200px" w="100%" objectFit="cover" />
+              ) : (
+                <Box h="200px" bg="gray.100" display="flex" alignItems="center" justifyContent="center">
+                  <QuestionIcon w={10} h={10} color="gray.400" />
+                </Box>
               )}
               <Box p={4}>
                 <Text fontSize="xl" fontWeight="bold">{recipe.name}</Text>
                 <Badge colorScheme="blue" mt={2}>{recipe.mood}</Badge>
-                <Text mt={2}>{recipe.description}</Text>
-                <Text mt={2}>Prep time: {recipe.prepTime} mins</Text>
+                <Text mt={2} noOfLines={2}>{recipe.description}</Text>
+                <Text mt={2} color="gray.600">Prep time: {recipe.prepTime} mins</Text>
+                <Button 
+                  mt={3} 
+                  colorScheme="teal" 
+                  size="sm" 
+                  w="100%"
+                >
+                  View Recipe
+                </Button>
               </Box>
             </Box>
           ))}
         </SimpleGrid>
+
+        {/* Recipe Details Modal */}
+        {selectedRecipe && (
+          <Modal isOpen={!!selectedRecipe} onClose={() => setSelectedRecipe(null)} size="xl">
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>{selectedRecipe.name}</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody pb={6}>
+                {selectedRecipe.imageUrl && (
+                  <Image 
+                    src={selectedRecipe.imageUrl} 
+                    alt={selectedRecipe.name} 
+                    borderRadius="md"
+                    mb={4}
+                  />
+                )}
+                <Text mb={4}>{selectedRecipe.description}</Text>
+                
+                <Text fontWeight="bold" mb={2}>Ingredients:</Text>
+                <UnorderedList mb={4}>
+                  {selectedRecipe.ingredients.map((ingredient, index) => (
+                    <ListItem key={index}>{ingredient}</ListItem>
+                  ))}
+                </UnorderedList>
+
+                <Text fontWeight="bold" mb={2}>Instructions:</Text>
+                <OrderedList mb={4}>
+                  {selectedRecipe.instructions.map((instruction, index) => (
+                    <ListItem key={index}>{instruction}</ListItem>
+                  ))}
+                </OrderedList>
+
+                <Text color="gray.600">Preparation Time: {selectedRecipe.prepTime} minutes</Text>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        )}
       </VStack>
     </Container>
   );
