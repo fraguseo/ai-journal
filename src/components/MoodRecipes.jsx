@@ -30,13 +30,16 @@ function MoodRecipes({ onBack }) {
 
   const fetchRecipes = async (mood) => {
     try {
+      console.log('Fetching recipes for mood:', mood);
       const response = await fetch(
         `https://ai-journal-backend-01bx.onrender.com/api/recipes${mood ? `?mood=${mood}` : ''}`
       );
       if (!response.ok) throw new Error('Failed to fetch recipes');
       const data = await response.json();
+      console.log('Received recipes:', data);
       setRecipes(data);
     } catch (error) {
+      console.error('Error fetching recipes:', error);
       toast({
         title: 'Error fetching recipes',
         status: 'error',
@@ -44,6 +47,11 @@ function MoodRecipes({ onBack }) {
       });
     }
   };
+
+  useEffect(() => {
+    // Load all recipes initially
+    fetchRecipes();
+  }, []); // Empty dependency array means this runs once on mount
 
   return (
     <Container maxW="container.xl" py={8}>

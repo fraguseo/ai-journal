@@ -23,12 +23,9 @@ const openai = new OpenAI({
 // Add after mongoose connection setup
 const initializeRecipes = async () => {
   try {
-    // Check if recipes already exist
-    const existingRecipes = await Recipe.find();
-    if (existingRecipes.length > 0) {
-      console.log('Recipes already exist, skipping initialization');
-      return;
-    }
+    // Clear existing recipes first
+    await Recipe.deleteMany({});
+    console.log('Cleared existing recipes');
 
     const sampleRecipes = [
       {
