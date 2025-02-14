@@ -42,16 +42,20 @@ function Diary({ onBack }) {
 
   const fetchMoodStats = async () => {
     try {
+      console.log('Fetching mood stats...');
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary/stats');
       if (!response.ok) throw new Error('Failed to fetch stats');
       const data = await response.json();
+      console.log('Mood stats received:', data);
       setMoodStats(data);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error fetching mood stats:', error);
+      setMoodStats([]); // Set empty array on error
     }
   };
 
   useEffect(() => {
+    console.log('Date changed:', date);
     fetchEntries(date);
     fetchMoodStats();
   }, [date]);
