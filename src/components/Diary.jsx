@@ -168,7 +168,9 @@ function Diary({ onBack }) {
 
         <DiaryCalendar entries={entries} onDateClick={handleDateClick} />
 
-        <MoodStats stats={moodStats} />
+        {moodStats && moodStats.length > 0 && (
+          <MoodStats stats={moodStats} />
+        )}
 
         <VStack spacing={4} w="100%" align="stretch">
           {entries.map((entry) => (

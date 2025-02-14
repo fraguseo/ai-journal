@@ -8,7 +8,11 @@ import {
   HStack,
 } from '@chakra-ui/react';
 
-function MoodStats({ stats }) {
+function MoodStats({ stats = [] }) {
+  if (!stats || stats.length === 0) {
+    return null;
+  }
+
   const totalEntries = stats.reduce((sum, stat) => sum + stat.count, 0);
 
   return (
