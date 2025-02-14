@@ -20,7 +20,7 @@ import {
   ListItem,
   OrderedList,
 } from '@chakra-ui/react';
-import { QuestionIcon } from '@chakra-ui/icons';
+import { QuestionIcon, ArrowBackIcon } from '@chakra-ui/icons';
 
 function MoodRecipes({ onBack }) {
   const [recipes, setRecipes] = useState([]);
@@ -52,7 +52,13 @@ function MoodRecipes({ onBack }) {
     <Container maxW="container.xl" py={8}>
       <VStack spacing={6}>
         <HStack w="100%" justify="space-between">
-          <Button onClick={onBack}>Back</Button>
+          <Button 
+            leftIcon={<ArrowBackIcon />} 
+            onClick={onBack}
+            variant="ghost"
+          >
+            Back
+          </Button>
           <Text fontSize="2xl" fontWeight="bold">Mood Recipes</Text>
           <Box w={20} />
         </HStack>
