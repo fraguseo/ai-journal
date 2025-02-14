@@ -7,9 +7,11 @@ import {
   VStack,
   Text,
   useToast,
+  HStack,
 } from '@chakra-ui/react';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
-function Journal() {
+function Journal({ onBack }) {
   const [entry, setEntry] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -58,9 +60,19 @@ function Journal() {
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={6}>
-        <Text fontSize="2xl" fontWeight="bold">
-          AI Journal
-        </Text>
+        <HStack w="100%" justify="space-between">
+          <Button 
+            leftIcon={<ArrowBackIcon />} 
+            onClick={onBack}
+            variant="ghost"
+          >
+            Back
+          </Button>
+          <Text fontSize="2xl" fontWeight="bold">
+            AI Chat
+          </Text>
+          <Box w={20}></Box>
+        </HStack>
         
         <VStack spacing={4} w="100%" align="stretch">
           {messages.map((message, index) => (

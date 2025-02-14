@@ -8,11 +8,13 @@ import {
   Text,
   Input,
   useToast,
+  HStack,
 } from '@chakra-ui/react';
 import DiaryCalendar from './DiaryCalendar';
 import { format } from 'date-fns';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
-function Diary() {
+function Diary({ onBack }) {
   const [entry, setEntry] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [entries, setEntries] = useState([]);
@@ -89,9 +91,19 @@ function Diary() {
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={6}>
-        <Text fontSize="2xl" fontWeight="bold">
-          Daily Diary
-        </Text>
+        <HStack w="100%" justify="space-between">
+          <Button 
+            leftIcon={<ArrowBackIcon />} 
+            onClick={onBack}
+            variant="ghost"
+          >
+            Back
+          </Button>
+          <Text fontSize="2xl" fontWeight="bold">
+            Daily Diary
+          </Text>
+          <Box w={20}></Box> {/* For alignment */}
+        </HStack>
         
         <Input
           type="date"
