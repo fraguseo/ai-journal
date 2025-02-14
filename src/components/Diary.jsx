@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -13,8 +13,30 @@ import {
 function Diary() {
   const [entry, setEntry] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [entries, setEntries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+
+  const fetchEntries = async () => {
+    try {
+      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary');
+      if (!response.ok) {
+        throw new Error('Failed to fetch entries');
+      }
+      const data = await response.json();
+      setEntries(data);
+    } catch (error) {
+      toast({
+        title: 'Error fetching entries',
+        status: 'error',
+        duration: 3000,
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchEntries();
+  }, []);
 
   const handleSubmit = async () => {
     if (!entry.trim()) {
@@ -89,6 +111,23 @@ function Diary() {
         >
           Save Entry
         </Button>
+
+        <VStack spacing={4} w="100%" align="stretch">
+          {entries.map((entry) => (
+            <Box
+              key={entry._id}
+              p={4}
+              borderWidth={1}
+              borderRadius="lg"
+              shadow="sm"
+            >
+              <Text fontWeight="bold">
+                {new Date(entry.date).toLocaleDateString()}
+              </Text>
+              <Text mt={2}>{entry.entry}</Text>
+            </Box>
+          ))}
+        </VStack>
       </VStack>
     </Container>
   );

@@ -82,5 +82,16 @@ app.post("/api/diary", async (req, res) => {
   }
 });
 
+// Add this new endpoint to get diary entries
+app.get("/api/diary", async (req, res) => {
+  try {
+    const entries = await DiaryEntry.find().sort({ date: -1 });
+    res.json(entries);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to fetch diary entries" });
+  }
+});
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
