@@ -20,6 +20,83 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
+// Add after mongoose connection setup
+const initializeRecipes = async () => {
+  try {
+    // Check if recipes already exist
+    const existingRecipes = await Recipe.find();
+    if (existingRecipes.length > 0) {
+      console.log('Recipes already exist, skipping initialization');
+      return;
+    }
+
+    const sampleRecipes = [
+      {
+        name: "Comfort Mac and Cheese",
+        mood: "Sad",
+        description: "A warm, creamy mac and cheese to lift your spirits",
+        ingredients: ["macaroni", "cheese", "milk", "butter", "breadcrumbs"],
+        instructions: ["Boil pasta", "Make cheese sauce", "Combine and bake"],
+        prepTime: 30,
+        imageUrl: "https://source.unsplash.com/random/800x600/?mac-and-cheese"
+      },
+      {
+        name: "Energizing Smoothie Bowl",
+        mood: "Happy",
+        description: "Start your day with this vibrant smoothie bowl",
+        ingredients: ["banana", "berries", "yogurt", "granola", "honey"],
+        instructions: ["Blend fruits", "Add toppings", "Enjoy!"],
+        prepTime: 15,
+        imageUrl: "https://source.unsplash.com/random/800x600/?smoothie-bowl"
+      },
+      {
+        name: "Calming Chamomile Tea",
+        mood: "Anxious",
+        description: "A soothing tea blend to help you relax",
+        ingredients: ["chamomile tea", "honey", "lemon", "lavender"],
+        instructions: ["Steep tea", "Add honey", "Optional: add lemon"],
+        prepTime: 5,
+        imageUrl: "https://source.unsplash.com/random/800x600/?tea"
+      },
+      {
+        name: "Energy-Boosting Trail Mix",
+        mood: "Tired",
+        description: "A nutrient-rich snack to boost your energy",
+        ingredients: ["nuts", "dried fruits", "dark chocolate", "seeds"],
+        instructions: ["Mix all ingredients", "Store in airtight container"],
+        prepTime: 10,
+        imageUrl: "https://source.unsplash.com/random/800x600/?trail-mix"
+      },
+      {
+        name: "Peaceful Green Tea",
+        mood: "Calm",
+        description: "A mindful cup of green tea for tranquility",
+        ingredients: ["green tea", "mint leaves", "ginger", "honey"],
+        instructions: ["Heat water", "Steep tea and mint", "Add honey to taste"],
+        prepTime: 8,
+        imageUrl: "https://source.unsplash.com/random/800x600/?green-tea"
+      },
+      {
+        name: "Power Protein Bowl",
+        mood: "Energetic",
+        description: "A protein-packed bowl to maintain your energy",
+        ingredients: ["quinoa", "chicken", "avocado", "vegetables"],
+        instructions: ["Cook quinoa", "Grill chicken", "Assemble bowl"],
+        prepTime: 25,
+        imageUrl: "https://source.unsplash.com/random/800x600/?protein-bowl"
+      }
+    ];
+
+    for (const recipe of sampleRecipes) {
+      const newRecipe = new Recipe(recipe);
+      await newRecipe.save();
+    }
+    console.log('Sample recipes initialized successfully');
+  } catch (error) {
+    console.error('Error initializing recipes:', error);
+  }
+};
+
 // Update the MongoDB connection with options
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -27,7 +104,10 @@ mongoose.connect(process.env.MONGODB_URI, {
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
 })
-.then(() => console.log('Connected to MongoDB'))
+.then(() => {
+  console.log('Connected to MongoDB');
+  initializeRecipes();
+})
 .catch(err => console.error('MongoDB connection error:', err));
 
 app.post("/api/analyze", async (req, res) => {
@@ -195,6 +275,18 @@ app.get("/api/recipes", async (req, res) => {
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Failed to fetch recipes" });
+  }
+});
+
+// Add endpoint to create recipes
+app.post("/api/recipes", async (req, res) => {
+  try {
+    const recipe = new Recipe(req.body);
+    await recipe.save();
+    res.json(recipe);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to create recipe" });
   }
 });
 
