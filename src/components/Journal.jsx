@@ -7,12 +7,11 @@ import {
   VStack,
   Text,
   useToast,
-  Spinner,
 } from '@chakra-ui/react';
 
 function Journal() {
   const [entry, setEntry] = useState('');
-  const [aiResponse, setAiResponse] = useState('');
+  const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
@@ -26,7 +25,9 @@ function Journal() {
       return;
     }
 
+    setMessages(prev => [...prev, { type: 'user', content: entry }]);
     setIsLoading(true);
+
     try {
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/analyze', {
         method: 'POST',
@@ -41,7 +42,8 @@ function Journal() {
       }
 
       const data = await response.json();
-      setAiResponse(data.response);
+      setMessages(prev => [...prev, { type: 'ai', content: data.response }]);
+      setEntry('');
     } catch (error) {
       toast({
         title: 'Error getting AI response',
@@ -60,12 +62,27 @@ function Journal() {
           AI Journal
         </Text>
         
+        <VStack spacing={4} w="100%" align="stretch">
+          {messages.map((message, index) => (
+            <Box
+              key={index}
+              p={4}
+              bg={message.type === 'user' ? 'blue.100' : 'blue.50'}
+              borderRadius="lg"
+              alignSelf={message.type === 'user' ? 'flex-end' : 'flex-start'}
+              maxW="80%"
+            >
+              <Text>{message.content}</Text>
+            </Box>
+          ))}
+        </VStack>
+        
         <Textarea
           value={entry}
           onChange={(e) => setEntry(e.target.value)}
           placeholder="Write your thoughts here..."
           size="lg"
-          minH="200px"
+          minH="100px"
         />
         
         <Button 
@@ -76,17 +93,6 @@ function Journal() {
         >
           Get AI Insights
         </Button>
-
-        {aiResponse && (
-          <Box
-            p={4}
-            bg="blue.50"
-            w="100%"
-            borderRadius="md"
-          >
-            <Text>{aiResponse}</Text>
-          </Box>
-        )}
       </VStack>
     </Container>
   );
