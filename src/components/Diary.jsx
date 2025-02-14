@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import DiaryCalendar from './DiaryCalendar';
 import { format } from 'date-fns';
-import { ArrowBackIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, SmileIcon, MehIcon } from '@chakra-ui/icons';
 
 function Diary({ onBack }) {
   const [entry, setEntry] = useState('');
@@ -68,7 +68,7 @@ function Diary({ onBack }) {
 
       const data = await response.json();
       toast({
-        title: 'Diary entry saved!',
+        title: `Entry saved! Mood: ${data.mood} (${data.intensity}/5)`,
         status: 'success',
         duration: 2000,
       });
@@ -145,9 +145,16 @@ function Diary({ onBack }) {
               borderRadius="lg"
               shadow="sm"
             >
-              <Text fontWeight="bold">
-                {new Date(entry.date).toLocaleDateString()}
-              </Text>
+              <HStack justify="space-between">
+                <Text fontWeight="bold">
+                  {new Date(entry.date).toLocaleDateString()}
+                </Text>
+                {entry.mood && (
+                  <Text color="gray.600">
+                    Mood: {entry.mood} ({entry.moodIntensity}/5)
+                  </Text>
+                )}
+              </HStack>
               <Text mt={2}>{entry.entry}</Text>
             </Box>
           ))}
