@@ -13,6 +13,7 @@ import {
 import DiaryCalendar from './DiaryCalendar';
 import { format } from 'date-fns';
 import { ArrowBackIcon, SmileIcon, MehIcon } from '@chakra-ui/icons';
+import MoodStats from './MoodStats';
 
 function Diary({ onBack }) {
   const [entry, setEntry] = useState('');
@@ -20,6 +21,7 @@ function Diary({ onBack }) {
   const [entries, setEntries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const [moodStats, setMoodStats] = useState([]);
 
   const fetchEntries = async (selectedDate) => {
     try {
@@ -38,8 +40,20 @@ function Diary({ onBack }) {
     }
   };
 
+  const fetchMoodStats = async () => {
+    try {
+      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary/stats');
+      if (!response.ok) throw new Error('Failed to fetch stats');
+      const data = await response.json();
+      setMoodStats(data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   useEffect(() => {
     fetchEntries(date);
+    fetchMoodStats();
   }, [date]);
 
   const handleSubmit = async () => {
@@ -153,6 +167,8 @@ function Diary({ onBack }) {
         </Button>
 
         <DiaryCalendar entries={entries} onDateClick={handleDateClick} />
+
+        <MoodStats stats={moodStats} />
 
         <VStack spacing={4} w="100%" align="stretch">
           {entries.map((entry) => (

@@ -136,5 +136,25 @@ app.get("/api/diary", async (req, res) => {
   }
 });
 
+// Add new endpoint for mood statistics
+app.get("/api/diary/stats", async (req, res) => {
+  try {
+    const stats = await DiaryEntry.aggregate([
+      {
+        $group: {
+          _id: "$mood",
+          count: { $sum: 1 },
+          averageIntensity: { $avg: "$moodIntensity" }
+        }
+      }
+    ]);
+    
+    res.json(stats);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to fetch mood statistics" });
+  }
+});
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
