@@ -38,7 +38,7 @@ const initializeRecipes = async () => {
         ingredients: ["macaroni", "cheese", "milk", "butter", "breadcrumbs"],
         instructions: ["Boil pasta", "Make cheese sauce", "Combine and bake"],
         prepTime: 30,
-        imageUrl: "https://source.unsplash.com/random/800x600/?mac-and-cheese"
+        imageUrl: "https://images.unsplash.com/photo-1612152328957-01c943051601?auto=format&fit=crop&w=800&q=80"
       },
       {
         name: "Energizing Smoothie Bowl",
@@ -47,7 +47,7 @@ const initializeRecipes = async () => {
         ingredients: ["banana", "berries", "yogurt", "granola", "honey"],
         instructions: ["Blend fruits", "Add toppings", "Enjoy!"],
         prepTime: 15,
-        imageUrl: "https://source.unsplash.com/random/800x600/?smoothie-bowl"
+        imageUrl: "https://images.unsplash.com/photo-1626790680787-de5e9a07bcf2?auto=format&fit=crop&w=800&q=80"
       },
       {
         name: "Calming Chamomile Tea",
@@ -56,7 +56,7 @@ const initializeRecipes = async () => {
         ingredients: ["chamomile tea", "honey", "lemon", "lavender"],
         instructions: ["Steep tea", "Add honey", "Optional: add lemon"],
         prepTime: 5,
-        imageUrl: "https://source.unsplash.com/random/800x600/?tea"
+        imageUrl: "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=800&q=80"
       },
       {
         name: "Energy-Boosting Trail Mix",
@@ -65,7 +65,7 @@ const initializeRecipes = async () => {
         ingredients: ["nuts", "dried fruits", "dark chocolate", "seeds"],
         instructions: ["Mix all ingredients", "Store in airtight container"],
         prepTime: 10,
-        imageUrl: "https://source.unsplash.com/random/800x600/?trail-mix"
+        imageUrl: "https://images.unsplash.com/photo-1541990202460-3df5bfa9ac51?auto=format&fit=crop&w=800&q=80"
       },
       {
         name: "Peaceful Green Tea",
@@ -74,7 +74,7 @@ const initializeRecipes = async () => {
         ingredients: ["green tea", "mint leaves", "ginger", "honey"],
         instructions: ["Heat water", "Steep tea and mint", "Add honey to taste"],
         prepTime: 8,
-        imageUrl: "https://source.unsplash.com/random/800x600/?green-tea"
+        imageUrl: "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?auto=format&fit=crop&w=800&q=80"
       },
       {
         name: "Power Protein Bowl",
@@ -83,7 +83,7 @@ const initializeRecipes = async () => {
         ingredients: ["quinoa", "chicken", "avocado", "vegetables"],
         instructions: ["Cook quinoa", "Grill chicken", "Assemble bowl"],
         prepTime: 25,
-        imageUrl: "https://source.unsplash.com/random/800x600/?protein-bowl"
+        imageUrl: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80"
       }
     ];
 
