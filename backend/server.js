@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const OpenAI = require("openai");
 const mongoose = require('mongoose');
 const DiaryEntry = require('./models/DiaryEntry');
+const Recipe = require('./models/Recipe');
 
 dotenv.config();
 
@@ -181,6 +182,19 @@ app.get("/api/diary/stats", async (req, res) => {
   } catch (error) {
     console.error("Error fetching stats:", error);
     res.status(500).json({ error: "Failed to fetch mood statistics" });
+  }
+});
+
+// Add endpoint to get recipes by mood
+app.get("/api/recipes", async (req, res) => {
+  try {
+    const { mood } = req.query;
+    const query = mood ? { mood } : {};
+    const recipes = await Recipe.find(query);
+    res.json(recipes);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to fetch recipes" });
   }
 });
 
