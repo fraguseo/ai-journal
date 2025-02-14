@@ -73,6 +73,9 @@ function Diary({ onBack }) {
         duration: 2000,
       });
       setEntry('');
+      
+      await fetchEntries(date);
+      
     } catch (error) {
       toast({
         title: 'Error saving entry',
