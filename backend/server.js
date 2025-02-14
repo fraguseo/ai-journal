@@ -35,7 +35,7 @@ const initializeRecipes = async () => {
         ingredients: ["macaroni", "cheese", "milk", "butter", "breadcrumbs"],
         instructions: ["Boil pasta", "Make cheese sauce", "Combine and bake"],
         prepTime: 30,
-        imageUrl: "https://images.unsplash.com/photo-1612152328957-01c943051601?auto=format&fit=crop&w=800&q=80"
+        imageUrl: "https://images.unsplash.com/photo-1543339494-b4cd4f7ba686?auto=format&fit=crop&w=800&q=80"
       },
       {
         name: "Energizing Smoothie Bowl",
@@ -62,7 +62,7 @@ const initializeRecipes = async () => {
         ingredients: ["nuts", "dried fruits", "dark chocolate", "seeds"],
         instructions: ["Mix all ingredients", "Store in airtight container"],
         prepTime: 10,
-        imageUrl: "https://images.unsplash.com/photo-1541990202460-3df5bfa9ac51?auto=format&fit=crop&w=800&q=80"
+        imageUrl: "https://images.unsplash.com/photo-1599598425947-5202edd56bdb?auto=format&fit=crop&w=800&q=80"
       },
       {
         name: "Peaceful Green Tea",
