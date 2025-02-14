@@ -92,6 +92,24 @@ function Diary({ onBack }) {
     setDate(formattedDate);
   };
 
+  const moodColors = {
+    Happy: 'yellow.100',
+    Calm: 'blue.100',
+    Sad: 'gray.100',
+    Anxious: 'orange.100',
+    Energetic: 'green.100',
+    Tired: 'purple.100'
+  };
+
+  const moodIcons = {
+    Happy: '😊',
+    Calm: '😌',
+    Sad: '😢',
+    Anxious: '😰',
+    Energetic: '⚡',
+    Tired: '😴'
+  };
+
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={6}>
@@ -144,6 +162,7 @@ function Diary({ onBack }) {
               borderWidth={1}
               borderRadius="lg"
               shadow="sm"
+              bg={entry.mood ? moodColors[entry.mood] : 'white'}
             >
               <HStack justify="space-between">
                 <Text fontWeight="bold">
@@ -151,7 +170,7 @@ function Diary({ onBack }) {
                 </Text>
                 {entry.mood && (
                   <Text color="gray.600">
-                    Mood: {entry.mood} ({entry.moodIntensity}/5)
+                    {moodIcons[entry.mood]} {entry.mood} ({entry.moodIntensity}/5)
                   </Text>
                 )}
               </HStack>
