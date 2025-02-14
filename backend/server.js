@@ -136,11 +136,37 @@ app.get("/api/diary", async (req, res) => {
   }
 });
 
-// Add new endpoint for mood statistics
+// Update stats endpoint to handle time periods
 app.get("/api/diary/stats", async (req, res) => {
   try {
-    console.log('Fetching mood statistics...');
+    const { period, date } = req.query;
+    let startDate, endDate;
+    
+    if (period === 'day') {
+      startDate = new Date(date);
+      endDate = new Date(date);
+      endDate.setDate(endDate.getDate() + 1);
+    } else if (period === 'week') {
+      startDate = new Date(date);
+      startDate.setDate(startDate.getDate() - startDate.getDay());
+      endDate = new Date(startDate);
+      endDate.setDate(endDate.getDate() + 7);
+    } else if (period === 'month') {
+      startDate = new Date(date);
+      startDate.setDate(1);
+      endDate = new Date(startDate);
+      endDate.setMonth(endDate.getMonth() + 1);
+    }
+
     const stats = await DiaryEntry.aggregate([
+      {
+        $match: {
+          date: {
+            $gte: startDate,
+            $lt: endDate
+          }
+        }
+      },
       {
         $group: {
           _id: "$mood",
@@ -149,7 +175,8 @@ app.get("/api/diary/stats", async (req, res) => {
         }
       }
     ]);
-    console.log('Mood stats found:', stats);
+    
+    console.log(`${period} stats found:`, stats);
     res.json(stats);
   } catch (error) {
     console.error("Error fetching stats:", error);

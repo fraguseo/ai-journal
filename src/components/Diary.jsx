@@ -22,6 +22,7 @@ function Diary({ onBack }) {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const [moodStats, setMoodStats] = useState([]);
+  const [statsPeriod, setStatsPeriod] = useState('day');
 
   const fetchEntries = async (selectedDate) => {
     try {
@@ -40,16 +41,15 @@ function Diary({ onBack }) {
     }
   };
 
-  const fetchMoodStats = async () => {
+  const fetchMoodStats = async (period = statsPeriod) => {
     try {
       console.log('Fetching mood stats...');
-      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary/stats');
+      const response = await fetch(
+        `https://ai-journal-backend-01bx.onrender.com/api/diary/stats?period=${period}&date=${date}`
+      );
       if (!response.ok) throw new Error('Failed to fetch stats');
       const data = await response.json();
-      console.log('Mood stats received:', data);
-      if (data.length === 0) {
-        console.log('No mood stats available');
-      }
+      console.log(`${period} mood stats received:`, data);
       setMoodStats(data);
     } catch (error) {
       console.error('Error fetching mood stats:', error);
@@ -180,8 +180,41 @@ function Diary({ onBack }) {
 
         <DiaryCalendar entries={entries} onDateClick={handleDateClick} />
 
+        <HStack spacing={4} w="100%" justify="center">
+          <Button
+            size="sm"
+            colorScheme={statsPeriod === 'day' ? 'blue' : 'gray'}
+            onClick={() => {
+              setStatsPeriod('day');
+              fetchMoodStats('day');
+            }}
+          >
+            Daily Stats
+          </Button>
+          <Button
+            size="sm"
+            colorScheme={statsPeriod === 'week' ? 'blue' : 'gray'}
+            onClick={() => {
+              setStatsPeriod('week');
+              fetchMoodStats('week');
+            }}
+          >
+            Weekly Stats
+          </Button>
+          <Button
+            size="sm"
+            colorScheme={statsPeriod === 'month' ? 'blue' : 'gray'}
+            onClick={() => {
+              setStatsPeriod('month');
+              fetchMoodStats('month');
+            }}
+          >
+            Monthly Stats
+          </Button>
+        </HStack>
+
         {moodStats && moodStats.length > 0 && (
-          <MoodStats stats={moodStats} />
+          <MoodStats stats={moodStats} period={statsPeriod} />
         )}
 
         <VStack spacing={4} w="100%" align="stretch">
