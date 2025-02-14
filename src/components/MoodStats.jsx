@@ -26,24 +26,25 @@ function MoodStats({ stats = [] }) {
         </Text>
         <VStack spacing={3} align="stretch">
           {stats.map((stat) => (
-            <Box key={stat._id}>
+            <Box key={stat._id || 'unknown'}>
               <HStack justify="space-between" mb={1}>
                 <Text>
-                  {stat._id} ({stat.count} entries)
+                  {stat._id || 'Unknown'} ({stat.count || 0} entries)
                 </Text>
                 <Text>
-                  Avg Intensity: {stat.averageIntensity.toFixed(1)}
+                  Avg Intensity: {(stat.averageIntensity || 0).toFixed(1)}
                 </Text>
               </HStack>
               <Progress 
-                value={(stat.count / totalEntries) * 100}
+                value={((stat.count || 0) / totalEntries) * 100}
                 colorScheme={
                   stat._id === 'Happy' ? 'yellow' :
                   stat._id === 'Calm' ? 'blue' :
                   stat._id === 'Sad' ? 'gray' :
                   stat._id === 'Anxious' ? 'orange' :
                   stat._id === 'Energetic' ? 'green' :
-                  'purple'
+                  stat._id === 'Tired' ? 'purple' :
+                  'gray'
                 }
               />
             </Box>

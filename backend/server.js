@@ -139,6 +139,7 @@ app.get("/api/diary", async (req, res) => {
 // Add new endpoint for mood statistics
 app.get("/api/diary/stats", async (req, res) => {
   try {
+    console.log('Fetching mood statistics...');
     const stats = await DiaryEntry.aggregate([
       {
         $group: {
@@ -148,10 +149,10 @@ app.get("/api/diary/stats", async (req, res) => {
         }
       }
     ]);
-    
+    console.log('Mood stats found:', stats);
     res.json(stats);
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error fetching stats:", error);
     res.status(500).json({ error: "Failed to fetch mood statistics" });
   }
 });

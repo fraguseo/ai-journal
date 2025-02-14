@@ -47,10 +47,18 @@ function Diary({ onBack }) {
       if (!response.ok) throw new Error('Failed to fetch stats');
       const data = await response.json();
       console.log('Mood stats received:', data);
+      if (data.length === 0) {
+        console.log('No mood stats available');
+      }
       setMoodStats(data);
     } catch (error) {
       console.error('Error fetching mood stats:', error);
-      setMoodStats([]); // Set empty array on error
+      toast({
+        title: 'Error fetching mood statistics',
+        status: 'error',
+        duration: 3000,
+      });
+      setMoodStats([]);
     }
   };
 
