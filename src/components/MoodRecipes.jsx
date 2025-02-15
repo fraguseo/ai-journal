@@ -103,7 +103,14 @@ function MoodRecipes({ onBack }) {
                 )}
                 <Box p={4}>
                   <Text fontSize="xl" fontWeight="bold">{recipe.name}</Text>
-                  <Badge colorScheme="blue" mt={2}>{recipe.mood}</Badge>
+                  <HStack spacing={2} mt={2}>
+                    <Badge colorScheme="blue">{recipe.mood}</Badge>
+                    {recipe.dietary && (
+                      <Badge colorScheme={recipe.dietary === 'vegan' ? 'green' : 'purple'}>
+                        {recipe.dietary}
+                      </Badge>
+                    )}
+                  </HStack>
                   <Text mt={2} noOfLines={2}>{recipe.description}</Text>
                   <Text mt={2} color="gray.600">Prep time: {recipe.prepTime} mins</Text>
                   <Button 
