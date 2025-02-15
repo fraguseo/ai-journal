@@ -16,7 +16,8 @@ import {
   isSameDay,
   startOfWeek,
   endOfWeek,
-  addDays
+  addDays,
+  isFuture
 } from 'date-fns';
 
 function DiaryCalendar({ entries, onDateClick }) {
@@ -70,20 +71,36 @@ function DiaryCalendar({ entries, onDateClick }) {
           </Box>
         ))}
         
-        {days.map((date, i) => (
-          <Box
-            key={i}
-            p={2}
-            textAlign="center"
-            cursor="pointer"
-            bg={isSameDay(date, today) ? 'blue.100' : hasEntries(date) ? 'green.100' : 'transparent'}
-            opacity={format(date, 'M') !== format(currentMonth, 'M') ? 0.5 : 1}
-            borderRadius="md"
-            onClick={() => onDateClick(format(date, 'yyyy-MM-dd'))}
-          >
-            {format(date, 'd')}
-          </Box>
-        ))}
+        {days.map((date, i) => {
+          const isFutureDate = isFuture(date);
+          const hasEntry = hasEntries(date);
+          
+          return (
+            <Box
+              key={i}
+              p={2}
+              textAlign="center"
+              cursor="pointer"
+              bg={
+                isSameDay(date, today) 
+                  ? 'blue.100' 
+                  : isFutureDate 
+                    ? 'yellow.100'
+                    : hasEntry 
+                      ? 'green.100' 
+                      : 'transparent'
+              }
+              opacity={format(date, 'M') !== format(currentMonth, 'M') ? 0.5 : 1}
+              borderRadius="md"
+              onClick={() => onDateClick(format(date, 'yyyy-MM-dd'))}
+              _hover={{
+                bg: isFutureDate ? 'yellow.200' : hasEntry ? 'green.200' : 'gray.100'
+              }}
+            >
+              {format(date, 'd')}
+            </Box>
+          );
+        })}
       </SimpleGrid>
     </VStack>
   );
