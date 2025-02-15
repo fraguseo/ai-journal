@@ -32,6 +32,7 @@ const initializeRecipes = async () => {
         name: "Comfort Mac and Cheese",
         mood: "Sad",
         description: "A warm, creamy mac and cheese to lift your spirits",
+        dietary: "vegetarian",
         ingredients: ["macaroni", "cheese", "milk", "butter", "breadcrumbs"],
         instructions: [
           "Boil water in a large pot and add salt",
@@ -50,6 +51,7 @@ const initializeRecipes = async () => {
         name: "Energizing Smoothie Bowl",
         mood: "Happy",
         description: "Start your day with this vibrant smoothie bowl",
+        dietary: "vegan",
         ingredients: ["banana", "berries", "yogurt", "granola", "honey"],
         instructions: [
           "Freeze banana and berries overnight",
@@ -68,6 +70,7 @@ const initializeRecipes = async () => {
         name: "Calming Chamomile Tea",
         mood: "Anxious",
         description: "A soothing tea blend to help you relax",
+        dietary: "vegan",
         ingredients: ["chamomile tea", "honey", "lemon", "lavender"],
         instructions: [
           "Bring fresh water to a near boil (around 200°F)",
@@ -85,6 +88,7 @@ const initializeRecipes = async () => {
         name: "Energy-Boosting Trail Mix",
         mood: "Tired",
         description: "A nutrient-rich snack to boost your energy",
+        dietary: "vegan",
         ingredients: ["nuts", "dried fruits", "dark chocolate", "seeds"],
         instructions: [
           "Toast nuts in a dry pan over medium heat for 5-7 minutes until fragrant",
@@ -102,6 +106,7 @@ const initializeRecipes = async () => {
         name: "Peaceful Green Tea",
         mood: "Calm",
         description: "A mindful cup of green tea for tranquility",
+        dietary: "vegan",
         ingredients: ["green tea", "mint leaves", "ginger", "honey"],
         instructions: [
           "Heat water to 175°F (not boiling) for optimal green tea brewing",
@@ -137,6 +142,7 @@ const initializeRecipes = async () => {
       {
         name: "Rainbow Fruit Salad",
         mood: "Happy",
+        dietary: "vegan",
         description: "A colorful mix of fresh fruits to brighten your day",
         ingredients: ["strawberries", "mango", "blueberries", "kiwi", "pineapple"],
         instructions: [
@@ -157,6 +163,7 @@ const initializeRecipes = async () => {
       {
         name: "Chocolate Chip Cookies",
         mood: "Sad",
+        dietary: "vegetarian",
         description: "Warm, gooey cookies that feel like a hug",
         ingredients: ["flour", "butter", "chocolate chips", "brown sugar", "vanilla"],
         instructions: [
@@ -178,6 +185,7 @@ const initializeRecipes = async () => {
         name: "Lavender Latte",
         mood: "Anxious",
         description: "A soothing coffee drink with calming lavender",
+        dietary: "vegetarian",
         ingredients: ["coffee", "milk", "lavender syrup", "honey"],
         instructions: [
           "Brew a strong shot of espresso or 4oz strong coffee",
@@ -198,6 +206,7 @@ const initializeRecipes = async () => {
         name: "Birthday Pancake Tower",
         mood: "Happy",
         description: "Colorful layered pancakes with sprinkles and cream",
+        dietary: "vegetarian",
         ingredients: ["pancake mix", "food coloring", "whipped cream", "sprinkles", "maple syrup", "butter"],
         instructions: [
           "Prepare pancake batter according to recipe or mix instructions",
@@ -215,6 +224,7 @@ const initializeRecipes = async () => {
       {
         name: "Summer Lemonade Slush",
         mood: "Happy",
+        dietary: "vegan",
         description: "Refreshing frozen lemonade with fresh mint",
         ingredients: ["lemons", "sugar", "mint", "ice", "water"],
         instructions: [
@@ -254,6 +264,7 @@ const initializeRecipes = async () => {
         name: "Nutella Hot Chocolate",
         mood: "Sad",
         description: "Decadent hot chocolate with Nutella and marshmallows",
+        dietary: "vegetarian",
         ingredients: ["milk", "Nutella", "cocoa powder", "marshmallows", "whipped cream"],
         instructions: [
           "Heat milk in a saucepan over medium heat until steaming",
@@ -274,6 +285,7 @@ const initializeRecipes = async () => {
         name: "Stress-Relief Energy Balls",
         mood: "Anxious",
         description: "No-bake energy balls with calming ingredients",
+        dietary: "vegan",
         ingredients: ["oats", "honey", "almond butter", "dark chocolate", "chia seeds", "lavender"],
         instructions: [
           "Pulse oats in food processor until finely ground",
@@ -292,6 +304,7 @@ const initializeRecipes = async () => {
         name: "Calming Banana Oatmeal",
         mood: "Anxious",
         description: "Warm oatmeal with banana and cinnamon",
+        dietary: "vegetarian",
         ingredients: ["oats", "banana", "cinnamon", "honey", "almonds"],
         instructions: [
           "Bring 1 cup water and 1/2 cup milk to a gentle boil",
@@ -368,6 +381,7 @@ const initializeRecipes = async () => {
         name: "Mindful Mint Water",
         mood: "Calm",
         description: "Refreshing infused water with mint and cucumber",
+        dietary: "vegan",
         ingredients: ["water", "mint leaves", "cucumber", "lemon", "ice"],
         instructions: [
           "Wash mint leaves and cucumber thoroughly",
@@ -388,6 +402,7 @@ const initializeRecipes = async () => {
         name: "Power-Up Protein Pancakes",
         mood: "Energetic",
         description: "High-protein pancakes with berry compote",
+        dietary: "vegetarian",
         ingredients: ["protein powder", "oats", "egg whites", "berries", "greek yogurt"],
         instructions: [
           "Blend oats into a fine flour in food processor",
@@ -406,6 +421,7 @@ const initializeRecipes = async () => {
         name: "Pre-Workout Energy Bites",
         mood: "Energetic",
         description: "Quick energy bites for an instant boost",
+        dietary: "vegan",
         ingredients: ["dates", "nuts", "protein powder", "coconut", "coffee beans"],
         instructions: [
           "Soak dates in warm water for 10 minutes, then drain",
