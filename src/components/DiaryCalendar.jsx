@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Text,
@@ -23,6 +23,7 @@ import {
 function DiaryCalendar({ entries, onDateClick }) {
   const [currentMonth, setCurrentMonth] = React.useState(new Date('2025-02-15')); // Set to Feb 2025
   const today = new Date('2025-02-15'); // Set to Feb 15, 2025
+  const [selectedDate, setSelectedDate] = useState(null); // Add this for tracking clicks
   
   // Use currentMonth for display
   const monthStart = startOfMonth(currentMonth);
@@ -74,6 +75,7 @@ function DiaryCalendar({ entries, onDateClick }) {
         {days.map((date, i) => {
           const isFutureDate = isFuture(date);
           const hasEntry = hasEntries(date);
+          const isSelected = selectedDate && isSameDay(date, selectedDate);
           
           return (
             <Box
@@ -84,7 +86,7 @@ function DiaryCalendar({ entries, onDateClick }) {
               bg={
                 isSameDay(date, today) 
                   ? 'blue.100' 
-                  : isFutureDate 
+                  : isSelected && isFutureDate
                     ? 'yellow.100'
                     : hasEntry 
                       ? 'green.100' 
@@ -92,7 +94,10 @@ function DiaryCalendar({ entries, onDateClick }) {
               }
               opacity={format(date, 'M') !== format(currentMonth, 'M') ? 0.5 : 1}
               borderRadius="md"
-              onClick={() => onDateClick(format(date, 'yyyy-MM-dd'))}
+              onClick={() => {
+                setSelectedDate(date);
+                onDateClick(format(date, 'yyyy-MM-dd'));
+              }}
               _hover={{
                 bg: isFutureDate ? 'yellow.200' : hasEntry ? 'green.200' : 'gray.100'
               }}
