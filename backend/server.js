@@ -515,7 +515,7 @@ const initializeRecipes = async () => {
           "Serve with crispy seaweed on the side"
         ],
         prepTime: 25,
-        imageUrl: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=800&q=80"
+        imageUrl: "https://images.unsplash.com/photo-1540713434306-58505cf1b6fc?auto=format&fit=crop&w=800&q=80"
       },
 
       // Calm Mood
@@ -555,7 +555,7 @@ const initializeRecipes = async () => {
           "Serve with guacamole, salsa, and fresh cilantro"
         ],
         prepTime: 45,
-        imageUrl: "https://images.unsplash.com/photo-1593424718424-cf4d83f3def1?auto=format&fit=crop&w=800&q=80"
+        imageUrl: "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=800&q=80"
       },
     ];
 
