@@ -100,7 +100,7 @@ const initializeRecipes = async () => {
           "Store in an airtight container for up to 2 weeks"
         ],
         prepTime: 10,
-        imageUrl: "https://images.unsplash.com/photo-1606923829579-0cb981a83e2e?auto=format&fit=crop&w=800&q=80"
+        imageUrl: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=800&q=80"
       },
       {
         name: "Peaceful Green Tea",
