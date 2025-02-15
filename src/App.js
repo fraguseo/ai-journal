@@ -6,6 +6,8 @@ import Diary from './components/Diary';
 import MoodRecipes from './components/MoodRecipes';
 import Dream from './components/Dream';
 
+// Dream Catcher feature added
+
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
 
