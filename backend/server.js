@@ -33,7 +33,16 @@ const initializeRecipes = async () => {
         mood: "Sad",
         description: "A warm, creamy mac and cheese to lift your spirits",
         ingredients: ["macaroni", "cheese", "milk", "butter", "breadcrumbs"],
-        instructions: ["Boil pasta", "Make cheese sauce", "Combine and bake"],
+        instructions: [
+          "Boil water in a large pot and add salt",
+          "Cook macaroni according to package instructions until al dente",
+          "In a separate pan, melt butter over medium heat",
+          "Whisk in flour to make a roux and cook for 2 minutes",
+          "Gradually add warm milk while whisking to prevent lumps",
+          "Add cheese and stir until melted and smooth",
+          "Combine sauce with cooked pasta",
+          "Top with breadcrumbs and bake at 350°F for 20 minutes until golden"
+        ],
         prepTime: 30,
         imageUrl: "https://images.unsplash.com/photo-1543339494-b4cd4f7ba686?auto=format&fit=crop&w=800&q=80"
       },
@@ -42,7 +51,16 @@ const initializeRecipes = async () => {
         mood: "Happy",
         description: "Start your day with this vibrant smoothie bowl",
         ingredients: ["banana", "berries", "yogurt", "granola", "honey"],
-        instructions: ["Blend fruits", "Add toppings", "Enjoy!"],
+        instructions: [
+          "Freeze banana and berries overnight",
+          "Blend frozen fruits with yogurt until smooth but thick",
+          "Add a splash of milk if needed for blending",
+          "Pour into a bowl and smooth the surface",
+          "Arrange fresh berries in a circular pattern",
+          "Sprinkle granola around the edges",
+          "Drizzle honey in a zigzag pattern",
+          "Serve immediately while cold and thick"
+        ],
         prepTime: 15,
         imageUrl: "https://images.unsplash.com/photo-1626790680787-de5e9a07bcf2?auto=format&fit=crop&w=800&q=80"
       },
@@ -51,7 +69,15 @@ const initializeRecipes = async () => {
         mood: "Anxious",
         description: "A soothing tea blend to help you relax",
         ingredients: ["chamomile tea", "honey", "lemon", "lavender"],
-        instructions: ["Steep tea", "Add honey", "Optional: add lemon"],
+        instructions: [
+          "Bring fresh water to a near boil (around 200°F)",
+          "Place chamomile tea bag in your favorite mug",
+          "Pour hot water over the tea bag and let steep for 3-5 minutes",
+          "Remove tea bag and add 1-2 teaspoons of honey to taste",
+          "Squeeze half a lemon for a citrus boost",
+          "Optional: add a small sprig of fresh lavender",
+          "Let cool for 2-3 minutes before enjoying"
+        ],
         prepTime: 5,
         imageUrl: "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=800&q=80"
       },
@@ -60,7 +86,15 @@ const initializeRecipes = async () => {
         mood: "Tired",
         description: "A nutrient-rich snack to boost your energy",
         ingredients: ["nuts", "dried fruits", "dark chocolate", "seeds"],
-        instructions: ["Mix all ingredients", "Store in airtight container"],
+        instructions: [
+          "Toast nuts in a dry pan over medium heat for 5-7 minutes until fragrant",
+          "Let nuts cool completely (about 15 minutes)",
+          "Chop any larger nuts into bite-sized pieces",
+          "Mix equal parts nuts and dried fruits in a large bowl",
+          "Add dark chocolate chips (about 1/4 of the total mixture)",
+          "Sprinkle in seeds for extra nutrition",
+          "Store in an airtight container for up to 2 weeks"
+        ],
         prepTime: 10,
         imageUrl: "https://images.unsplash.com/photo-1599598425947-5202edd56bdb?auto=format&fit=crop&w=800&q=80"
       },
