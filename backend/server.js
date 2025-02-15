@@ -192,7 +192,7 @@ const initializeRecipes = async () => {
         ingredients: ["chia seeds", "coffee", "milk", "maple syrup", "cocoa"],
         instructions: ["Mix ingredients", "Refrigerate overnight", "Top and serve"],
         prepTime: 5,
-        imageUrl: "https://images.unsplash.com/photo-1509449307943-f45e6d5f9c0d?auto=format&fit=crop&w=800&q=80"
+        imageUrl: "https://images.unsplash.com/photo-1542691457-cbe4df041eb2?auto=format&fit=crop&w=800&q=80"
       },
 
       // Additional Calm recipes
@@ -232,7 +232,7 @@ const initializeRecipes = async () => {
         ingredients: ["dates", "nuts", "protein powder", "coconut", "coffee beans"],
         instructions: ["Process dates", "Mix ingredients", "Form balls", "Roll in coconut"],
         prepTime: 15,
-        imageUrl: "https://images.unsplash.com/photo-1582037928769-171b0eae297d?auto=format&fit=crop&w=800&q=80"
+        imageUrl: "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=800&q=80"
       }
     ];
 
