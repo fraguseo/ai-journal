@@ -75,12 +75,12 @@ function Dream({ onBack }) {
             />
             <Button
               type="submit"
-              colorScheme="purple"
+              colorScheme="teal"
               isLoading={isLoading}
               loadingText="Interpreting..."
               w="full"
             >
-              Get Interpretation
+              Tell me what this means
             </Button>
           </VStack>
         </form>
