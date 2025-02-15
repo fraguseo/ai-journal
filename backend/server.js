@@ -540,22 +540,22 @@ const initializeRecipes = async () => {
 
       // Energetic Mood
       {
-        name: "Grilled Steak Fajitas",
+        name: "Grilled Chicken Fajitas",
         mood: "Energetic",
-        description: "Sizzling steak fajitas with colorful peppers",
-        ingredients: ["flank steak", "bell peppers", "onions", "lime", "tortillas", "guacamole", "salsa", "cilantro"],
+        description: "Sizzling chicken fajitas with colorful peppers",
+        ingredients: ["chicken breast", "bell peppers", "onions", "lime", "tortillas", "guacamole", "salsa", "cilantro"],
         instructions: [
-          "Marinate steak in lime juice and spices for 30 minutes",
+          "Marinate chicken in lime juice and spices for 30 minutes",
           "Slice peppers and onions into strips",
-          "Grill steak 5-7 minutes per side for medium-rare",
-          "Let steak rest for 5 minutes before slicing",
+          "Grill chicken 5-6 minutes per side until cooked through",
+          "Let chicken rest for 5 minutes before slicing",
           "Grill vegetables until charred and tender",
           "Warm tortillas on the grill",
-          "Slice steak against the grain",
+          "Slice chicken into strips",
           "Serve with guacamole, salsa, and fresh cilantro"
         ],
         prepTime: 45,
-        imageUrl: "https://images.unsplash.com/photo-1534352956036-cd81e27dd615?auto=format&fit=crop&w=800&q=80"
+        imageUrl: "https://images.unsplash.com/photo-1613514785940-daed07799d9b?auto=format&fit=crop&w=800&q=80"
       },
     ];
 
