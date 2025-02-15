@@ -20,7 +20,7 @@ function App() {
       case 'recipes':
         return <MoodRecipes onBack={() => setCurrentPage('home')} />;
       case 'dream':
-        return <Dream />;
+        return <Dream onBack={() => setCurrentPage('home')} />;
       default:
         return (
           <Home 

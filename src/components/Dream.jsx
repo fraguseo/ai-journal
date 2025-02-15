@@ -9,8 +9,9 @@ import {
   useToast,
   Heading,
 } from '@chakra-ui/react';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
-function Dream() {
+function Dream({ onBack }) {
   const [dream, setDream] = useState('');
   const [interpretation, setInterpretation] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -49,6 +50,15 @@ function Dream() {
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={6} align="stretch">
+        <Button 
+          leftIcon={<ArrowBackIcon />} 
+          onClick={onBack}
+          variant="ghost"
+          alignSelf="flex-start"
+        >
+          Back
+        </Button>
+
         <Heading textAlign="center">Dream Catcher</Heading>
         <Text textAlign="center" color="gray.600">
           Share your dream and receive an interpretation
