@@ -81,6 +81,158 @@ const initializeRecipes = async () => {
         instructions: ["Cook quinoa", "Grill chicken", "Assemble bowl"],
         prepTime: 25,
         imageUrl: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80"
+      },
+      // Additional Happy recipes
+      {
+        name: "Rainbow Fruit Salad",
+        mood: "Happy",
+        description: "A colorful mix of fresh fruits to brighten your day",
+        ingredients: ["strawberries", "mango", "blueberries", "kiwi", "pineapple"],
+        instructions: ["Wash fruits", "Cut into bite-sized pieces", "Mix gently", "Add mint for garnish"],
+        prepTime: 15,
+        imageUrl: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=800&q=80"
+      },
+      
+      // Additional Sad recipes
+      {
+        name: "Chocolate Chip Cookies",
+        mood: "Sad",
+        description: "Warm, gooey cookies that feel like a hug",
+        ingredients: ["flour", "butter", "chocolate chips", "brown sugar", "vanilla"],
+        instructions: ["Mix ingredients", "Form cookie dough", "Bake until golden"],
+        prepTime: 25,
+        imageUrl: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Additional Anxious recipes
+      {
+        name: "Lavender Latte",
+        mood: "Anxious",
+        description: "A soothing coffee drink with calming lavender",
+        ingredients: ["coffee", "milk", "lavender syrup", "honey"],
+        instructions: ["Brew coffee", "Steam milk", "Add lavender", "Top with foam"],
+        prepTime: 10,
+        imageUrl: "https://images.unsplash.com/photo-1545665277-5937489579f2?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Additional Happy recipes
+      {
+        name: "Birthday Pancake Tower",
+        mood: "Happy",
+        description: "Colorful layered pancakes with sprinkles and cream",
+        ingredients: ["pancake mix", "food coloring", "whipped cream", "sprinkles", "maple syrup", "butter"],
+        instructions: ["Make pancake batter", "Divide and color batches", "Cook each color", "Layer with cream", "Top with sprinkles"],
+        prepTime: 45,
+        imageUrl: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Summer Lemonade Slush",
+        mood: "Happy",
+        description: "Refreshing frozen lemonade with fresh mint",
+        ingredients: ["lemons", "sugar", "mint", "ice", "water"],
+        instructions: ["Make simple syrup", "Squeeze lemons", "Blend with ice", "Garnish with mint"],
+        prepTime: 10,
+        imageUrl: "https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Additional Sad recipes
+      {
+        name: "Loaded Baked Potato Soup",
+        mood: "Sad",
+        description: "Rich and creamy potato soup topped with cheese and bacon",
+        ingredients: ["potatoes", "cream", "cheese", "bacon", "green onions", "sour cream"],
+        instructions: ["Cook potatoes", "Crisp bacon", "Make cream base", "Blend soup", "Add toppings"],
+        prepTime: 60,
+        imageUrl: "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Nutella Hot Chocolate",
+        mood: "Sad",
+        description: "Decadent hot chocolate with Nutella and marshmallows",
+        ingredients: ["milk", "Nutella", "cocoa powder", "marshmallows", "whipped cream"],
+        instructions: ["Heat milk", "Whisk in Nutella", "Add cocoa", "Top with marshmallows"],
+        prepTime: 8,
+        imageUrl: "https://images.unsplash.com/photo-1517578239113-b03992dcdd25?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Additional Anxious recipes
+      {
+        name: "Stress-Relief Energy Balls",
+        mood: "Anxious",
+        description: "No-bake energy balls with calming ingredients",
+        ingredients: ["oats", "honey", "almond butter", "dark chocolate", "chia seeds", "lavender"],
+        instructions: ["Mix ingredients", "Form balls", "Chill", "Store in container"],
+        prepTime: 20,
+        imageUrl: "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Calming Banana Oatmeal",
+        mood: "Anxious",
+        description: "Warm oatmeal with banana and cinnamon",
+        ingredients: ["oats", "banana", "cinnamon", "honey", "almonds"],
+        instructions: ["Cook oats", "Mash banana", "Add toppings", "Drizzle honey"],
+        prepTime: 12,
+        imageUrl: "https://images.unsplash.com/photo-1517673400267-0251440c45dc?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Additional Tired recipes
+      {
+        name: "Energy Boost Breakfast Sandwich",
+        mood: "Tired",
+        description: "Protein-packed breakfast sandwich with avocado",
+        ingredients: ["eggs", "bread", "avocado", "cheese", "spinach", "hot sauce"],
+        instructions: ["Toast bread", "Cook eggs", "Mash avocado", "Assemble sandwich"],
+        prepTime: 15,
+        imageUrl: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Quick Wake-Up Chia Pudding",
+        mood: "Tired",
+        description: "Easy overnight chia pudding with coffee",
+        ingredients: ["chia seeds", "coffee", "milk", "maple syrup", "cocoa"],
+        instructions: ["Mix ingredients", "Refrigerate overnight", "Top and serve"],
+        prepTime: 5,
+        imageUrl: "https://images.unsplash.com/photo-1509449307943-f45e6d5f9c0d?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Additional Calm recipes
+      {
+        name: "Zen Garden Sushi Bowl",
+        mood: "Calm",
+        description: "Deconstructed sushi bowl with fresh ingredients",
+        ingredients: ["sushi rice", "salmon", "avocado", "cucumber", "nori", "soy sauce"],
+        instructions: ["Cook rice", "Prep ingredients", "Arrange bowl", "Add sauce"],
+        prepTime: 35,
+        imageUrl: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Mindful Mint Water",
+        mood: "Calm",
+        description: "Refreshing infused water with mint and cucumber",
+        ingredients: ["water", "mint leaves", "cucumber", "lemon", "ice"],
+        instructions: ["Slice cucumber", "Add ingredients", "Infuse water", "Chill"],
+        prepTime: 5,
+        imageUrl: "https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Additional Energetic recipes
+      {
+        name: "Power-Up Protein Pancakes",
+        mood: "Energetic",
+        description: "High-protein pancakes with berry compote",
+        ingredients: ["protein powder", "oats", "egg whites", "berries", "greek yogurt"],
+        instructions: ["Blend batter", "Cook pancakes", "Make compote", "Add toppings"],
+        prepTime: 30,
+        imageUrl: "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Pre-Workout Energy Bites",
+        mood: "Energetic",
+        description: "Quick energy bites for an instant boost",
+        ingredients: ["dates", "nuts", "protein powder", "coconut", "coffee beans"],
+        instructions: ["Process dates", "Mix ingredients", "Form balls", "Roll in coconut"],
+        prepTime: 15,
+        imageUrl: "https://images.unsplash.com/photo-1582037928769-171b0eae297d?auto=format&fit=crop&w=800&q=80"
       }
     ];
 
