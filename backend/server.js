@@ -437,7 +437,126 @@ const initializeRecipes = async () => {
         ],
         prepTime: 15,
         imageUrl: "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=800&q=80"
-      }
+      },
+      // Happy Mood
+      {
+        name: "Grilled Honey Lime Chicken Skewers",
+        mood: "Happy",
+        description: "Bright and zesty grilled chicken skewers with a tropical twist",
+        ingredients: ["chicken breast", "lime", "honey", "soy sauce", "garlic", "bell peppers", "pineapple"],
+        instructions: [
+          "Cut chicken into 1-inch cubes",
+          "Whisk honey, lime juice, soy sauce, and minced garlic for marinade",
+          "Marinate chicken for 30 minutes to 2 hours",
+          "Cut bell peppers and pineapple into chunks",
+          "Thread chicken and vegetables onto skewers",
+          "Preheat grill to medium-high heat",
+          "Grill skewers for 12-15 minutes, turning occasionally",
+          "Brush with remaining marinade during last 2 minutes"
+        ],
+        prepTime: 45,
+        imageUrl: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Sad Mood
+      {
+        name: "Classic Beef Stew",
+        mood: "Sad",
+        description: "Hearty beef stew that warms the soul",
+        ingredients: ["beef chuck", "potatoes", "carrots", "onions", "beef broth", "red wine", "thyme"],
+        instructions: [
+          "Cut beef into 1.5-inch cubes and season with salt and pepper",
+          "Brown beef in batches in a Dutch oven over medium-high heat",
+          "Remove beef and sauté onions until softened",
+          "Add wine to deglaze, scraping bottom of pot",
+          "Return beef, add broth and herbs, simmer for 1.5 hours",
+          "Add potatoes and carrots, cook 30-40 minutes more",
+          "Check seasoning and adjust if needed",
+          "Let rest 10 minutes before serving"
+        ],
+        prepTime: 150,
+        imageUrl: "https://images.unsplash.com/photo-1534939561126-855b8675edd7?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Anxious Mood
+      {
+        name: "Lemon Butter Salmon",
+        mood: "Anxious",
+        description: "Light and nourishing salmon with calming herbs",
+        ingredients: ["salmon fillet", "lemon", "butter", "dill", "capers", "asparagus", "garlic"],
+        instructions: [
+          "Pat salmon dry and season with salt and pepper",
+          "Melt butter with minced garlic in a large skillet",
+          "Place salmon skin-side up in the pan",
+          "Cook for 4 minutes until golden brown",
+          "Flip salmon, add lemon slices and capers",
+          "Steam asparagus alongside for 3-4 minutes",
+          "Sprinkle fresh dill over everything",
+          "Serve with lemon butter sauce drizzled on top"
+        ],
+        prepTime: 20,
+        imageUrl: "https://images.unsplash.com/photo-1485921325833-c519f76c4927?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Tired Mood
+      {
+        name: "Spicy Tuna Rice Bowl",
+        mood: "Tired",
+        description: "Quick and energizing tuna bowl with a kick",
+        ingredients: ["sushi-grade tuna", "sushi rice", "sriracha", "soy sauce", "seaweed", "sesame seeds", "green onions"],
+        instructions: [
+          "Cook sushi rice according to package instructions",
+          "Cut tuna into 1/2-inch cubes",
+          "Mix sriracha and soy sauce for spicy sauce",
+          "Warm rice and place in serving bowl",
+          "Top with fresh tuna cubes",
+          "Drizzle with spicy sauce",
+          "Garnish with sesame seeds and green onions",
+          "Serve with crispy seaweed on the side"
+        ],
+        prepTime: 25,
+        imageUrl: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Calm Mood
+      {
+        name: "Herb-Roasted Chicken",
+        mood: "Calm",
+        description: "Simple and comforting roasted chicken with fresh herbs",
+        ingredients: ["whole chicken", "rosemary", "thyme", "sage", "lemon", "garlic", "olive oil", "root vegetables"],
+        instructions: [
+          "Preheat oven to 375°F",
+          "Pat chicken dry and stuff cavity with lemon and herbs",
+          "Rub skin with olive oil, salt, and pepper",
+          "Arrange root vegetables around chicken in roasting pan",
+          "Roast for 1 hour and 15 minutes or until done",
+          "Let rest for 15 minutes before carving",
+          "Serve with roasted vegetables",
+          "Drizzle with pan juices"
+        ],
+        prepTime: 90,
+        imageUrl: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=800&q=80"
+      },
+
+      // Energetic Mood
+      {
+        name: "Grilled Steak Fajitas",
+        mood: "Energetic",
+        description: "Sizzling steak fajitas with colorful peppers",
+        ingredients: ["flank steak", "bell peppers", "onions", "lime", "tortillas", "guacamole", "salsa", "cilantro"],
+        instructions: [
+          "Marinate steak in lime juice and spices for 30 minutes",
+          "Slice peppers and onions into strips",
+          "Grill steak 5-7 minutes per side for medium-rare",
+          "Let steak rest for 5 minutes before slicing",
+          "Grill vegetables until charred and tender",
+          "Warm tortillas on the grill",
+          "Slice steak against the grain",
+          "Serve with guacamole, salsa, and fresh cilantro"
+        ],
+        prepTime: 45,
+        imageUrl: "https://images.unsplash.com/photo-1593424718424-cf4d83f3def1?auto=format&fit=crop&w=800&q=80"
+      },
     ];
 
     for (const recipe of sampleRecipes) {
