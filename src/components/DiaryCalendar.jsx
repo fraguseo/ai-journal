@@ -1,22 +1,45 @@
 import React from 'react';
 import {
   Box,
-  Grid,
   Text,
   VStack,
   HStack,
   Button,
+  SimpleGrid,
 } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns';
+import { 
+  format, 
+  startOfMonth, 
+  endOfMonth, 
+  eachDayOfInterval, 
+  isSameDay,
+  startOfWeek,
+  endOfWeek,
+  addDays
+} from 'date-fns';
 
 function DiaryCalendar({ entries, onDateClick }) {
-  const [currentMonth, setCurrentMonth] = React.useState(new Date());
+  const [currentMonth, setCurrentMonth] = React.useState(new Date('2025-02-15')); // Set to Feb 2025
+  const today = new Date('2025-02-15'); // Set to Feb 15, 2025
+  
+  // Use currentMonth for display
+  const monthStart = startOfMonth(currentMonth);
+  const monthEnd = endOfMonth(currentMonth);
+  
+  // Get the start of the first week
+  const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 }); // Sunday start
+  // Get the end of the last week
+  const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 0 }); // Sunday start
+  
+  // Get all days to display
+  const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 
-  const daysInMonth = eachDayOfInterval({
-    start: startOfMonth(currentMonth),
-    end: endOfMonth(currentMonth),
-  });
+  const hasEntries = (date) => {
+    return entries.some(entry => 
+      isSameDay(new Date(entry.date), date)
+    );
+  };
 
   const nextMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
@@ -40,34 +63,28 @@ function DiaryCalendar({ entries, onDateClick }) {
         </Button>
       </HStack>
 
-      <Grid templateColumns="repeat(7, 1fr)" gap={2} w="100%">
+      <SimpleGrid columns={7} spacing={2} w="100%">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
           <Box key={day} textAlign="center" fontWeight="bold">
             {day}
           </Box>
         ))}
         
-        {daysInMonth.map((date) => {
-          const hasEntry = entries.some((entry) => 
-            isSameDay(new Date(entry.date), date)
-          );
-          
-          return (
-            <Box
-              key={date.toString()}
-              p={2}
-              textAlign="center"
-              cursor="pointer"
-              bg={hasEntry ? 'green.100' : 'transparent'}
-              borderRadius="md"
-              onClick={() => onDateClick(date)}
-              _hover={{ bg: hasEntry ? 'green.200' : 'gray.100' }}
-            >
-              {format(date, 'd')}
-            </Box>
-          );
-        })}
-      </Grid>
+        {days.map((date, i) => (
+          <Box
+            key={i}
+            p={2}
+            textAlign="center"
+            cursor="pointer"
+            bg={isSameDay(date, today) ? 'blue.100' : hasEntries(date) ? 'green.100' : 'transparent'}
+            opacity={format(date, 'M') !== format(currentMonth, 'M') ? 0.5 : 1}
+            borderRadius="md"
+            onClick={() => onDateClick(format(date, 'yyyy-MM-dd'))}
+          >
+            {format(date, 'd')}
+          </Box>
+        ))}
+      </SimpleGrid>
     </VStack>
   );
 }
