@@ -6,6 +6,7 @@ import {
   Text,
   Box,
   SimpleGrid,
+  HStack,
 } from '@chakra-ui/react';
 import { ChatIcon, CalendarIcon } from '@chakra-ui/icons';
 import { FaFeather } from 'react-icons/fa';
@@ -45,14 +46,13 @@ function Home({ onJournalClick, onDiaryClick, onRecipesClick, onDreamClick }) {
         <Button
           onClick={onDreamClick}
           size="lg"
-          colorScheme="purple"
-          p={8}
-          display="flex"
-          flexDirection="column"
-          gap={4}
+          colorScheme="teal"
+          w="100%"
         >
-          <Icon as={FaFeather} w={10} h={10} />
-          Dream Catcher
+          <HStack>
+            <Icon as={FaFeather} />
+            <Text>Dream Catcher</Text>
+          </HStack>
         </Button>
       </VStack>
     </Container>
