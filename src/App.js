@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Journal from './components/Journal';
 import Diary from './components/Diary';
 import MoodRecipes from './components/MoodRecipes';
+import Dream from './components/Dream';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -16,12 +17,15 @@ function App() {
         return <Diary onBack={() => setCurrentPage('home')} />;
       case 'recipes':
         return <MoodRecipes onBack={() => setCurrentPage('home')} />;
+      case 'dream':
+        return <Dream />;
       default:
         return (
           <Home 
             onJournalClick={() => setCurrentPage('journal')}
             onDiaryClick={() => setCurrentPage('diary')}
             onRecipesClick={() => setCurrentPage('recipes')}
+            onDreamClick={() => setCurrentPage('dream')}
           />
         );
     }

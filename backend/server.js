@@ -762,5 +762,38 @@ app.post("/api/recipes", async (req, res) => {
   }
 });
 
+// Add dream interpretation endpoint
+app.post("/api/dream", async (req, res) => {
+  try {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OpenAI API key is not set');
+    }
+
+    const { dream } = req.body;
+    if (!dream) {
+      throw new Error('No dream provided');
+    }
+    
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a thoughtful dream interpreter. Provide insightful, meaningful interpretations of dreams. Consider symbolism, emotions, and personal growth. Be supportive and constructive in your analysis."
+        },
+        {
+          role: "user",
+          content: dream
+        }
+      ],
+    });
+
+    res.json({ response: completion.choices[0].message.content });
+  } catch (error) {
+    console.error("Error details:", error);
+    res.status(500).json({ error: error.message || "Failed to interpret dream" });
+  }
+});
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
