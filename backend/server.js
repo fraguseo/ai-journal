@@ -515,7 +515,7 @@ const initializeRecipes = async () => {
           "Serve with crispy seaweed on the side"
         ],
         prepTime: 25,
-        imageUrl: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=800&q=80"
+        imageUrl: "https://images.unsplash.com/photo-1546069901-d5bfd2cbfb1f?auto=format&fit=crop&w=800&q=80"
       },
 
       // Calm Mood
