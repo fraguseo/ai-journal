@@ -103,7 +103,15 @@ const initializeRecipes = async () => {
         mood: "Calm",
         description: "A mindful cup of green tea for tranquility",
         ingredients: ["green tea", "mint leaves", "ginger", "honey"],
-        instructions: ["Heat water", "Steep tea and mint", "Add honey to taste"],
+        instructions: [
+          "Heat water to 175°F (not boiling) for optimal green tea brewing",
+          "Place green tea bag and 2-3 fresh mint leaves in your cup",
+          "Add a thin slice of fresh ginger",
+          "Pour hot water over and steep for exactly 2 minutes",
+          "Remove tea bag and ginger slice",
+          "Stir in honey to taste (about 1 teaspoon)",
+          "Let cool for 1-2 minutes before enjoying"
+        ],
         prepTime: 8,
         imageUrl: "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?auto=format&fit=crop&w=800&q=80"
       },
@@ -112,7 +120,16 @@ const initializeRecipes = async () => {
         mood: "Energetic",
         description: "A protein-packed bowl to maintain your energy",
         ingredients: ["quinoa", "chicken", "avocado", "vegetables"],
-        instructions: ["Cook quinoa", "Grill chicken", "Assemble bowl"],
+        instructions: [
+          "Rinse quinoa thoroughly under cold water",
+          "Cook quinoa in vegetable broth for extra flavor (2:1 ratio, 15 minutes)",
+          "Season chicken breast with salt, pepper, and herbs",
+          "Grill chicken for 6-7 minutes per side until cooked through",
+          "Slice chicken and avocado",
+          "Steam or roast your choice of vegetables",
+          "Layer quinoa in bowl, arrange chicken and vegetables",
+          "Top with sliced avocado and your favorite sauce"
+        ],
         prepTime: 25,
         imageUrl: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80"
       },
@@ -122,7 +139,16 @@ const initializeRecipes = async () => {
         mood: "Happy",
         description: "A colorful mix of fresh fruits to brighten your day",
         ingredients: ["strawberries", "mango", "blueberries", "kiwi", "pineapple"],
-        instructions: ["Wash fruits", "Cut into bite-sized pieces", "Mix gently", "Add mint for garnish"],
+        instructions: [
+          "Wash all fruits thoroughly under cold water",
+          "Hull and quarter strawberries",
+          "Peel and cube mango into 1-inch pieces",
+          "Peel and slice kiwi into half-moons",
+          "Cut pineapple into bite-sized chunks",
+          "Gently mix fruits in a large bowl",
+          "Chiffonade fresh mint leaves for garnish",
+          "Serve immediately or chill for up to 2 hours"
+        ],
         prepTime: 15,
         imageUrl: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=800&q=80"
       },
@@ -133,7 +159,16 @@ const initializeRecipes = async () => {
         mood: "Sad",
         description: "Warm, gooey cookies that feel like a hug",
         ingredients: ["flour", "butter", "chocolate chips", "brown sugar", "vanilla"],
-        instructions: ["Mix ingredients", "Form cookie dough", "Bake until golden"],
+        instructions: [
+          "Preheat oven to 375°F and line baking sheets with parchment",
+          "Cream butter and both sugars until light and fluffy (about 3 minutes)",
+          "Beat in eggs one at a time, then add vanilla",
+          "Mix dry ingredients in separate bowl: flour, baking soda, salt",
+          "Gradually add dry ingredients to wet mixture",
+          "Fold in chocolate chips by hand",
+          "Drop rounded tablespoons onto baking sheets",
+          "Bake for 10-12 minutes until edges are golden brown"
+        ],
         prepTime: 25,
         imageUrl: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=800&q=80"
       },
@@ -144,7 +179,16 @@ const initializeRecipes = async () => {
         mood: "Anxious",
         description: "A soothing coffee drink with calming lavender",
         ingredients: ["coffee", "milk", "lavender syrup", "honey"],
-        instructions: ["Brew coffee", "Steam milk", "Add lavender", "Top with foam"],
+        instructions: [
+          "Brew a strong shot of espresso or 4oz strong coffee",
+          "Heat milk in a saucepan until steaming (not boiling)",
+          "Add 1-2 pumps of lavender syrup to the hot coffee",
+          "Froth the warm milk using a whisk or frother",
+          "Pour coffee into your favorite mug",
+          "Slowly add the frothed milk, holding back foam",
+          "Spoon foam on top and drizzle with honey",
+          "Optional: sprinkle dried lavender for garnish"
+        ],
         prepTime: 10,
         imageUrl: "https://images.unsplash.com/photo-1545665277-5937489579f2?auto=format&fit=crop&w=800&q=80"
       },
@@ -155,7 +199,16 @@ const initializeRecipes = async () => {
         mood: "Happy",
         description: "Colorful layered pancakes with sprinkles and cream",
         ingredients: ["pancake mix", "food coloring", "whipped cream", "sprinkles", "maple syrup", "butter"],
-        instructions: ["Make pancake batter", "Divide and color batches", "Cook each color", "Layer with cream", "Top with sprinkles"],
+        instructions: [
+          "Prepare pancake batter according to recipe or mix instructions",
+          "Divide batter into 4 bowls and add different food coloring to each",
+          "Heat non-stick pan or griddle to medium heat",
+          "Pour 1/4 cup of each colored batter to make medium pancakes",
+          "Cook until bubbles form, flip and cook other side",
+          "Whip cream with vanilla and sugar until stiff peaks form",
+          "Layer pancakes with whipped cream between each layer",
+          "Top with extra cream, sprinkles, and a birthday candle"
+        ],
         prepTime: 45,
         imageUrl: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=800&q=80"
       },
@@ -164,7 +217,16 @@ const initializeRecipes = async () => {
         mood: "Happy",
         description: "Refreshing frozen lemonade with fresh mint",
         ingredients: ["lemons", "sugar", "mint", "ice", "water"],
-        instructions: ["Make simple syrup", "Squeeze lemons", "Blend with ice", "Garnish with mint"],
+        instructions: [
+          "Make simple syrup by heating 1 cup water with 1 cup sugar until dissolved",
+          "Let simple syrup cool completely (about 15 minutes)",
+          "Juice 6-8 fresh lemons to get 1 cup of juice",
+          "Blend 4 cups of ice with lemon juice and simple syrup",
+          "Taste and adjust sweetness if needed",
+          "Muddle fresh mint leaves in serving glasses",
+          "Pour slush into glasses",
+          "Garnish with lemon slices and mint sprigs"
+        ],
         prepTime: 10,
         imageUrl: "https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=800&q=80"
       },
@@ -175,7 +237,16 @@ const initializeRecipes = async () => {
         mood: "Sad",
         description: "Rich and creamy potato soup topped with cheese and bacon",
         ingredients: ["potatoes", "cream", "cheese", "bacon", "green onions", "sour cream"],
-        instructions: ["Cook potatoes", "Crisp bacon", "Make cream base", "Blend soup", "Add toppings"],
+        instructions: [
+          "Bake potatoes at 400°F for 1 hour until tender",
+          "Cook diced bacon until crispy, set aside",
+          "In same pot, sauté onions in bacon fat until soft",
+          "Add flour to make roux, cook for 2 minutes",
+          "Gradually whisk in chicken broth and cream",
+          "Add chopped potatoes and simmer for 15 minutes",
+          "Stir in cheese until melted",
+          "Top with bacon, green onions, and sour cream"
+        ],
         prepTime: 60,
         imageUrl: "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80"
       },
@@ -184,7 +255,16 @@ const initializeRecipes = async () => {
         mood: "Sad",
         description: "Decadent hot chocolate with Nutella and marshmallows",
         ingredients: ["milk", "Nutella", "cocoa powder", "marshmallows", "whipped cream"],
-        instructions: ["Heat milk", "Whisk in Nutella", "Add cocoa", "Top with marshmallows"],
+        instructions: [
+          "Heat milk in a saucepan over medium heat until steaming",
+          "Whisk in 2 tablespoons Nutella until completely dissolved",
+          "Add 1 tablespoon cocoa powder for extra richness",
+          "Continue whisking until hot and smooth",
+          "Pour into your favorite mug",
+          "Top with a generous dollop of whipped cream",
+          "Add mini marshmallows",
+          "Optional: drizzle with extra melted Nutella"
+        ],
         prepTime: 8,
         imageUrl: "https://images.unsplash.com/photo-1517578239113-b03992dcdd25?auto=format&fit=crop&w=800&q=80"
       },
@@ -195,7 +275,16 @@ const initializeRecipes = async () => {
         mood: "Anxious",
         description: "No-bake energy balls with calming ingredients",
         ingredients: ["oats", "honey", "almond butter", "dark chocolate", "chia seeds", "lavender"],
-        instructions: ["Mix ingredients", "Form balls", "Chill", "Store in container"],
+        instructions: [
+          "Pulse oats in food processor until finely ground",
+          "Add honey and almond butter, pulse to combine",
+          "Mix in dark chocolate chips and chia seeds",
+          "Add a tiny pinch of culinary lavender (optional)",
+          "Roll mixture into 1-inch balls",
+          "Place on parchment-lined tray",
+          "Refrigerate for at least 1 hour",
+          "Store in airtight container for up to 1 week"
+        ],
         prepTime: 20,
         imageUrl: "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?auto=format&fit=crop&w=800&q=80"
       },
@@ -204,7 +293,16 @@ const initializeRecipes = async () => {
         mood: "Anxious",
         description: "Warm oatmeal with banana and cinnamon",
         ingredients: ["oats", "banana", "cinnamon", "honey", "almonds"],
-        instructions: ["Cook oats", "Mash banana", "Add toppings", "Drizzle honey"],
+        instructions: [
+          "Bring 1 cup water and 1/2 cup milk to a gentle boil",
+          "Add 1/2 cup rolled oats and reduce heat to medium-low",
+          "Cook for 5 minutes, stirring occasionally",
+          "Mash half a ripe banana and stir into oats",
+          "Add 1/4 teaspoon cinnamon and a pinch of salt",
+          "Top with remaining sliced banana",
+          "Sprinkle with toasted almonds",
+          "Finish with a drizzle of warm honey"
+        ],
         prepTime: 12,
         imageUrl: "https://images.unsplash.com/photo-1517673400267-0251440c45dc?auto=format&fit=crop&w=800&q=80"
       },
@@ -215,7 +313,16 @@ const initializeRecipes = async () => {
         mood: "Tired",
         description: "Protein-packed breakfast sandwich with avocado",
         ingredients: ["eggs", "bread", "avocado", "cheese", "spinach", "hot sauce"],
-        instructions: ["Toast bread", "Cook eggs", "Mash avocado", "Assemble sandwich"],
+        instructions: [
+          "Toast two slices of whole grain bread until golden",
+          "Mash half an avocado with salt and pepper",
+          "Heat a non-stick pan over medium heat",
+          "Crack two eggs into pan and cook to desired doneness",
+          "Layer toast with mashed avocado, spinach leaves",
+          "Add eggs and a slice of cheese",
+          "Optional: add a dash of hot sauce",
+          "Cut diagonally and serve immediately while warm"
+        ],
         prepTime: 15,
         imageUrl: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80"
       },
@@ -224,7 +331,16 @@ const initializeRecipes = async () => {
         mood: "Tired",
         description: "Easy overnight chia pudding with coffee",
         ingredients: ["chia seeds", "coffee", "milk", "maple syrup", "cocoa"],
-        instructions: ["Mix ingredients", "Refrigerate overnight", "Top and serve"],
+        instructions: [
+          "Brew 1/2 cup strong coffee and let cool",
+          "In a jar, combine 1/4 cup chia seeds with coffee and 1 cup milk",
+          "Add 2 tablespoons maple syrup and 1 teaspoon cocoa powder",
+          "Whisk well to prevent clumps",
+          "Cover and refrigerate overnight (at least 6 hours)",
+          "Stir well before serving",
+          "Top with cocoa nibs or chocolate shavings",
+          "Optional: add a dollop of whipped cream"
+        ],
         prepTime: 5,
         imageUrl: "https://images.unsplash.com/photo-1542691457-cbe4df041eb2?auto=format&fit=crop&w=800&q=80"
       },
@@ -235,7 +351,16 @@ const initializeRecipes = async () => {
         mood: "Calm",
         description: "Deconstructed sushi bowl with fresh ingredients",
         ingredients: ["sushi rice", "salmon", "avocado", "cucumber", "nori", "soy sauce"],
-        instructions: ["Cook rice", "Prep ingredients", "Arrange bowl", "Add sauce"],
+        instructions: [
+          "Rinse sushi rice until water runs clear",
+          "Cook rice with rice vinegar and salt according to package",
+          "Slice salmon into thin pieces (or cook if preferred)",
+          "Cut cucumber and avocado into thin strips",
+          "Arrange rice in bowl, creating a base",
+          "Place fish and vegetables in sections around the bowl",
+          "Tear nori into small pieces and sprinkle",
+          "Serve with soy sauce, wasabi, and pickled ginger"
+        ],
         prepTime: 35,
         imageUrl: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=800&q=80"
       },
@@ -244,7 +369,16 @@ const initializeRecipes = async () => {
         mood: "Calm",
         description: "Refreshing infused water with mint and cucumber",
         ingredients: ["water", "mint leaves", "cucumber", "lemon", "ice"],
-        instructions: ["Slice cucumber", "Add ingredients", "Infuse water", "Chill"],
+        instructions: [
+          "Wash mint leaves and cucumber thoroughly",
+          "Slice cucumber into thin rounds",
+          "Cut lemon into thin wheels, remove seeds",
+          "Layer ingredients in a large glass pitcher",
+          "Fill with filtered water",
+          "Gently press ingredients with wooden spoon to release flavors",
+          "Refrigerate for at least 1 hour to infuse",
+          "Serve over ice, garnish with fresh mint sprig"
+        ],
         prepTime: 5,
         imageUrl: "https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=800&q=80"
       },
@@ -255,7 +389,16 @@ const initializeRecipes = async () => {
         mood: "Energetic",
         description: "High-protein pancakes with berry compote",
         ingredients: ["protein powder", "oats", "egg whites", "berries", "greek yogurt"],
-        instructions: ["Blend batter", "Cook pancakes", "Make compote", "Add toppings"],
+        instructions: [
+          "Blend oats into a fine flour in food processor",
+          "Mix with protein powder, baking powder, and cinnamon",
+          "Whisk egg whites until slightly frothy",
+          "Combine wet and dry ingredients until just mixed",
+          "Heat non-stick pan over medium heat",
+          "Pour 1/4 cup batter for each pancake",
+          "Cook until bubbles form, then flip",
+          "Serve with Greek yogurt and fresh berries"
+        ],
         prepTime: 30,
         imageUrl: "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=800&q=80"
       },
@@ -264,7 +407,16 @@ const initializeRecipes = async () => {
         mood: "Energetic",
         description: "Quick energy bites for an instant boost",
         ingredients: ["dates", "nuts", "protein powder", "coconut", "coffee beans"],
-        instructions: ["Process dates", "Mix ingredients", "Form balls", "Roll in coconut"],
+        instructions: [
+          "Soak dates in warm water for 10 minutes, then drain",
+          "Process dates in food processor until paste forms",
+          "Add nuts and protein powder, pulse until combined",
+          "Add crushed coffee beans for extra energy",
+          "Roll mixture into 1-inch balls",
+          "Coat each ball in shredded coconut",
+          "Place on lined tray and refrigerate for 30 minutes",
+          "Store in airtight container in fridge for up to 2 weeks"
+        ],
         prepTime: 15,
         imageUrl: "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=800&q=80"
       }
