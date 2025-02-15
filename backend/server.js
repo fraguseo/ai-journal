@@ -325,6 +325,7 @@ const initializeRecipes = async () => {
         name: "Energy Boost Breakfast Sandwich",
         mood: "Tired",
         description: "Protein-packed breakfast sandwich with avocado",
+        dietary: "vegetarian",
         ingredients: ["eggs", "bread", "avocado", "cheese", "spinach", "hot sauce"],
         instructions: [
           "Toast two slices of whole grain bread until golden",
@@ -343,6 +344,7 @@ const initializeRecipes = async () => {
         name: "Quick Wake-Up Chia Pudding",
         mood: "Tired",
         description: "Easy overnight chia pudding with coffee",
+        dietary: "vegetarian",
         ingredients: ["chia seeds", "coffee", "milk", "maple syrup", "cocoa"],
         instructions: [
           "Brew 1/2 cup strong coffee and let cool",
