@@ -555,7 +555,7 @@ const initializeRecipes = async () => {
           "Serve with guacamole, salsa, and fresh cilantro"
         ],
         prepTime: 45,
-        imageUrl: "https://images.unsplash.com/photo-1612151855475-877969f4a6cc?auto=format&fit=crop&w=800&q=80"
+        imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80"
       },
     ];
 
