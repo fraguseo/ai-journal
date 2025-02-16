@@ -21,8 +21,8 @@ import {
 } from 'date-fns';
 
 function DiaryCalendar({ entries, onDateClick }) {
-  const [currentMonth, setCurrentMonth] = React.useState(new Date('2025-02-15')); // Set to Feb 2025
-  const today = new Date('2025-02-15'); // Set to Feb 15, 2025
+  const [currentMonth, setCurrentMonth] = React.useState(new Date()); // Use current date
+  const today = new Date(); // Use current date
   const [selectedDate, setSelectedDate] = useState(null); // Add this for tracking clicks
   
   // Use currentMonth for display
