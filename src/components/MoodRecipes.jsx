@@ -19,6 +19,8 @@ import {
   UnorderedList,
   ListItem,
   OrderedList,
+  Wrap,
+  WrapItem,
 } from '@chakra-ui/react';
 import { QuestionIcon, ArrowBackIcon } from '@chakra-ui/icons';
 
@@ -49,7 +51,7 @@ function MoodRecipes({ onBack }) {
   };
 
   return (
-    <Container maxW="container.xl" py={8}>
+    <Container maxW="container.xl" py={4} px={{ base: 2, md: 8 }}>
       <VStack spacing={6}>
         <HStack w="100%" justify="space-between">
           <Button 
@@ -64,24 +66,29 @@ function MoodRecipes({ onBack }) {
         </HStack>
 
         {/* Mood selection */}
-        <HStack spacing={4}>
+        <Wrap spacing={4} justify="center">
           {['Happy', 'Calm', 'Sad', 'Anxious', 'Energetic', 'Tired'].map((mood) => (
-            <Button
-              key={mood}
-              colorScheme={selectedMood === mood ? 'blue' : 'gray'}
-              onClick={() => {
-                setSelectedMood(mood);
-                fetchRecipes(mood);
-              }}
-            >
-              {mood}
-            </Button>
+            <WrapItem key={mood}>
+              <Button
+                colorScheme={selectedMood === mood ? 'blue' : 'gray'}
+                onClick={() => {
+                  setSelectedMood(mood);
+                  fetchRecipes(mood);
+                }}
+              >
+                {mood}
+              </Button>
+            </WrapItem>
           ))}
-        </HStack>
+        </Wrap>
 
         {/* Only show grid if a mood is selected */}
         {selectedMood && (
-          <SimpleGrid columns={[1, 2, 3]} spacing={6} w="100%">
+          <SimpleGrid 
+            columns={{ base: 1, md: 2, lg: 3 }} 
+            spacing={{ base: 4, md: 6 }} 
+            w="100%"
+          >
             {recipes.map((recipe) => (
               <Box
                 key={recipe._id}
