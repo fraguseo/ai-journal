@@ -5,6 +5,7 @@ const OpenAI = require("openai");
 const mongoose = require('mongoose');
 const DiaryEntry = require('./models/DiaryEntry');
 const Recipe = require('./models/Recipe');
+const Goal = require('./models/Goal');
 
 dotenv.config();
 
@@ -883,6 +884,60 @@ app.get("/api/diary/on-this-day", async (req, res) => {
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Failed to fetch memory journal data" });
+  }
+});
+
+// Add after other requires
+const Goal = require('./models/Goal');
+
+// Add these routes
+app.get('/api/goals', async (req, res) => {
+  try {
+    const goals = await Goal.find().sort({ createdAt: -1 });
+    res.json(goals);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.post('/api/goals', async (req, res) => {
+  try {
+    const goal = new Goal({
+      description: req.body.description,
+      progress: req.body.progress || 0,
+      completed: req.body.completed || false,
+    });
+    const newGoal = await goal.save();
+    res.status(201).json(newGoal);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.patch('/api/goals/:id', async (req, res) => {
+  try {
+    const goal = await Goal.findById(req.params.id);
+    if (!goal) return res.status(404).json({ message: 'Goal not found' });
+    
+    if (req.body.progress !== undefined) goal.progress = req.body.progress;
+    if (req.body.completed !== undefined) goal.completed = req.body.completed;
+    
+    const updatedGoal = await goal.save();
+    res.json(updatedGoal);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.delete('/api/goals/:id', async (req, res) => {
+  try {
+    const goal = await Goal.findById(req.params.id);
+    if (!goal) return res.status(404).json({ message: 'Goal not found' });
+    
+    await goal.remove();
+    res.json({ message: 'Goal deleted' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
