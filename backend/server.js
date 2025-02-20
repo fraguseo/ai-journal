@@ -933,9 +933,10 @@ app.delete('/api/goals/:id', async (req, res) => {
     const goal = await Goal.findById(req.params.id);
     if (!goal) return res.status(404).json({ message: 'Goal not found' });
     
-    await goal.remove();
+    await Goal.deleteOne({ _id: req.params.id });
     res.json({ message: 'Goal deleted' });
   } catch (error) {
+    console.error('Goal delete error:', error);
     res.status(500).json({ message: error.message });
   }
 });
