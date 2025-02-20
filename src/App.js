@@ -1,41 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import Home from './components/Home';
 import Journal from './components/Journal';
 import Diary from './components/Diary';
 import MoodRecipes from './components/MoodRecipes';
 import Dream from './components/Dream';
+import GoalTracker from './components/GoalTracker';
 
 // Dream Catcher feature added
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [view, setView] = useState('main');
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'journal':
-        return <Journal onBack={() => setCurrentPage('home')} />;
+  const renderView = () => {
+    switch (view) {
+      case 'main':
+        return <Journal onNavigate={setView} />;
       case 'diary':
-        return <Diary onBack={() => setCurrentPage('home')} />;
+        return <Diary onBack={() => setView('main')} />;
       case 'recipes':
-        return <MoodRecipes onBack={() => setCurrentPage('home')} />;
-      case 'dream':
-        return <Dream onBack={() => setCurrentPage('home')} />;
+        return <MoodRecipes onBack={() => setView('main')} />;
+      case 'goals':
+        return <GoalTracker onBack={() => setView('main')} />;
       default:
-        return (
-          <Home 
-            onJournalClick={() => setCurrentPage('journal')}
-            onDiaryClick={() => setCurrentPage('diary')}
-            onRecipesClick={() => setCurrentPage('recipes')}
-            onDreamClick={() => setCurrentPage('dream')}
-          />
-        );
+        return <Journal onNavigate={setView} />;
     }
   };
 
+  useEffect(() => {
+    const keepAlive = setInterval(() => {
+      fetch('https://ai-journal-backend-01bx.onrender.com/health')
+        .catch(console.error);
+    }, 840000); // 14 minutes
+    
+    return () => clearInterval(keepAlive);
+  }, []);
+
   return (
     <ChakraProvider>
-      {renderPage()}
+      {renderView()}
     </ChakraProvider>
   );
 }

@@ -9,12 +9,13 @@ import {
   useToast,
   HStack,
 } from '@chakra-ui/react';
-import { ArrowBackIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, CheckIcon } from '@chakra-ui/icons';
 
-function Journal({ onBack }) {
+function Journal({ onBack, onNavigate }) {
   const [entry, setEntry] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(false);
   const toast = useToast();
 
   const handleSubmit = async () => {
@@ -55,6 +56,10 @@ function Journal({ onBack }) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const retryConnection = async () => {
+    // Retry logic for first connection
   };
 
   return (
@@ -104,6 +109,16 @@ function Journal({ onBack }) {
           loadingText="Getting insights..."
         >
           Get AI Insights
+        </Button>
+
+        <Button
+          leftIcon={<CheckIcon />}
+          onClick={() => onNavigate('goals')}
+          size="lg"
+          colorScheme="purple"
+          w="100%"
+        >
+          Goals & Progress
         </Button>
       </VStack>
     </Container>
