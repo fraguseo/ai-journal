@@ -122,17 +122,22 @@
 .today {
   // Remove these styles
 } */
-.react-calendar__tile--active.future-date {
-  background-color: #FEFCBF !important;  /* Yellow when selected */
-  color: #744210 !important;
+.react-calendar__tile--active {
+  background-color: inherit !important;  /* Inherit from the assigned past/future/today color */
+  color: inherit !important;
 }
 
-.react-calendar__tile--active.past-date {
-  background-color: #C6F6D5 !important;  /* Green when selected */
+.past-date {
+  background-color: #C6F6D5 !important;  /* Green for all past dates */
   color: #22543D !important;
 }
 
-.react-calendar__tile--active.today {
-  background-color: #90CDF4 !important;  /* Blue when selected */
+.future-date {
+  background-color: #FEFCBF !important;  /* Yellow for all future dates */
+  color: #744210 !important;
+}
+
+.today {
+  background-color: #90CDF4 !important;  /* Blue for today */
   color: #2A4365 !important;
 } 
