@@ -57,18 +57,19 @@ function DiaryCalendar({ entries, onDateClick, selectedDate }) {
           tileClassName={({ date }) => {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            date.setHours(0, 0, 0, 0);
+            
+            const compareDate = new Date(date);
+            compareDate.setHours(0, 0, 0, 0);
 
-            // Check if date has an entry
-            const hasEntry = markedDates.some(markedDate => 
-              date.getDate() === markedDate.getDate() &&
-              date.getMonth() === markedDate.getMonth() &&
-              date.getFullYear() === markedDate.getFullYear()
-            );
+            // Check if this date is selected
+            const isSelected = selectedDate && 
+              new Date(selectedDate).toDateString() === compareDate.toDateString();
 
-            if (hasEntry) return 'has-entry';
-            if (date > today) return 'future-date';
-            if (date.getTime() === today.getTime()) return 'today';
+            if (!isSelected) return null;  // Only apply classes when selected
+
+            // Return appropriate class based on date comparison
+            if (compareDate.getTime() === today.getTime()) return 'today';
+            if (compareDate > today) return 'future-date';
             return 'past-date';
           }}
         />
