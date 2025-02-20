@@ -800,21 +800,19 @@ app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-// Add mood analysis endpoint
+// Update the mood analysis endpoint to ensure proper JSON formatting
 app.get("/api/diary/mood-analysis", async (req, res) => {
   try {
-    // Get recent entries
     const recentEntries = await DiaryEntry.find()
       .sort({ date: -1 })
-      .limit(7);  // Last 7 days
+      .limit(7);
 
-    // Analyze with OpenAI
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "You are a mood analysis expert. Analyze the mood data and provide insights, trends, and suggestions. Return as JSON with fields: trend, suggestions, warnings (if any)."
+          content: "You are a mood analysis expert. Analyze the mood data and provide insights, trends, and suggestions. Respond ONLY with a JSON object containing these exact fields: trend (string), suggestions (string), warnings (string or null). Do not include markdown formatting or backticks."
         },
         {
           role: "user",
@@ -823,7 +821,20 @@ app.get("/api/diary/mood-analysis", async (req, res) => {
       ],
     });
 
-    const analysis = JSON.parse(completion.choices[0].message.content);
+    // Parse the response more safely
+    let analysis;
+    try {
+      const content = completion.choices[0].message.content;
+      analysis = JSON.parse(content.replace(/```json|```/g, '').trim());
+    } catch (parseError) {
+      console.error("Parse error:", parseError);
+      analysis = {
+        trend: "unable to analyze",
+        suggestions: "Unable to generate suggestions at this time",
+        warnings: null
+      };
+    }
+
     res.json(analysis);
   } catch (error) {
     console.error("Error:", error);
