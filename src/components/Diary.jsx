@@ -81,7 +81,7 @@ function Diary({ onBack }) {
     fetchEntries(date);
     fetchMoodStats();
     fetchMoodAnalysis();
-  }, [date, entries]);
+  }, [date]);
 
   const handleSubmit = async () => {
     if (!entry.trim()) {
