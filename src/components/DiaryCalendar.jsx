@@ -1,47 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Text,
   VStack,
   HStack,
   Button,
-  SimpleGrid,
 } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
-import { 
-  format, 
-  startOfMonth, 
-  endOfMonth, 
-  eachDayOfInterval, 
-  isSameDay,
-  startOfWeek,
-  endOfWeek,
-  addDays,
-  isFuture
-} from 'date-fns';
+import { format } from 'date-fns';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
-function DiaryCalendar({ entries, onDateClick }) {
-  const [currentMonth, setCurrentMonth] = React.useState(new Date()); // Use current date
-  const today = new Date(); // Use current date
-  const [selectedDate, setSelectedDate] = useState(null); // Add this for tracking clicks
-  
-  // Use currentMonth for display
-  const monthStart = startOfMonth(currentMonth);
-  const monthEnd = endOfMonth(currentMonth);
-  
-  // Get the start of the first week
-  const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 }); // Sunday start
-  // Get the end of the last week
-  const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 0 }); // Sunday start
-  
-  // Get all days to display
-  const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
+function DiaryCalendar({ entries, onDateClick, selectedDate }) {
+  const [currentMonth, setCurrentMonth] = React.useState(new Date());
+  const [markedDates, setMarkedDates] = useState([]);
 
-  const hasEntries = (date) => {
-    return entries.some(entry => 
-      isSameDay(new Date(entry.date), date)
-    );
-  };
+  useEffect(() => {
+    if (entries) {
+      setMarkedDates(entries.map(entry => new Date(entry.date)));
+    }
+  }, [entries]);
 
   const nextMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
@@ -65,48 +43,21 @@ function DiaryCalendar({ entries, onDateClick }) {
         </Button>
       </HStack>
 
-      <SimpleGrid columns={7} spacing={2} w="100%">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-          <Box key={day} textAlign="center" fontWeight="bold">
-            {day}
-          </Box>
-        ))}
-        
-        {days.map((date, i) => {
-          const isFutureDate = isFuture(date);
-          const hasEntry = hasEntries(date);
-          const isSelected = selectedDate && isSameDay(date, selectedDate);
-          
-          return (
-            <Box
-              key={i}
-              p={2}
-              textAlign="center"
-              cursor="pointer"
-              bg={
-                isSameDay(date, today) 
-                  ? 'blue.100' 
-                  : isSelected && isFutureDate
-                    ? 'yellow.100'
-                    : hasEntry 
-                      ? 'green.100' 
-                      : 'transparent'
-              }
-              opacity={format(date, 'M') !== format(currentMonth, 'M') ? 0.5 : 1}
-              borderRadius="md"
-              onClick={() => {
-                setSelectedDate(date);
-                onDateClick(format(date, 'yyyy-MM-dd'));
-              }}
-              _hover={{
-                bg: isFutureDate ? 'yellow.200' : hasEntry ? 'green.200' : 'gray.100'
-              }}
-            >
-              {format(date, 'd')}
-            </Box>
-          );
-        })}
-      </SimpleGrid>
+      <Box className="calendar-container" w="100%">
+        <Calendar
+          onChange={onDateClick}
+          value={selectedDate ? new Date(selectedDate) : new Date()}
+          tileClassName={({ date }) => {
+            if (markedDates.some(markedDate => 
+              date.getDate() === markedDate.getDate() &&
+              date.getMonth() === markedDate.getMonth() &&
+              date.getFullYear() === markedDate.getFullYear()
+            )) {
+              return 'has-entry';
+            }
+          }}
+        />
+      </Box>
     </VStack>
   );
 }
