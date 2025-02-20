@@ -58,7 +58,7 @@ function Home({ onJournalClick, onDiaryClick, onRecipesClick, onDreamClick, onGo
           leftIcon={<CheckIcon />}
           onClick={onGoalsClick}
           size="lg"
-          colorScheme="purple"
+          colorScheme="orange"
           w="100%"
         >
           Goals & Progress
