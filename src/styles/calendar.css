@@ -78,7 +78,7 @@
 .react-calendar__tile {
   max-width: 100%;
   padding: 10px 6.6667px;
-  background: none;
+  background: white;
   text-align: center;
   line-height: 16px;
 }
@@ -121,16 +121,22 @@
 .react-calendar__tile--future {
   background-color: #EDF2F7;
 }
-.future-date {
-  background-color: #FEFCBF !important;  /* Light yellow */
-  color: #744210 !important;  /* Dark yellow text */
-}
-.past-date {
-  background-color: #C6F6D5 !important;  /* Light green */
-  color: #22543D !important;  /* Dark green text */
-}
+/* .future-date,
+.past-date,
 .today {
-  background-color: #90CDF4 !important;  /* Blue */
-  color: #2A4365 !important;  /* Dark blue text */
-  font-weight: bold;
+  // Remove these styles
+} */
+.react-calendar__tile--active.future-date {
+  background-color: #FEFCBF !important;  /* Yellow when selected */
+  color: #744210 !important;
+}
+
+.react-calendar__tile--active.past-date {
+  background-color: #C6F6D5 !important;  /* Green when selected */
+  color: #22543D !important;
+}
+
+.react-calendar__tile--active.today {
+  background-color: #90CDF4 !important;  /* Blue when selected */
+  color: #2A4365 !important;
 } 
