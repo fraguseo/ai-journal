@@ -47,6 +47,7 @@ function DiaryCalendar({ entries, onDateClick, selectedDate }) {
         <Calendar
           onChange={onDateClick}
           value={selectedDate ? new Date(selectedDate) : new Date()}
+          activeStartDate={currentMonth}
           tileClassName={({ date }) => {
             if (markedDates.some(markedDate => 
               date.getDate() === markedDate.getDate() &&
