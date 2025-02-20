@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 import { ArrowBackIcon, SmileIcon, MehIcon } from '@chakra-ui/icons';
 import MoodStats from './MoodStats';
 import MoodAnalysis from './MoodAnalysis';
+import MemoryJournal from './MemoryJournal';
 
 function Diary({ onBack }) {
   const [entry, setEntry] = useState('');
@@ -26,6 +27,7 @@ function Diary({ onBack }) {
   const [statsPeriod, setStatsPeriod] = useState('day');
   const [showStats, setShowStats] = useState(false);
   const [moodAnalysis, setMoodAnalysis] = useState(null);
+  const [memories, setMemories] = useState(null);
 
   const fetchEntries = async (selectedDate) => {
     try {
@@ -76,11 +78,25 @@ function Diary({ onBack }) {
     }
   };
 
+  const fetchMemories = async (selectedDate) => {
+    try {
+      const response = await fetch(
+        `https://ai-journal-backend-01bx.onrender.com/api/diary/on-this-day?date=${selectedDate}`
+      );
+      if (!response.ok) throw new Error('Failed to fetch memories');
+      const data = await response.json();
+      setMemories(data);
+    } catch (error) {
+      console.error('Error fetching memories:', error);
+    }
+  };
+
   useEffect(() => {
     console.log('Date changed:', date);
     fetchEntries(date);
     fetchMoodStats();
     fetchMoodAnalysis();
+    fetchMemories(date);
   }, [date]);
 
   const handleSubmit = async () => {
@@ -194,6 +210,8 @@ function Diary({ onBack }) {
         </Button>
 
         <DiaryCalendar entries={entries} onDateClick={handleDateClick} />
+
+        {memories && <MemoryJournal memories={memories} />}
 
         <Button
           size="sm"

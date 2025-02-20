@@ -842,5 +842,49 @@ app.get("/api/diary/mood-analysis", async (req, res) => {
   }
 });
 
+// Add "On This Day" endpoint
+app.get("/api/diary/on-this-day", async (req, res) => {
+  try {
+    const { date } = req.query;
+    const currentDate = new Date(date);
+    
+    // Find entries from same day in previous years/months
+    const entries = await DiaryEntry.find({
+      $expr: {
+        $and: [
+          { $eq: [{ $dayOfMonth: "$date" }, { $dayOfMonth: currentDate }] },
+          { $eq: [{ $month: "$date" }, { $month: currentDate }] },
+          { $lt: ["$date", currentDate] }  // Only past entries
+        ]
+      }
+    }).sort({ date: -1 });
+
+    // Get AI insights about patterns
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a thoughtful journal analyst. Look at these entries from the same calendar day across different years/months. Identify patterns, growth, and provide gentle insights. Return as JSON with fields: patterns (string), insights (string), reflection (string)."
+        },
+        {
+          role: "user",
+          content: JSON.stringify(entries)
+        }
+      ],
+    });
+
+    const analysis = JSON.parse(completion.choices[0].message.content);
+    
+    res.json({
+      entries,
+      analysis
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to fetch memory journal data" });
+  }
+});
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
