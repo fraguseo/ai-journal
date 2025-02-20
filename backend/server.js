@@ -902,12 +902,17 @@ app.post('/api/goals', async (req, res) => {
   try {
     const goal = new Goal({
       description: req.body.description,
+      category: req.body.category,
+      deadline: req.body.deadline,
       progress: req.body.progress || 0,
       completed: req.body.completed || false,
+      subTasks: req.body.subTasks || [],
+      progressHistory: req.body.progressHistory || []
     });
     const newGoal = await goal.save();
     res.status(201).json(newGoal);
   } catch (error) {
+    console.error('Goal creation error:', error);
     res.status(400).json({ message: error.message });
   }
 });
@@ -917,8 +922,14 @@ app.patch('/api/goals/:id', async (req, res) => {
     const goal = await Goal.findById(req.params.id);
     if (!goal) return res.status(404).json({ message: 'Goal not found' });
     
+    // Update all possible fields
+    if (req.body.description !== undefined) goal.description = req.body.description;
+    if (req.body.category !== undefined) goal.category = req.body.category;
+    if (req.body.deadline !== undefined) goal.deadline = req.body.deadline;
     if (req.body.progress !== undefined) goal.progress = req.body.progress;
     if (req.body.completed !== undefined) goal.completed = req.body.completed;
+    if (req.body.subTasks !== undefined) goal.subTasks = req.body.subTasks;
+    if (req.body.progressHistory !== undefined) goal.progressHistory = req.body.progressHistory;
     
     const updatedGoal = await goal.save();
     res.json(updatedGoal);
