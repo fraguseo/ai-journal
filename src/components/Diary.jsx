@@ -9,6 +9,7 @@ import {
   Input,
   useToast,
   HStack,
+  Select,
 } from '@chakra-ui/react';
 import DiaryCalendar from './DiaryCalendar';
 import { format } from 'date-fns';
@@ -167,6 +168,9 @@ function Diary({ onBack }) {
     Tired: '😴'
   };
 
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({length: 5}, (_, i) => currentYear - i);
+
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={6}>
@@ -184,12 +188,30 @@ function Diary({ onBack }) {
           <Box w={20}></Box> {/* For alignment */}
         </HStack>
         
-        <Input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          size="lg"
-        />
+        <HStack w="100%">
+          <Select 
+            value={date.split('-')[0]}
+            onChange={(e) => {
+              const [_, month, day] = date.split('-');
+              setDate(`${e.target.value}-${month}-${day}`);
+            }}
+            size="lg"
+            w="30%"
+          >
+            {years.map(year => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </Select>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            size="lg"
+            w="70%"
+          />
+        </HStack>
         
         <Textarea
           value={entry}
