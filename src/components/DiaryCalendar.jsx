@@ -9,7 +9,7 @@ import {
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { format } from 'date-fns';
 import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import '../styles/calendar.css';
 
 function DiaryCalendar({ entries, onDateClick, selectedDate }) {
   const [currentMonth, setCurrentMonth] = React.useState(new Date());
