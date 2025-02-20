@@ -10,20 +10,30 @@ import GoalTracker from './components/GoalTracker';
 // Dream Catcher feature added
 
 function App() {
-  const [view, setView] = useState('main');
+  const [currentPage, setCurrentPage] = useState('home');
 
-  const renderView = () => {
-    switch (view) {
-      case 'main':
-        return <Journal onNavigate={setView} />;
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'journal':
+        return <Journal onBack={() => setCurrentPage('home')} />;
       case 'diary':
-        return <Diary onBack={() => setView('main')} />;
+        return <Diary onBack={() => setCurrentPage('home')} />;
       case 'recipes':
-        return <MoodRecipes onBack={() => setView('main')} />;
+        return <MoodRecipes onBack={() => setCurrentPage('home')} />;
+      case 'dream':
+        return <Dream onBack={() => setCurrentPage('home')} />;
       case 'goals':
-        return <GoalTracker onBack={() => setView('main')} />;
+        return <GoalTracker onBack={() => setCurrentPage('home')} />;
       default:
-        return <Journal onNavigate={setView} />;
+        return (
+          <Home 
+            onJournalClick={() => setCurrentPage('journal')}
+            onDiaryClick={() => setCurrentPage('diary')}
+            onRecipesClick={() => setCurrentPage('recipes')}
+            onDreamClick={() => setCurrentPage('dream')}
+            onGoalsClick={() => setCurrentPage('goals')}
+          />
+        );
     }
   };
 
@@ -38,7 +48,7 @@ function App() {
 
   return (
     <ChakraProvider>
-      {renderView()}
+      {renderPage()}
     </ChakraProvider>
   );
 }

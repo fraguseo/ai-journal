@@ -8,11 +8,11 @@ import {
   SimpleGrid,
   HStack,
 } from '@chakra-ui/react';
-import { ChatIcon, CalendarIcon } from '@chakra-ui/icons';
+import { ChatIcon, CalendarIcon, CheckIcon } from '@chakra-ui/icons';
 import { FaFeather } from 'react-icons/fa';
 import { Icon } from '@chakra-ui/react';
 
-function Home({ onJournalClick, onDiaryClick, onRecipesClick, onDreamClick }) {
+function Home({ onJournalClick, onDiaryClick, onRecipesClick, onDreamClick, onGoalsClick }) {
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={8}>
@@ -53,6 +53,15 @@ function Home({ onJournalClick, onDiaryClick, onRecipesClick, onDreamClick }) {
             <Icon as={FaFeather} />
             <Text>Dream Catcher</Text>
           </HStack>
+        </Button>
+        <Button
+          leftIcon={<CheckIcon />}
+          onClick={onGoalsClick}
+          size="lg"
+          colorScheme="purple"
+          w="100%"
+        >
+          Goals & Progress
         </Button>
       </VStack>
     </Container>
