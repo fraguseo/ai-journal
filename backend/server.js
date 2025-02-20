@@ -795,5 +795,41 @@ app.post("/api/dream", async (req, res) => {
   }
 });
 
+// Add a health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+// Add mood analysis endpoint
+app.get("/api/diary/mood-analysis", async (req, res) => {
+  try {
+    // Get recent entries
+    const recentEntries = await DiaryEntry.find()
+      .sort({ date: -1 })
+      .limit(7);  // Last 7 days
+
+    // Analyze with OpenAI
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a mood analysis expert. Analyze the mood data and provide insights, trends, and suggestions. Return as JSON with fields: trend, suggestions, warnings (if any)."
+        },
+        {
+          role: "user",
+          content: JSON.stringify(recentEntries)
+        }
+      ],
+    });
+
+    const analysis = JSON.parse(completion.choices[0].message.content);
+    res.json(analysis);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to analyze mood data" });
+  }
+});
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

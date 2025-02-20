@@ -14,6 +14,7 @@ import DiaryCalendar from './DiaryCalendar';
 import { format } from 'date-fns';
 import { ArrowBackIcon, SmileIcon, MehIcon } from '@chakra-ui/icons';
 import MoodStats from './MoodStats';
+import MoodAnalysis from './MoodAnalysis';
 
 function Diary({ onBack }) {
   const [entry, setEntry] = useState('');
@@ -24,6 +25,7 @@ function Diary({ onBack }) {
   const [moodStats, setMoodStats] = useState([]);
   const [statsPeriod, setStatsPeriod] = useState('day');
   const [showStats, setShowStats] = useState(false);
+  const [moodAnalysis, setMoodAnalysis] = useState(null);
 
   const fetchEntries = async (selectedDate) => {
     try {
@@ -63,11 +65,23 @@ function Diary({ onBack }) {
     }
   };
 
+  const fetchMoodAnalysis = async () => {
+    try {
+      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary/mood-analysis');
+      if (!response.ok) throw new Error('Failed to fetch mood analysis');
+      const data = await response.json();
+      setMoodAnalysis(data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   useEffect(() => {
     console.log('Date changed:', date);
     fetchEntries(date);
     fetchMoodStats();
-  }, [date]);
+    fetchMoodAnalysis();
+  }, [date, entries]);
 
   const handleSubmit = async () => {
     if (!entry.trim()) {
@@ -226,6 +240,10 @@ function Diary({ onBack }) {
 
             {moodStats && moodStats.length > 0 && (
               <MoodStats stats={moodStats} period={statsPeriod} />
+            )}
+
+            {showStats && moodAnalysis && (
+              <MoodAnalysis moodData={moodAnalysis} />
             )}
           </>
         )}
