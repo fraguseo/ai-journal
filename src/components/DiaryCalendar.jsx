@@ -21,6 +21,12 @@ function DiaryCalendar({ entries, onDateClick, selectedDate }) {
     }
   }, [entries]);
 
+  useEffect(() => {
+    if (selectedDate) {
+      setCurrentMonth(new Date(selectedDate));
+    }
+  }, [selectedDate]);
+
   const nextMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
   };

@@ -193,7 +193,8 @@ function Diary({ onBack }) {
             value={date.split('-')[0]}
             onChange={(e) => {
               const [_, month, day] = date.split('-');
-              setDate(`${e.target.value}-${month}-${day}`);
+              const newDate = `${e.target.value}-${month}-${day}`;
+              setDate(newDate);
             }}
             size="lg"
             w="30%"
@@ -231,7 +232,11 @@ function Diary({ onBack }) {
           Save Entry
         </Button>
 
-        <DiaryCalendar entries={entries} onDateClick={handleDateClick} />
+        <DiaryCalendar 
+          entries={entries} 
+          onDateClick={handleDateClick}
+          selectedDate={date}
+        />
 
         {memories && <MemoryJournal memories={memories} />}
 
