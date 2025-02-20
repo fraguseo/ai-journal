@@ -11,13 +11,26 @@ import {
   useToast,
   IconButton,
   Container,
+  Select,
+  FormControl,
+  FormLabel,
+  Checkbox,
+  Stack,
+  Collapse,
 } from '@chakra-ui/react';
-import { AddIcon, CheckIcon, DeleteIcon, ArrowBackIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon, ArrowBackIcon, ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 function GoalTracker({ onBack }) {
   const [goals, setGoals] = useState([]);
   const [newGoal, setNewGoal] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Personal');
+  const [deadline, setDeadline] = useState('');
+  const [newSubTask, setNewSubTask] = useState('');
+  const [expandedGoal, setExpandedGoal] = useState(null);
   const toast = useToast();
+
+  const categories = ['Personal', 'Health', 'Career', 'Learning'];
 
   useEffect(() => {
     fetchGoals();
@@ -49,14 +62,19 @@ function GoalTracker({ onBack }) {
         },
         body: JSON.stringify({
           description: newGoal,
+          category: selectedCategory,
+          deadline: deadline || undefined,
           progress: 0,
           completed: false,
+          subTasks: [],
+          progressHistory: []
         }),
       });
 
       if (!response.ok) throw new Error('Failed to add goal');
       
       setNewGoal('');
+      setDeadline('');
       fetchGoals();
       
       toast({
@@ -73,14 +91,48 @@ function GoalTracker({ onBack }) {
     }
   };
 
-  const updateProgress = async (goalId, newProgress) => {
+  const addSubTask = async (goalId) => {
+    if (!newSubTask.trim()) return;
+
     try {
+      const goal = goals.find(g => g._id === goalId);
+      const updatedSubTasks = [...goal.subTasks, { description: newSubTask, completed: false }];
+
       const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/goals/${goalId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ progress: newProgress }),
+        body: JSON.stringify({ subTasks: updatedSubTasks }),
+      });
+
+      if (!response.ok) throw new Error('Failed to add subtask');
+      setNewSubTask('');
+      fetchGoals();
+    } catch (error) {
+      toast({
+        title: 'Error adding subtask',
+        status: 'error',
+        duration: 3000,
+      });
+    }
+  };
+
+  const updateProgress = async (goalId, newProgress) => {
+    try {
+      const goal = goals.find(g => g._id === goalId);
+      const updatedHistory = [...goal.progressHistory, { value: newProgress, date: new Date() }];
+
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/goals/${goalId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          progress: newProgress,
+          progressHistory: updatedHistory,
+          completed: newProgress === 100
+        }),
       });
 
       if (!response.ok) throw new Error('Failed to update progress');
@@ -117,6 +169,31 @@ function GoalTracker({ onBack }) {
     }
   };
 
+  const toggleSubTask = async (goalId, subTaskIndex) => {
+    try {
+      const goal = goals.find(g => g._id === goalId);
+      const updatedSubTasks = [...goal.subTasks];
+      updatedSubTasks[subTaskIndex].completed = !updatedSubTasks[subTaskIndex].completed;
+
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/goals/${goalId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ subTasks: updatedSubTasks }),
+      });
+
+      if (!response.ok) throw new Error('Failed to update subtask');
+      fetchGoals();
+    } catch (error) {
+      toast({
+        title: 'Error updating subtask',
+        status: 'error',
+        duration: 3000,
+      });
+    }
+  };
+
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={6} align="stretch">
@@ -132,20 +209,42 @@ function GoalTracker({ onBack }) {
           <Box w={20} />
         </HStack>
 
-        <HStack>
-          <Input
-            value={newGoal}
-            onChange={(e) => setNewGoal(e.target.value)}
-            placeholder="Enter a new goal..."
-            size="lg"
-          />
-          <IconButton
-            icon={<AddIcon />}
-            onClick={addGoal}
-            colorScheme="green"
-            size="lg"
-          />
-        </HStack>
+        <VStack spacing={4}>
+          <FormControl>
+            <Input
+              value={newGoal}
+              onChange={(e) => setNewGoal(e.target.value)}
+              placeholder="Enter a new goal..."
+              size="lg"
+            />
+          </FormControl>
+
+          <HStack w="100%">
+            <Select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              size="lg"
+            >
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </Select>
+
+            <Input
+              type="date"
+              value={deadline}
+              onChange={(e) => setDeadline(e.target.value)}
+              size="lg"
+            />
+
+            <IconButton
+              icon={<AddIcon />}
+              onClick={addGoal}
+              colorScheme="green"
+              size="lg"
+            />
+          </HStack>
+        </VStack>
 
         <VStack spacing={4} align="stretch">
           {goals.map((goal) => (
@@ -156,14 +255,19 @@ function GoalTracker({ onBack }) {
               borderRadius="lg"
               shadow="sm"
             >
-              <HStack justify="space-between" mb={2}>
-                <Text fontWeight="bold">{goal.description}</Text>
-                <HStack>
-                  <Badge 
-                    colorScheme={goal.progress === 100 ? 'green' : 'blue'}
-                  >
-                    {goal.progress}%
-                  </Badge>
+              <VStack align="stretch" spacing={3}>
+                <HStack justify="space-between">
+                  <VStack align="start" spacing={1}>
+                    <Text fontWeight="bold">{goal.description}</Text>
+                    <HStack>
+                      <Badge colorScheme="purple">{goal.category}</Badge>
+                      {goal.deadline && (
+                        <Badge colorScheme="orange">
+                          Due: {new Date(goal.deadline).toLocaleDateString()}
+                        </Badge>
+                      )}
+                    </HStack>
+                  </VStack>
                   <IconButton
                     icon={<DeleteIcon />}
                     onClick={() => deleteGoal(goal._id)}
@@ -172,27 +276,94 @@ function GoalTracker({ onBack }) {
                     variant="ghost"
                   />
                 </HStack>
-              </HStack>
-              
-              <Progress 
-                value={goal.progress} 
-                colorScheme={goal.progress === 100 ? 'green' : 'blue'}
-                borderRadius="full"
-              />
-              
-              <HStack mt={2} spacing={2}>
-                {[25, 50, 75, 100].map((progress) => (
-                  <Button
-                    key={progress}
-                    size="sm"
-                    onClick={() => updateProgress(goal._id, progress)}
-                    colorScheme={goal.progress >= progress ? 'green' : 'gray'}
-                    variant={goal.progress >= progress ? 'solid' : 'outline'}
-                  >
-                    {progress}%
-                  </Button>
-                ))}
-              </HStack>
+
+                <Progress 
+                  value={goal.progress} 
+                  colorScheme={goal.progress === 100 ? 'green' : 'blue'}
+                  borderRadius="full"
+                />
+
+                <HStack spacing={2}>
+                  {[25, 50, 75, 100].map((progress) => (
+                    <Button
+                      key={progress}
+                      size="sm"
+                      onClick={() => updateProgress(goal._id, progress)}
+                      colorScheme={goal.progress >= progress ? 'green' : 'gray'}
+                      variant={goal.progress >= progress ? 'solid' : 'outline'}
+                    >
+                      {progress}%
+                    </Button>
+                  ))}
+                </HStack>
+
+                <Button
+                  size="sm"
+                  rightIcon={expandedGoal === goal._id ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                  onClick={() => setExpandedGoal(expandedGoal === goal._id ? null : goal._id)}
+                  variant="ghost"
+                >
+                  {expandedGoal === goal._id ? 'Hide Details' : 'Show Details'}
+                </Button>
+
+                <Collapse in={expandedGoal === goal._id}>
+                  <VStack align="stretch" spacing={3} mt={2}>
+                    {/* Progress Chart */}
+                    {goal.progressHistory.length > 0 && (
+                      <Box h="200px">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <LineChart data={goal.progressHistory}>
+                            <XAxis 
+                              dataKey="date" 
+                              tickFormatter={(date) => new Date(date).toLocaleDateString()}
+                            />
+                            <YAxis domain={[0, 100]} />
+                            <Tooltip 
+                              labelFormatter={(date) => new Date(date).toLocaleDateString()}
+                            />
+                            <Line 
+                              type="monotone" 
+                              dataKey="value" 
+                              stroke="#3182ce" 
+                              strokeWidth={2}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </Box>
+                    )}
+
+                    {/* Sub-tasks */}
+                    <VStack align="stretch" spacing={2}>
+                      <HStack>
+                        <Input
+                          placeholder="Add a sub-task..."
+                          value={newSubTask}
+                          onChange={(e) => setNewSubTask(e.target.value)}
+                          size="sm"
+                        />
+                        <IconButton
+                          icon={<AddIcon />}
+                          onClick={() => addSubTask(goal._id)}
+                          size="sm"
+                          colorScheme="blue"
+                        />
+                      </HStack>
+
+                      <Stack spacing={2}>
+                        {goal.subTasks.map((task, index) => (
+                          <Checkbox
+                            key={index}
+                            isChecked={task.completed}
+                            onChange={() => toggleSubTask(goal._id, index)}
+                          >
+                            {task.description}
+                          </Checkbox>
+                        ))}
+                      </Stack>
+                    </VStack>
+                  </VStack>
+                </Collapse>
+              </VStack>
             </Box>
           ))}
         </VStack>
