@@ -887,9 +887,6 @@ app.get("/api/diary/on-this-day", async (req, res) => {
   }
 });
 
-// Add after other requires
-const Goal = require('./models/Goal');
-
 // Add these routes
 app.get('/api/goals', async (req, res) => {
   try {
