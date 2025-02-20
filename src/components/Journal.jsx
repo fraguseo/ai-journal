@@ -9,9 +9,9 @@ import {
   useToast,
   HStack,
 } from '@chakra-ui/react';
-import { ArrowBackIcon, CheckIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
-function Journal({ onBack, onNavigate }) {
+function Journal({ onBack }) {
   const [entry, setEntry] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -109,16 +109,6 @@ function Journal({ onBack, onNavigate }) {
           loadingText="Getting insights..."
         >
           Get AI Insights
-        </Button>
-
-        <Button
-          leftIcon={<CheckIcon />}
-          onClick={() => onNavigate('goals')}
-          size="lg"
-          colorScheme="purple"
-          w="100%"
-        >
-          Goals & Progress
         </Button>
       </VStack>
     </Container>
