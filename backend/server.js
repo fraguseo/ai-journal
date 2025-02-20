@@ -12,8 +12,9 @@ dotenv.config();
 const app = express();
 app.use(cors({
   origin: '*',  // Be more specific in production
-  methods: ['POST', 'GET', 'OPTIONS'],
-  allowedHeaders: ['Content-Type']
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],  // Added PATCH and DELETE
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Added Authorization
+  credentials: true  // Allow credentials
 }));
 app.use(express.json());
 
@@ -922,6 +923,7 @@ app.patch('/api/goals/:id', async (req, res) => {
     const updatedGoal = await goal.save();
     res.json(updatedGoal);
   } catch (error) {
+    console.error('Goal update error:', error);
     res.status(400).json({ message: error.message });
   }
 });
