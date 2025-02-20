@@ -114,9 +114,23 @@
 .react-calendar--selectRange .react-calendar__tile--hover {
   background-color: #e6e6e6;
 }
-.has-entry {
-  background-color: #90CDF4 !important;
-}
+/* .has-entry {
+  background-color: #4299E1 !important;
+  color: white !important;
+} */
 .react-calendar__tile--future {
   background-color: #EDF2F7;
+}
+.future-date {
+  background-color: #FEFCBF !important;  /* Light yellow */
+  color: #744210 !important;  /* Dark yellow text */
+}
+.past-date {
+  background-color: #C6F6D5 !important;  /* Light green */
+  color: #22543D !important;  /* Dark green text */
+}
+.today {
+  background-color: #90CDF4 !important;  /* Blue */
+  color: #2A4365 !important;  /* Dark blue text */
+  font-weight: bold;
 } 

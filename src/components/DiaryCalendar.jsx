@@ -55,13 +55,21 @@ function DiaryCalendar({ entries, onDateClick, selectedDate }) {
           value={selectedDate ? new Date(selectedDate) : new Date()}
           activeStartDate={currentMonth}
           tileClassName={({ date }) => {
-            if (markedDates.some(markedDate => 
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            date.setHours(0, 0, 0, 0);
+
+            // Check if date has an entry
+            const hasEntry = markedDates.some(markedDate => 
               date.getDate() === markedDate.getDate() &&
               date.getMonth() === markedDate.getMonth() &&
               date.getFullYear() === markedDate.getFullYear()
-            )) {
-              return 'has-entry';
-            }
+            );
+
+            if (hasEntry) return 'has-entry';
+            if (date > today) return 'future-date';
+            if (date.getTime() === today.getTime()) return 'today';
+            return 'past-date';
           }}
         />
       </Box>
