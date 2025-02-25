@@ -17,9 +17,17 @@ import {
   Checkbox,
   Stack,
   Collapse,
+  Switch,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import { AddIcon, DeleteIcon, ArrowBackIcon, ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import GoalTemplates from './GoalTemplates';
 
 function GoalTracker({ onBack }) {
   const [goals, setGoals] = useState([]);
@@ -28,13 +36,34 @@ function GoalTracker({ onBack }) {
   const [deadline, setDeadline] = useState('');
   const [newSubTask, setNewSubTask] = useState('');
   const [expandedGoal, setExpandedGoal] = useState(null);
+  const [notifications, setNotifications] = useState(true);
   const toast = useToast();
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
 
   const categories = ['Personal', 'Health', 'Career', 'Learning'];
 
   useEffect(() => {
     fetchGoals();
   }, []);
+
+  useEffect(() => {
+    if (notifications && "Notification" in window) {
+      goals.forEach(goal => {
+        if (goal.deadline) {
+          const deadline = new Date(goal.deadline);
+          const today = new Date();
+          const daysUntil = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+          
+          if (daysUntil <= 3 && !goal.completed) {
+            new Notification('Goal Deadline Approaching', {
+              body: `${goal.description} is due in ${daysUntil} days`,
+              icon: '/logo192.png'  // Optional: add your app icon
+            });
+          }
+        }
+      });
+    }
+  }, [goals, notifications]);
 
   const fetchGoals = async () => {
     try {
@@ -194,6 +223,19 @@ function GoalTracker({ onBack }) {
     }
   };
 
+  const handleTemplateSelect = (template) => {
+    setNewGoal(template.description);
+    setSelectedCategory(template.category);
+    setIsTemplateModalOpen(false);
+  };
+
+  const requestNotificationPermission = async () => {
+    if ("Notification" in window) {
+      const permission = await Notification.requestPermission();
+      setNotifications(permission === "granted");
+    }
+  };
+
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={6} align="stretch">
@@ -243,7 +285,25 @@ function GoalTracker({ onBack }) {
               colorScheme="green"
               size="lg"
             />
+            <Button
+              onClick={() => setIsTemplateModalOpen(true)}
+              colorScheme="purple"
+              size="lg"
+            >
+              Use Template
+            </Button>
           </HStack>
+
+          <FormControl display="flex" alignItems="center" mb={4}>
+            <FormLabel htmlFor="notifications" mb="0">
+              Enable Reminders
+            </FormLabel>
+            <Switch
+              id="notifications"
+              isChecked={notifications}
+              onChange={(e) => setNotifications(e.target.checked)}
+            />
+          </FormControl>
         </VStack>
 
         <VStack spacing={4} align="stretch">
@@ -368,6 +428,17 @@ function GoalTracker({ onBack }) {
           ))}
         </VStack>
       </VStack>
+
+      <Modal isOpen={isTemplateModalOpen} onClose={() => setIsTemplateModalOpen(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Choose a Goal Template</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <GoalTemplates onSelectTemplate={handleTemplateSelect} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 }
