@@ -24,9 +24,10 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
+  Tooltip,
 } from '@chakra-ui/react';
 import { AddIcon, DeleteIcon, ArrowBackIcon, ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import GoalTemplates from './GoalTemplates';
 
 function GoalTracker({ onBack }) {
@@ -285,15 +286,19 @@ function GoalTracker({ onBack }) {
               colorScheme="green"
               size="lg"
             />
-            <Button
-              leftIcon={<AddIcon />}
-              onClick={() => setIsTemplateModalOpen(true)}
-              colorScheme="purple"
-              size="lg"
-              ml={2}
-            >
-              Template
-            </Button>
+            <Tooltip label="Use Template">
+              <Button
+                leftIcon={<AddIcon />}
+                onClick={() => setIsTemplateModalOpen(true)}
+                colorScheme="purple"
+                size="lg"
+                ml={2}
+                minW="140px"
+                h="48px"
+              >
+                Template
+              </Button>
+            </Tooltip>
           </HStack>
 
           <FormControl display="flex" alignItems="center" mb={4}>
@@ -380,7 +385,7 @@ function GoalTracker({ onBack }) {
                               tickFormatter={(date) => new Date(date).toLocaleDateString()}
                             />
                             <YAxis domain={[0, 100]} />
-                            <Tooltip 
+                            <RechartsTooltip 
                               labelFormatter={(date) => new Date(date).toLocaleDateString()}
                             />
                             <Line 
