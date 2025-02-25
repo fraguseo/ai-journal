@@ -273,28 +273,21 @@ function GoalTracker({ onBack }) {
               ))}
             </Select>
 
-            <Input
-              type="date"
-              value={deadline}
-              onChange={(e) => setDeadline(e.target.value)}
-              size="lg"
-              w={{ base: "full", md: "auto" }}
-              placeholder="Select deadline"
-              sx={{
-                '&::-webkit-date-and-time-value': {
-                  minHeight: '1.5em'
-                },
-                '&:not([value]):not(:focus):before': {
-                  content: '"Select deadline"',
-                  color: 'gray.500',
-                  position: 'absolute',
-                  left: '0.5rem'
-                },
-                '-webkit-appearance': 'none',
-                'appearance': 'none',
-                'position': 'relative'
-              }}
-            />
+            <FormControl>
+              <FormLabel>Deadline</FormLabel>
+              <Input
+                type="date"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+                size="lg"
+                w={{ base: "full", md: "auto" }}
+                sx={{
+                  '&::-webkit-date-and-time-value': {
+                    minHeight: '1.5em'
+                  }
+                }}
+              />
+            </FormControl>
 
             <IconButton
               icon={<AddIcon />}
