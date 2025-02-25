@@ -230,10 +230,28 @@ function GoalTracker({ onBack }) {
     setIsTemplateModalOpen(false);
   };
 
-  const requestNotificationPermission = async () => {
-    if ("Notification" in window) {
-      const permission = await Notification.requestPermission();
-      setNotifications(permission === "granted");
+  const handleNotificationToggle = async (e) => {
+    if (e.target.checked) {
+      if ("Notification" in window) {
+        const permission = await Notification.requestPermission();
+        setNotifications(permission === "granted");
+        
+        if (permission === "granted") {
+          new Notification('Notifications Enabled', {
+            body: 'You will be notified of upcoming goal deadlines',
+            icon: '/logo192.png'
+          });
+        } else {
+          toast({
+            title: 'Notifications not enabled',
+            description: 'Please allow notifications in your browser settings',
+            status: 'warning',
+            duration: 3000,
+          });
+        }
+      }
+    } else {
+      setNotifications(false);
     }
   };
 
@@ -310,7 +328,7 @@ function GoalTracker({ onBack }) {
               <Switch
                 id="notifications"
                 isChecked={notifications}
-                onChange={(e) => setNotifications(e.target.checked)}
+                onChange={handleNotificationToggle}
               />
             </FormControl>
 
