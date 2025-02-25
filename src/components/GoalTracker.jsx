@@ -278,16 +278,21 @@ function GoalTracker({ onBack }) {
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
               size="lg"
-              w={{ base: "100%", md: "auto" }}
-              min={new Date().toISOString().split('T')[0]}
+              w={{ base: "full", md: "auto" }}
+              placeholder="Select deadline"
               sx={{
-                '::-webkit-calendar-picker-indicator': {
-                  display: 'block'
+                '&::-webkit-date-and-time-value': {
+                  minHeight: '1.5em'
                 },
-                '&::-webkit-datetime-edit': {
-                  display: 'block',
-                  padding: '0.5rem'
-                }
+                '&:not(:focus):before': {
+                  content: '"Select deadline"',
+                  color: 'gray.500',
+                  position: 'absolute',
+                  left: '0.5rem'
+                },
+                '-webkit-appearance': 'none',
+                'appearance': 'none',
+                'position': 'relative'
               }}
             />
 
