@@ -232,6 +232,20 @@ function GoalTracker({ onBack }) {
 
   const handleNotificationToggle = async (e) => {
     if (e.target.checked) {
+      // Check if mobile device
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        toast({
+          title: 'Mobile Notifications',
+          description: 'Notifications are currently only supported on desktop browsers',
+          status: 'info',
+          duration: 5000,
+        });
+        setNotifications(false);
+        return;
+      }
+
       if ("Notification" in window) {
         const permission = await Notification.requestPermission();
         setNotifications(permission === "granted");
