@@ -286,11 +286,13 @@ function GoalTracker({ onBack }) {
               size="lg"
             />
             <Button
+              leftIcon={<AddIcon />}
               onClick={() => setIsTemplateModalOpen(true)}
               colorScheme="purple"
               size="lg"
+              ml={2}
             >
-              Use Template
+              Template
             </Button>
           </HStack>
 
