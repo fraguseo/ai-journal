@@ -278,6 +278,17 @@ function GoalTracker({ onBack }) {
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
               size="lg"
+              w={{ base: "100%", md: "auto" }}
+              min={new Date().toISOString().split('T')[0]}
+              sx={{
+                '::-webkit-calendar-picker-indicator': {
+                  display: 'block'
+                },
+                '&::-webkit-datetime-edit': {
+                  display: 'block',
+                  padding: '0.5rem'
+                }
+              }}
             />
 
             <IconButton
