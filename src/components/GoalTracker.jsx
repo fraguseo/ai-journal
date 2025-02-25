@@ -263,15 +263,18 @@ function GoalTracker({ onBack }) {
           </FormControl>
 
           <HStack w="100%">
-            <Select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              size="lg"
-            >
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </Select>
+            <FormControl>
+              <FormLabel>Category</FormLabel>
+              <Select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                size="lg"
+              >
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </Select>
+            </FormControl>
 
             <FormControl>
               <FormLabel>Deadline</FormLabel>
@@ -294,6 +297,8 @@ function GoalTracker({ onBack }) {
               onClick={addGoal}
               colorScheme="green"
               size="lg"
+              mt="auto"
+              mb={1}
             />
           </HStack>
 
