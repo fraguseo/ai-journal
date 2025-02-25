@@ -286,13 +286,26 @@ function GoalTracker({ onBack }) {
               colorScheme="green"
               size="lg"
             />
+          </HStack>
+
+          <HStack w="100%" justify="space-between" align="center">
+            <FormControl display="flex" alignItems="center">
+              <FormLabel htmlFor="notifications" mb="0">
+                Enable Reminders
+              </FormLabel>
+              <Switch
+                id="notifications"
+                isChecked={notifications}
+                onChange={(e) => setNotifications(e.target.checked)}
+              />
+            </FormControl>
+
             <Tooltip label="Use Template">
               <Button
                 leftIcon={<AddIcon />}
                 onClick={() => setIsTemplateModalOpen(true)}
                 colorScheme="purple"
                 size="lg"
-                ml={2}
                 minW="140px"
                 h="48px"
               >
@@ -300,17 +313,6 @@ function GoalTracker({ onBack }) {
               </Button>
             </Tooltip>
           </HStack>
-
-          <FormControl display="flex" alignItems="center" mb={4}>
-            <FormLabel htmlFor="notifications" mb="0">
-              Enable Reminders
-            </FormLabel>
-            <Switch
-              id="notifications"
-              isChecked={notifications}
-              onChange={(e) => setNotifications(e.target.checked)}
-            />
-          </FormControl>
         </VStack>
 
         <VStack spacing={4} align="stretch">
