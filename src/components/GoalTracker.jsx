@@ -284,7 +284,7 @@ function GoalTracker({ onBack }) {
                 '&::-webkit-date-and-time-value': {
                   minHeight: '1.5em'
                 },
-                '&:not(:focus):before': {
+                '&:not([value]):not(:focus):before': {
                   content: '"Select deadline"',
                   color: 'gray.500',
                   position: 'absolute',
