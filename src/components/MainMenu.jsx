@@ -28,7 +28,7 @@ function MainMenu({ onDiaryClick, onChatClick, onRecipesClick, onDreamClick, onG
             onClick={onDiaryClick}
             size="lg"
             w="100%"
-            colorScheme="teal"
+            colorScheme="green"
           >
             Daily Diary
           </Button>
@@ -48,7 +48,7 @@ function MainMenu({ onDiaryClick, onChatClick, onRecipesClick, onDreamClick, onG
             onClick={onRecipesClick}
             size="lg"
             w="100%"
-            colorScheme="purple"
+            colorScheme="yellow"
           >
             Mood Recipes
           </Button>
@@ -58,7 +58,7 @@ function MainMenu({ onDiaryClick, onChatClick, onRecipesClick, onDreamClick, onG
             onClick={onDreamClick}
             size="lg"
             w="100%"
-            colorScheme="pink"
+            colorScheme="purple"
           >
             Dream Journal
           </Button>
@@ -68,7 +68,7 @@ function MainMenu({ onDiaryClick, onChatClick, onRecipesClick, onDreamClick, onG
             onClick={onGoalsClick}
             size="lg"
             w="100%"
-            colorScheme="orange"
+            colorScheme="red"
           >
             Goal Tracker
           </Button>
