@@ -8,6 +8,7 @@ import {
   Text,
   useToast,
   HStack,
+  Select,
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
@@ -17,6 +18,24 @@ function Journal({ onBack }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
   const toast = useToast();
+  const [journalType, setJournalType] = useState('free');
+  const [promptAnswers, setPromptAnswers] = useState({});
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [mood, setMood] = useState('');
+  const [moodIntensity, setMoodIntensity] = useState(3);
+
+  const journalTypes = {
+    gratitude: [
+      "What are you grateful for today?",
+      "Who made a positive impact on your day?",
+      "What small joy did you experience?"
+    ],
+    reflection: [
+      "What challenged you today?",
+      "What did you learn?",
+      "What would you do differently?"
+    ]
+  };
 
   const handleSubmit = async () => {
     if (!entry.trim()) {
@@ -32,12 +51,22 @@ function Journal({ onBack }) {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/analyze', {
+      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ entry }),
+        body: JSON.stringify({
+          entry: entry,
+          date: selectedDate,
+          mood: mood,
+          moodIntensity: moodIntensity,
+          journalType: journalType,
+          prompts: Object.entries(promptAnswers).map(([question, answer]) => ({
+            question,
+            answer
+          }))
+        }),
       });
 
       if (!response.ok) {
@@ -93,6 +122,34 @@ function Journal({ onBack }) {
             </Box>
           ))}
         </VStack>
+        
+        <Select
+          value={journalType}
+          onChange={(e) => setJournalType(e.target.value)}
+          mb={4}
+        >
+          <option value="free">Free Writing</option>
+          <option value="gratitude">Gratitude Journal</option>
+          <option value="reflection">Daily Reflection</option>
+        </Select>
+
+        {journalType !== 'free' && (
+          <VStack spacing={4} mb={4}>
+            {journalTypes[journalType].map((prompt, index) => (
+              <Box key={index}>
+                <Text mb={2}>{prompt}</Text>
+                <Textarea
+                  value={promptAnswers[prompt] || ''}
+                  onChange={(e) => setPromptAnswers(prev => ({
+                    ...prev,
+                    [prompt]: e.target.value
+                  }))}
+                  placeholder="Your answer..."
+                />
+              </Box>
+            ))}
+          </VStack>
+        )}
         
         <Textarea
           value={entry}

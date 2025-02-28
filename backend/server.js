@@ -619,15 +619,26 @@ app.post("/api/analyze", async (req, res) => {
 // Update the diary endpoint to include AI mood analysis
 app.post("/api/diary", async (req, res) => {
   try {
-    const { entry, date } = req.body;
+    const { entry, date, mood, moodIntensity, journalType, prompts } = req.body;
+    
+    const diaryEntry = new DiaryEntry({
+      entry,
+      date,
+      mood,
+      moodIntensity,
+      journalType,
+      prompts
+    });
 
-    // First, get AI to analyze the mood
+    await diaryEntry.save();
+
+    // Get AI insights
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "You are a mood analyzer. Analyze the text and respond with only a JSON object containing: mood (one of: Happy, Calm, Sad, Anxious, Energetic, Tired) and intensity (1-5). Example: {\"mood\": \"Happy\", \"intensity\": 4}"
+          content: "You are a thoughtful journal companion. Provide gentle insights and reflective questions about the entry."
         },
         {
           role: "user",
@@ -636,28 +647,13 @@ app.post("/api/diary", async (req, res) => {
       ],
     });
 
-    // Parse the AI response
-    const moodAnalysis = JSON.parse(completion.choices[0].message.content);
-    
-    // Create new diary entry with mood
-    const diaryEntry = new DiaryEntry({
-      entry,
-      date: new Date(date),
-      mood: moodAnalysis.mood,
-      moodIntensity: moodAnalysis.intensity
-    });
-
-    // Save to database
-    await diaryEntry.save();
-    
     res.json({ 
-      message: "Entry saved successfully",
-      mood: moodAnalysis.mood,
-      intensity: moodAnalysis.intensity
+      message: 'Entry saved',
+      response: completion.choices[0].message.content 
     });
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Failed to save diary entry" });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Failed to save entry' });
   }
 });
 
