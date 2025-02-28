@@ -29,6 +29,21 @@ function Diary({ onBack }) {
   const [showStats, setShowStats] = useState(false);
   const [moodAnalysis, setMoodAnalysis] = useState(null);
   const [memories, setMemories] = useState(null);
+  const [journalType, setJournalType] = useState('free');
+  const [promptAnswers, setPromptAnswers] = useState({});
+
+  const journalTypes = {
+    gratitude: [
+      "What are you grateful for today?",
+      "Who made a positive impact on your day?",
+      "What small joy did you experience?"
+    ],
+    reflection: [
+      "What challenged you today?",
+      "What did you learn?",
+      "What would you do differently?"
+    ]
+  };
 
   const fetchEntries = async (selectedDate) => {
     try {
@@ -117,7 +132,15 @@ function Diary({ onBack }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ entry, date }),
+        body: JSON.stringify({ 
+          entry, 
+          date,
+          journalType,
+          prompts: Object.entries(promptAnswers).map(([question, answer]) => ({
+            question,
+            answer
+          }))
+        }),
       });
 
       if (!response.ok) {
@@ -213,6 +236,38 @@ function Diary({ onBack }) {
             w="70%"
           />
         </HStack>
+        
+        <Select
+          value={journalType}
+          onChange={(e) => setJournalType(e.target.value)}
+          mb={4}
+          placeholder="Select Journal Type"
+        >
+          <option value="free">Free Writing</option>
+          <option value="gratitude">Gratitude Journal</option>
+          <option value="reflection">Daily Reflection</option>
+        </Select>
+        
+        {journalType !== 'free' && (
+          <VStack spacing={4} mb={4}>
+            <Text fontSize="lg" fontWeight="bold">
+              {journalType === 'gratitude' ? 'Gratitude Prompts' : 'Reflection Prompts'}
+            </Text>
+            {journalTypes[journalType].map((prompt, index) => (
+              <Box key={index}>
+                <Text mb={2}>{prompt}</Text>
+                <Textarea
+                  value={promptAnswers[prompt] || ''}
+                  onChange={(e) => setPromptAnswers(prev => ({
+                    ...prev,
+                    [prompt]: e.target.value
+                  }))}
+                  placeholder="Your answer..."
+                />
+              </Box>
+            ))}
+          </VStack>
+        )}
         
         <Textarea
           value={entry}
