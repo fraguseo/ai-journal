@@ -58,7 +58,7 @@ function MainMenu({ onDiaryClick, onChatClick, onRecipesClick, onDreamClick, onG
             onClick={onDreamClick}
             size="lg"
             w="100%"
-            colorScheme="purple"
+            colorScheme="teal"
           >
             Dream Journal
           </Button>
@@ -68,7 +68,7 @@ function MainMenu({ onDiaryClick, onChatClick, onRecipesClick, onDreamClick, onG
             onClick={onGoalsClick}
             size="lg"
             w="100%"
-            colorScheme="red"
+            colorScheme="purple"
           >
             Goal Tracker
           </Button>
