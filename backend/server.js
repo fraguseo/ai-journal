@@ -619,26 +619,15 @@ app.post("/api/analyze", async (req, res) => {
 // Update the diary endpoint to include AI mood analysis
 app.post("/api/diary", async (req, res) => {
   try {
-    const { entry, date, mood, moodIntensity, journalType, prompts } = req.body;
+    const { entry, date, journalType, prompts } = req.body;
     
-    const diaryEntry = new DiaryEntry({
-      entry,
-      date,
-      mood,
-      moodIntensity,
-      journalType,
-      prompts
-    });
-
-    await diaryEntry.save();
-
-    // Get AI insights
-    const completion = await openai.chat.completions.create({
+    // First, get AI to analyze the mood
+    const moodCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "You are a thoughtful journal companion. Provide gentle insights and reflective questions about the entry."
+          content: "You are a mood analyzer. Analyze the text and respond with only a JSON object containing: mood (one of: Happy, Calm, Sad, Anxious, Energetic, Tired) and intensity (1-5). Example: {\"mood\": \"Happy\", \"intensity\": 4}"
         },
         {
           role: "user",
@@ -647,13 +636,29 @@ app.post("/api/diary", async (req, res) => {
       ],
     });
 
+    // Parse the AI mood response
+    const moodAnalysis = JSON.parse(moodCompletion.choices[0].message.content);
+    
+    // Create new diary entry with all fields
+    const diaryEntry = new DiaryEntry({
+      entry,
+      date: new Date(date),
+      mood: moodAnalysis.mood,
+      moodIntensity: moodAnalysis.intensity,
+      journalType,
+      prompts
+    });
+
+    await diaryEntry.save();
+
     res.json({ 
-      message: 'Entry saved',
-      response: completion.choices[0].message.content 
+      message: "Entry saved successfully",
+      mood: moodAnalysis.mood,
+      intensity: moodAnalysis.intensity
     });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Failed to save entry' });
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to save diary entry" });
   }
 });
 
@@ -664,7 +669,6 @@ app.get("/api/diary", async (req, res) => {
     let entries;
     
     if (date) {
-      // If date is provided, find entries for that date
       const startOfDay = new Date(date);
       const endOfDay = new Date(date);
       endOfDay.setDate(endOfDay.getDate() + 1);
@@ -676,7 +680,6 @@ app.get("/api/diary", async (req, res) => {
         }
       }).sort({ date: -1 });
     } else {
-      // If no date, return all entries
       entries = await DiaryEntry.find().sort({ date: -1 });
     }
     

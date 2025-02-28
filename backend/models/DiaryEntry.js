@@ -9,15 +9,8 @@ const diaryEntrySchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  mood: {
-    type: String,
-    enum: ['Happy', 'Calm', 'Sad', 'Anxious', 'Energetic', 'Tired']
-  },
-  moodIntensity: {
-    type: Number,
-    min: 1,
-    max: 5
-  },
+  mood: String,
+  moodIntensity: Number,
   createdAt: {
     type: Date,
     default: Date.now
@@ -28,7 +21,7 @@ const diaryEntrySchema = new mongoose.Schema({
   }],
   journalType: {
     type: String,
-    enum: ['free', 'guided', 'gratitude', 'reflection'],
+    enum: ['free', 'guided', 'gratitude', 'reflection', 'growth', 'mindfulness', 'creativity'],
     default: 'free'
   }
 });
