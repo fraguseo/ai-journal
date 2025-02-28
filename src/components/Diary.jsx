@@ -30,7 +30,6 @@ function Diary({ onBack }) {
   const [moodAnalysis, setMoodAnalysis] = useState(null);
   const [memories, setMemories] = useState(null);
   const [journalType, setJournalType] = useState('free');
-  const [promptAnswers, setPromptAnswers] = useState({});
 
   const journalTypes = {
     gratitude: [
@@ -141,11 +140,9 @@ function Diary({ onBack }) {
   }, [date]);
 
   const handleSubmit = async () => {
-    if (journalType !== 'free' && 
-        Object.keys(promptAnswers).length === 0 && 
-        !entry.trim()) {
+    if (!entry.trim()) {
       toast({
-        title: 'Please answer at least one prompt or write in the main entry',
+        title: 'Please write something first',
         status: 'warning',
         duration: 2000,
       });
@@ -154,30 +151,30 @@ function Diary({ onBack }) {
 
     setIsLoading(true);
     try {
+      const payload = { 
+        entry: entry.trim(), 
+        date,
+        journalType
+      };
+      console.log('Sending to server:', payload);
+
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          entry: entry.trim(), 
-          date,
-          journalType,
-          prompts: Object.entries(promptAnswers)
-            .filter(([_, answer]) => answer.trim())
-            .map(([question, answer]) => ({
-              question,
-              answer: answer.trim()
-            }))
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('Server error:', errorData);
         throw new Error(errorData.error || 'Failed to save diary entry');
       }
 
       const data = await response.json();
+      console.log('Server response:', data);
+
       toast({
         title: `Entry saved! Mood: ${data.mood} (${data.intensity}/5)`,
         status: 'success',
@@ -185,14 +182,14 @@ function Diary({ onBack }) {
       });
       
       setEntry('');
-      setPromptAnswers({});
       setJournalType('free');
       
       await fetchEntries(date);
       
     } catch (error) {
+      console.error('Error saving entry:', error);
       toast({
-        title: 'Error saving entry',
+        title: error.message || 'Error saving entry',
         status: 'error',
         duration: 3000,
       });
@@ -285,22 +282,14 @@ function Diary({ onBack }) {
         </Select>
         
         {journalType !== 'free' && (
-          <VStack spacing={4} mb={4}>
+          <VStack spacing={4} mb={4} p={4} bg="gray.50" borderRadius="md">
             <Text fontSize="lg" fontWeight="bold">
-              {journalType === 'gratitude' ? 'Gratitude Prompts' : journalType === 'reflection' ? 'Reflection Prompts' : journalType === 'growth' ? 'Growth Prompts' : journalType === 'mindfulness' ? 'Mindfulness Prompts' : 'Creativity Prompts'}
+              {journalType.charAt(0).toUpperCase() + journalType.slice(1)} Prompts:
             </Text>
             {journalTypes[journalType].map((prompt, index) => (
-              <Box key={index}>
-                <Text mb={2}>{prompt}</Text>
-                <Textarea
-                  value={promptAnswers[prompt] || ''}
-                  onChange={(e) => setPromptAnswers(prev => ({
-                    ...prev,
-                    [prompt]: e.target.value
-                  }))}
-                  placeholder="Your answer..."
-                />
-              </Box>
+              <Text key={index} color="gray.600">
+                • {prompt}
+              </Text>
             ))}
           </VStack>
         )}
@@ -308,7 +297,9 @@ function Diary({ onBack }) {
         <Textarea
           value={entry}
           onChange={(e) => setEntry(e.target.value)}
-          placeholder="Write about your day..."
+          placeholder={journalType === 'free' 
+            ? "Write about your day..." 
+            : "Answer the prompts above and write about your day..."}
           size="lg"
           minH="200px"
         />
