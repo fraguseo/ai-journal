@@ -582,7 +582,19 @@ mongoose.connect(process.env.MONGODB_URI, {
   console.log('Connected to MongoDB');
   initializeRecipes();
 })
-.catch(err => console.error('MongoDB connection error:', err));
+.catch(err => {
+  console.error('MongoDB connection error:', err);
+  process.exit(1);  // Exit if can't connect to database
+});
+
+// Add error handler for MongoDB
+mongoose.connection.on('error', err => {
+  console.error('MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
+});
 
 app.post("/api/analyze", async (req, res) => {
   try {
@@ -623,6 +635,15 @@ app.post("/api/diary", async (req, res) => {
     
     console.log('Received diary entry:', { entry, date, journalType, prompts }); // Debug log
     
+    if (!date) {
+      throw new Error('Date is required');
+    }
+
+    // Validate prompts format
+    if (prompts && !Array.isArray(prompts)) {
+      throw new Error('Prompts must be an array');
+    }
+
     // First, get AI to analyze the mood
     const moodCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -633,37 +654,47 @@ app.post("/api/diary", async (req, res) => {
         },
         {
           role: "user",
-          // Combine prompts and main entry for mood analysis
           content: `${prompts?.map(p => p.answer).join(' ')} ${entry || ''}`
         }
       ],
     });
 
-    // Parse the AI mood response
-    const moodAnalysis = JSON.parse(moodCompletion.choices[0].message.content);
-    console.log('Mood analysis:', moodAnalysis); // Debug log
-    
-    // Create new diary entry with all fields
-    const diaryEntry = new DiaryEntry({
-      entry: entry || '', // Make entry optional
-      date: new Date(date),
-      mood: moodAnalysis.mood,
-      moodIntensity: moodAnalysis.intensity,
-      journalType,
-      prompts: prompts || []
-    });
+    try {
+      const moodAnalysis = JSON.parse(moodCompletion.choices[0].message.content);
+      console.log('Mood analysis:', moodAnalysis);
 
-    await diaryEntry.save();
-    console.log('Entry saved successfully'); // Debug log
+      if (!moodAnalysis.mood || !moodAnalysis.intensity) {
+        throw new Error('Invalid mood analysis format');
+      }
 
-    res.json({ 
-      message: "Entry saved successfully",
-      mood: moodAnalysis.mood,
-      intensity: moodAnalysis.intensity
-    });
+      const diaryEntry = new DiaryEntry({
+        entry: entry || '',
+        date: new Date(date),
+        mood: moodAnalysis.mood,
+        moodIntensity: moodAnalysis.intensity,
+        journalType,
+        prompts: prompts || []
+      });
+
+      console.log('Saving diary entry:', diaryEntry);
+      await diaryEntry.save();
+      console.log('Entry saved successfully');
+
+      res.json({ 
+        message: "Entry saved successfully",
+        mood: moodAnalysis.mood,
+        intensity: moodAnalysis.intensity
+      });
+    } catch (parseError) {
+      console.error('Error parsing mood analysis:', parseError);
+      throw new Error('Failed to analyze mood');
+    }
   } catch (error) {
-    console.error("Error details:", error); // Detailed error log
-    res.status(500).json({ error: error.message || "Failed to save diary entry" });
+    console.error("Error details:", error);
+    res.status(500).json({ 
+      error: error.message || "Failed to save diary entry",
+      details: error.stack
+    });
   }
 });
 
