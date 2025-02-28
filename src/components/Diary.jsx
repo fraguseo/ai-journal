@@ -141,9 +141,11 @@ function Diary({ onBack }) {
   }, [date]);
 
   const handleSubmit = async () => {
-    if (journalType !== 'free' && Object.keys(promptAnswers).length === 0) {
+    if (journalType !== 'free' && 
+        Object.keys(promptAnswers).length === 0 && 
+        !entry.trim()) {
       toast({
-        title: 'Please answer at least one prompt',
+        title: 'Please answer at least one prompt or write in the main entry',
         status: 'warning',
         duration: 2000,
       });
@@ -158,18 +160,21 @@ function Diary({ onBack }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          entry, 
+          entry: entry.trim(), 
           date,
           journalType,
-          prompts: Object.entries(promptAnswers).map(([question, answer]) => ({
-            question,
-            answer
-          }))
+          prompts: Object.entries(promptAnswers)
+            .filter(([_, answer]) => answer.trim())
+            .map(([question, answer]) => ({
+              question,
+              answer: answer.trim()
+            }))
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save diary entry');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save diary entry');
       }
 
       const data = await response.json();

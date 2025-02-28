@@ -621,6 +621,8 @@ app.post("/api/diary", async (req, res) => {
   try {
     const { entry, date, journalType, prompts } = req.body;
     
+    console.log('Received diary entry:', { entry, date, journalType, prompts }); // Debug log
+    
     // First, get AI to analyze the mood
     const moodCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -631,25 +633,28 @@ app.post("/api/diary", async (req, res) => {
         },
         {
           role: "user",
-          content: entry
+          // Combine prompts and main entry for mood analysis
+          content: `${prompts?.map(p => p.answer).join(' ')} ${entry || ''}`
         }
       ],
     });
 
     // Parse the AI mood response
     const moodAnalysis = JSON.parse(moodCompletion.choices[0].message.content);
+    console.log('Mood analysis:', moodAnalysis); // Debug log
     
     // Create new diary entry with all fields
     const diaryEntry = new DiaryEntry({
-      entry,
+      entry: entry || '', // Make entry optional
       date: new Date(date),
       mood: moodAnalysis.mood,
       moodIntensity: moodAnalysis.intensity,
       journalType,
-      prompts
+      prompts: prompts || []
     });
 
     await diaryEntry.save();
+    console.log('Entry saved successfully'); // Debug log
 
     res.json({ 
       message: "Entry saved successfully",
@@ -657,8 +662,8 @@ app.post("/api/diary", async (req, res) => {
       intensity: moodAnalysis.intensity
     });
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Failed to save diary entry" });
+    console.error("Error details:", error); // Detailed error log
+    res.status(500).json({ error: error.message || "Failed to save diary entry" });
   }
 });
 
