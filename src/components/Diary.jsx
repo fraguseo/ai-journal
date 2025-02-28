@@ -36,12 +36,37 @@ function Diary({ onBack }) {
     gratitude: [
       "What are you grateful for today?",
       "Who made a positive impact on your day?",
-      "What small joy did you experience?"
+      "What small joy did you experience?",
+      "What's something about yourself you're thankful for?",
+      "What opportunity are you grateful for right now?"
     ],
     reflection: [
       "What challenged you today?",
       "What did you learn?",
-      "What would you do differently?"
+      "What would you do differently?",
+      "What made you feel strong today?",
+      "What's something you're looking forward to?"
+    ],
+    growth: [
+      "What progress did you make toward your goals today?",
+      "What new skill or knowledge did you gain?",
+      "How did you step out of your comfort zone?",
+      "What obstacle did you overcome?",
+      "What inspired you today?"
+    ],
+    mindfulness: [
+      "How are you feeling right now, in this moment?",
+      "What sensations do you notice in your body?",
+      "What's occupying your thoughts the most?",
+      "What brought you peace today?",
+      "What emotions were strongest today?"
+    ],
+    creativity: [
+      "What new ideas came to you today?",
+      "What did you create or express today?",
+      "What sparked your imagination?",
+      "What would you like to create next?",
+      "How did you think outside the box today?"
     ]
   };
 
@@ -246,12 +271,15 @@ function Diary({ onBack }) {
           <option value="free">Free Writing</option>
           <option value="gratitude">Gratitude Journal</option>
           <option value="reflection">Daily Reflection</option>
+          <option value="growth">Growth Journal</option>
+          <option value="mindfulness">Mindfulness Journal</option>
+          <option value="creativity">Creativity Journal</option>
         </Select>
         
         {journalType !== 'free' && (
           <VStack spacing={4} mb={4}>
             <Text fontSize="lg" fontWeight="bold">
-              {journalType === 'gratitude' ? 'Gratitude Prompts' : 'Reflection Prompts'}
+              {journalType === 'gratitude' ? 'Gratitude Prompts' : journalType === 'reflection' ? 'Reflection Prompts' : journalType === 'growth' ? 'Growth Prompts' : journalType === 'mindfulness' ? 'Mindfulness Prompts' : 'Creativity Prompts'}
             </Text>
             {journalTypes[journalType].map((prompt, index) => (
               <Box key={index}>
