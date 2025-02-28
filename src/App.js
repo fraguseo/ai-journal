@@ -6,32 +6,29 @@ import Diary from './components/Diary';
 import MoodRecipes from './components/MoodRecipes';
 import Dream from './components/Dream';
 import GoalTracker from './components/GoalTracker';
+import MainMenu from './components/MainMenu';
+import AIChat from './components/AIChat';
 
 // Dream Catcher feature added
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentView, setCurrentView] = useState('main');
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'journal':
-        return <Journal onBack={() => setCurrentPage('home')} />;
+  const renderView = () => {
+    switch (currentView) {
       case 'diary':
-        return <Diary onBack={() => setCurrentPage('home')} />;
+        return <Diary onBack={() => setCurrentView('main')} />;
+      case 'chat':
+        return <AIChat onBack={() => setCurrentView('main')} />;
       case 'recipes':
-        return <MoodRecipes onBack={() => setCurrentPage('home')} />;
-      case 'dream':
-        return <Dream onBack={() => setCurrentPage('home')} />;
-      case 'goals':
-        return <GoalTracker onBack={() => setCurrentPage('home')} />;
+        return <MoodRecipes onBack={() => setCurrentView('main')} />;
       default:
         return (
-          <Home 
-            onJournalClick={() => setCurrentPage('journal')}
-            onDiaryClick={() => setCurrentPage('diary')}
-            onRecipesClick={() => setCurrentPage('recipes')}
-            onDreamClick={() => setCurrentPage('dream')}
-            onGoalsClick={() => setCurrentPage('goals')}
+          <MainMenu 
+            onDiaryClick={() => setCurrentView('diary')}
+            onChatClick={() => setCurrentView('chat')}
+            onRecipesClick={() => setCurrentView('recipes')}
           />
         );
     }
@@ -48,7 +45,7 @@ function App() {
 
   return (
     <ChakraProvider>
-      {renderPage()}
+      {renderView()}
     </ChakraProvider>
   );
 }
