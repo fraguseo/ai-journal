@@ -9,10 +9,12 @@ import {
 import { 
   EditIcon, 
   ChatIcon, 
-  SpinnerIcon 
+  SpinnerIcon,
+  MoonIcon,
+  StarIcon 
 } from '@chakra-ui/icons';
 
-function MainMenu({ onDiaryClick, onChatClick, onRecipesClick }) {
+function MainMenu({ onDiaryClick, onChatClick, onRecipesClick, onDreamClick, onGoalsClick }) {
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={8}>
@@ -49,6 +51,26 @@ function MainMenu({ onDiaryClick, onChatClick, onRecipesClick }) {
             colorScheme="purple"
           >
             Mood Recipes
+          </Button>
+
+          <Button
+            leftIcon={<MoonIcon />}
+            onClick={onDreamClick}
+            size="lg"
+            w="100%"
+            colorScheme="pink"
+          >
+            Dream Journal
+          </Button>
+
+          <Button
+            leftIcon={<StarIcon />}
+            onClick={onGoalsClick}
+            size="lg"
+            w="100%"
+            colorScheme="orange"
+          >
+            Goal Tracker
           </Button>
         </VStack>
       </VStack>
