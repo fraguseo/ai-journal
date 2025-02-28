@@ -7,6 +7,7 @@ import {
   VStack,
   Text,
   HStack,
+  Flex,
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
@@ -59,9 +60,17 @@ function AIChat({ onBack }) {
 
         <VStack spacing={4} w="100%" align="stretch">
           {messages.map((msg, index) => (
-            <Box key={index} p={4} bg={msg.role === 'user' ? 'gray.100' : 'blue.50'} borderRadius="md">
-              <Text>{msg.content}</Text>
-            </Box>
+            <Flex key={index} justify={msg.role === 'user' ? 'flex-end' : 'flex-start'}>
+              <Box 
+                p={4} 
+                bg={msg.role === 'user' ? 'blue.500' : 'gray.100'} 
+                color={msg.role === 'user' ? 'white' : 'black'}
+                borderRadius="lg"
+                maxW="80%"
+              >
+                <Text>{msg.content}</Text>
+              </Box>
+            </Flex>
           ))}
         </VStack>
 
