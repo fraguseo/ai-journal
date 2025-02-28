@@ -21,6 +21,15 @@ const diaryEntrySchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  prompts: [{
+    question: String,
+    answer: String
+  }],
+  journalType: {
+    type: String,
+    enum: ['free', 'guided', 'gratitude', 'reflection'],
+    default: 'free'
   }
 });
 
