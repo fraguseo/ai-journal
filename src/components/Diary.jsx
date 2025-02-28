@@ -386,17 +386,39 @@ function Diary({ onBack }) {
               shadow="sm"
               bg={entry.mood ? moodColors[entry.mood] : 'white'}
             >
-              <HStack justify="space-between">
-                <Text fontWeight="bold">
-                  {new Date(entry.date).toLocaleDateString()}
-                </Text>
-                {entry.mood && (
-                  <Text color="gray.600">
-                    {moodIcons[entry.mood]} {entry.mood} ({entry.moodIntensity}/5)
+              <VStack align="stretch" spacing={3}>
+                <HStack justify="space-between">
+                  <Text fontWeight="bold">
+                    {new Date(entry.date).toLocaleDateString()}
+                  </Text>
+                  {entry.mood && (
+                    <Text color="gray.600">
+                      {moodIcons[entry.mood]} {entry.mood} ({entry.moodIntensity}/5)
+                    </Text>
+                  )}
+                </HStack>
+
+                {entry.journalType && entry.journalType !== 'free' && (
+                  <Text color="gray.600" fontSize="sm">
+                    {entry.journalType.charAt(0).toUpperCase() + entry.journalType.slice(1)} Journal
                   </Text>
                 )}
-              </HStack>
-              <Text mt={2}>{entry.entry}</Text>
+
+                {entry.prompts && entry.prompts.length > 0 && (
+                  <VStack align="stretch" spacing={2} pl={4} borderLeft="2px" borderColor="gray.200">
+                    {entry.prompts.map((prompt, index) => (
+                      <Box key={index}>
+                        <Text fontWeight="medium" fontSize="sm" color="gray.600">
+                          {prompt.question}
+                        </Text>
+                        <Text pl={2}>{prompt.answer}</Text>
+                      </Box>
+                    ))}
+                  </VStack>
+                )}
+
+                {entry.entry && <Text mt={2}>{entry.entry}</Text>}
+              </VStack>
             </Box>
           ))}
         </VStack>
