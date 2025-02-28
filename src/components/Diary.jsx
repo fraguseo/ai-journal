@@ -141,9 +141,9 @@ function Diary({ onBack }) {
   }, [date]);
 
   const handleSubmit = async () => {
-    if (!entry.trim()) {
+    if (journalType !== 'free' && Object.keys(promptAnswers).length === 0) {
       toast({
-        title: 'Please write something first',
+        title: 'Please answer at least one prompt',
         status: 'warning',
         duration: 2000,
       });
@@ -178,7 +178,10 @@ function Diary({ onBack }) {
         status: 'success',
         duration: 2000,
       });
+      
       setEntry('');
+      setPromptAnswers({});
+      setJournalType('free');
       
       await fetchEntries(date);
       
