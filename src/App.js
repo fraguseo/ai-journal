@@ -6,6 +6,7 @@ import AIChat from './components/AIChat';
 import MoodRecipes from './components/MoodRecipes';
 import Dream from './components/Dream';
 import GoalTracker from './components/GoalTracker';
+import MorningThoughts from './components/MorningThoughts';
 
 function App() {
   const [currentView, setCurrentView] = useState('main');
@@ -23,6 +24,8 @@ function App() {
         return <Dream onBack={() => setCurrentView('main')} />;
       case 'goals':
         return <GoalTracker onBack={() => setCurrentView('main')} />;
+      case 'morningThoughts':
+        return <MorningThoughts onBack={() => setCurrentView('main')} />;
       default:
         return (
           <MainMenu 
@@ -31,6 +34,7 @@ function App() {
             onRecipesClick={() => setCurrentView('recipes')}
             onDreamClick={() => setCurrentView('dream')}
             onGoalsClick={() => setCurrentView('goals')}
+            onMorningThoughtsClick={() => setCurrentView('morningThoughts')}
           />
         );
     }

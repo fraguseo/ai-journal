@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const DiaryEntry = require('./models/DiaryEntry');
 const Recipe = require('./models/Recipe');
 const Goal = require('./models/Goal');
+const MorningThought = require('./models/MorningThought');
 
 dotenv.config();
 
@@ -1008,6 +1009,53 @@ app.post("/api/chat", async (req, res) => {
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Failed to get AI response" });
+  }
+});
+
+// Add morning thoughts endpoints
+app.post("/api/morning-thoughts", async (req, res) => {
+  try {
+    const { thoughts, date } = req.body;
+    
+    // Update or create thoughts for the date
+    const result = await MorningThought.findOneAndUpdate(
+      { date: new Date(date) },
+      { thoughts },
+      { new: true, upsert: true }
+    );
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to save morning thoughts" });
+  }
+});
+
+app.get("/api/morning-thoughts", async (req, res) => {
+  try {
+    const { date } = req.query;
+    
+    const thoughts = await MorningThought.findOne({
+      date: new Date(date)
+    });
+    
+    res.json(thoughts || { thoughts: [], date });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to fetch morning thoughts" });
+  }
+});
+
+// Add speech-to-text endpoint
+app.post("/api/speech-to-text", async (req, res) => {
+  try {
+    const audioBlob = req.body;
+    // Here you would integrate with a speech-to-text service
+    // For now, we'll return a placeholder
+    res.json({ text: "Voice recorded thought..." });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to convert speech to text" });
   }
 });
 
