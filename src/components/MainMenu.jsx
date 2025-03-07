@@ -79,7 +79,7 @@ function MainMenu({ onDiaryClick, onChatClick, onRecipesClick, onDreamClick, onG
             onClick={onMorningThoughtsClick}
             size="lg"
             w="100%"
-            colorScheme="yellow"
+            colorScheme="orange"
           >
             Morning Thoughts
           </Button>
