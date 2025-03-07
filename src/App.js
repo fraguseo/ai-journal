@@ -7,26 +7,10 @@ import MoodRecipes from './components/MoodRecipes';
 import Dream from './components/Dream';
 import GoalTracker from './components/GoalTracker';
 import MorningThoughts from './components/MorningThoughts';
-import Login from './components/Login';
 
 function App() {
   const [currentView, setCurrentView] = useState('main');
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsAuthenticated(true);
-    }
-    setIsLoading(false);
-  }, []);
-
-  const handleLogin = (token) => {
-    setIsAuthenticated(true);
-    setCurrentView('main');
-  };
 
   const renderView = () => {
     switch (currentView) {
@@ -64,14 +48,6 @@ function App() {
     
     return () => clearInterval(keepAlive);
   }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!isAuthenticated) {
-    return <Login onLogin={handleLogin} />;
-  }
 
   return (
     <ChakraProvider>
