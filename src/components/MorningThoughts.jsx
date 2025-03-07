@@ -186,31 +186,24 @@ function MorningThoughts({ onBack }) {
         </HStack>
 
         <HStack spacing={4} w="100%" justify="center">
-          <Button
-            onClick={() => {
-              const prevDate = new Date(date);
-              prevDate.setDate(prevDate.getDate() - 1);
-              setDate(prevDate.toISOString().split('T')[0]);
-            }}
-          >
-            Previous Day
-          </Button>
           <Input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            maxW="150px"
+            maxW="200px"
             textAlign="center"
-          />
-          <Button
-            onClick={() => {
-              const nextDate = new Date(date);
-              nextDate.setDate(nextDate.getDate() + 1);
-              setDate(nextDate.toISOString().split('T')[0]);
+            cursor="pointer"
+            _hover={{ borderColor: 'blue.500' }}
+            sx={{
+              '&::-webkit-calendar-picker-indicator': {
+                cursor: 'pointer',
+                opacity: 0.7,
+                '&:hover': {
+                  opacity: 1
+                }
+              }
             }}
-          >
-            Next Day
-          </Button>
+          />
         </HStack>
 
         <Box 
