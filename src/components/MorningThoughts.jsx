@@ -12,7 +12,7 @@ import {
   useToast,
   IconButton
 } from '@chakra-ui/react';
-import { ArrowBackIcon, AddIcon, DeleteIcon, MicrophoneIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import { FaMicrophone, FaStop } from 'react-icons/fa';
 
 function MorningThoughts({ onBack }) {
@@ -20,27 +20,55 @@ function MorningThoughts({ onBack }) {
   const [newThought, setNewThought] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const mediaRecorder = useRef(null);
+  const recognition = useRef(null);
   const toast = useToast();
+
+  // Initialize speech recognition
+  const initializeSpeechRecognition = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognition.current = new SpeechRecognition();
+      recognition.current.continuous = true;
+      recognition.current.interimResults = true;
+      
+      recognition.current.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0].transcript)
+          .join('');
+        
+        setNewThought(transcript);
+      };
+
+      recognition.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        toast({
+          title: "Error",
+          description: "There was a problem with speech recognition",
+          status: "error",
+          duration: 3000,
+        });
+        stopRecording();
+      };
+    }
+  };
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder.current = new MediaRecorder(stream);
+      if (!recognition.current) {
+        initializeSpeechRecognition();
+      }
       
-      mediaRecorder.current.ondataavailable = async (event) => {
-        const audioBlob = event.data;
-        // Convert speech to text using a service like Google Speech-to-Text
-        // For now, we'll just add a placeholder thought
-        setThoughts(prev => [...prev, "Voice recorded thought..."]);
-      };
-
-      mediaRecorder.current.start();
-      setIsRecording(true);
+      if (recognition.current) {
+        recognition.current.start();
+        setIsRecording(true);
+      } else {
+        throw new Error('Speech recognition not supported');
+      }
     } catch (error) {
+      console.error('Speech recognition error:', error);
       toast({
-        title: "Microphone access denied",
-        description: "Please enable microphone access to use voice input",
+        title: "Error",
+        description: "Speech recognition is not supported in your browser",
         status: "error",
         duration: 3000,
       });
@@ -48,10 +76,14 @@ function MorningThoughts({ onBack }) {
   };
 
   const stopRecording = () => {
-    if (mediaRecorder.current && isRecording) {
-      mediaRecorder.current.stop();
+    if (recognition.current && isRecording) {
+      recognition.current.stop();
       setIsRecording(false);
-      mediaRecorder.current.stream.getTracks().forEach(track => track.stop());
+      
+      // Add the transcribed thought if it exists
+      if (newThought.trim()) {
+        addThought();
+      }
     }
   };
 
