@@ -197,11 +197,16 @@ function MorningThoughts({ onBack }) {
             sx={{
               '&::-webkit-calendar-picker-indicator': {
                 cursor: 'pointer',
-                opacity: 0.7,
+                opacity: 1,
+                position: 'absolute',
+                right: '10px',
+                color: 'gray.500',
+                fontSize: '1.2em',
                 '&:hover': {
-                  opacity: 1
+                  opacity: 0.7
                 }
-              }
+              },
+              paddingRight: '30px'  // Make space for the icon
             }}
           />
         </HStack>
