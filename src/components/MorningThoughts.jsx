@@ -185,6 +185,34 @@ function MorningThoughts({ onBack }) {
           <Box w={20}></Box>
         </HStack>
 
+        <HStack spacing={4} w="100%" justify="center">
+          <Button
+            onClick={() => {
+              const prevDate = new Date(date);
+              prevDate.setDate(prevDate.getDate() - 1);
+              setDate(prevDate.toISOString().split('T')[0]);
+            }}
+          >
+            Previous Day
+          </Button>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            maxW="150px"
+            textAlign="center"
+          />
+          <Button
+            onClick={() => {
+              const nextDate = new Date(date);
+              nextDate.setDate(nextDate.getDate() + 1);
+              setDate(nextDate.toISOString().split('T')[0]);
+            }}
+          >
+            Next Day
+          </Button>
+        </HStack>
+
         <Box 
           p={6} 
           bg="white" 
@@ -198,14 +226,6 @@ function MorningThoughts({ onBack }) {
             backgroundAttachment: 'local',
           }}
         >
-          <Input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            mb={4}
-            maxW="200px"
-          />
-          
           <UnorderedList spacing={3} styleType="none" ml={0}>
             {thoughts.map((thought, index) => (
               <ListItem key={index} display="flex" alignItems="center">
