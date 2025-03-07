@@ -25,6 +25,7 @@ function MorningThoughts({ onBack }) {
 
   // Load thoughts when date changes
   useEffect(() => {
+    console.log('Loading thoughts for date:', date); // Debug log
     loadThoughts();
   }, [date]);
 
@@ -32,8 +33,11 @@ function MorningThoughts({ onBack }) {
     try {
       const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`);
       const data = await response.json();
+      console.log('Loaded thoughts:', data); // Debug log
       if (data && data.thoughts) {
         setThoughts(data.thoughts);
+      } else {
+        setThoughts([]); // Reset if no thoughts found
       }
     } catch (error) {
       console.error('Error loading thoughts:', error);
@@ -46,17 +50,33 @@ function MorningThoughts({ onBack }) {
     }
   };
 
-  const saveThoughts = async () => {
+  const saveThoughts = async (updatedThoughts) => {
     try {
-      await fetch('https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts', {
+      console.log('Saving thoughts:', { thoughts: updatedThoughts, date }); // Debug log
+      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          thoughts,
+          thoughts: updatedThoughts,
           date
         }),
+      });
+      const data = await response.json();
+      console.log('Save response:', data); // Debug log
+      
+      // Verify save was successful
+      if (!response.ok) {
+        throw new Error('Failed to save thoughts');
+      }
+      
+      // Show success toast
+      toast({
+        title: "Saved",
+        description: "Your thoughts have been saved",
+        status: "success",
+        duration: 2000,
       });
     } catch (error) {
       console.error('Error saving thoughts:', error);
@@ -138,16 +158,14 @@ function MorningThoughts({ onBack }) {
       const updatedThoughts = [...thoughts, newThought.trim()];
       setThoughts(updatedThoughts);
       setNewThought('');
-      // Save to backend
-      saveThoughts();
+      saveThoughts(updatedThoughts); // Save after updating state
     }
   };
 
   const removeThought = (index) => {
     const updatedThoughts = thoughts.filter((_, i) => i !== index);
     setThoughts(updatedThoughts);
-    // Save to backend
-    saveThoughts();
+    saveThoughts(updatedThoughts); // Save after updating state
   };
 
   const handleKeyPress = (e) => {

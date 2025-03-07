@@ -1012,37 +1012,46 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-// Add morning thoughts endpoints
+// Update morning thoughts endpoints
 app.post("/api/morning-thoughts", async (req, res) => {
   try {
     const { thoughts, date } = req.body;
+    console.log('Received save request:', { thoughts, date }); // Debug log
+
+    if (!thoughts || !date) {
+      throw new Error('Missing required fields');
+    }
     
-    // Update or create thoughts for the date
     const result = await MorningThought.findOneAndUpdate(
-      { date: new Date(date) },
-      { thoughts },
+      { date },
+      { thoughts, date },
       { new: true, upsert: true }
     );
 
+    console.log('Saved result:', result); // Debug log
     res.json(result);
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Failed to save morning thoughts" });
+    console.error("Error saving thoughts:", error);
+    res.status(500).json({ error: error.message || "Failed to save morning thoughts" });
   }
 });
 
 app.get("/api/morning-thoughts", async (req, res) => {
   try {
     const { date } = req.query;
+    console.log('Received load request for date:', date); // Debug log
     
-    const thoughts = await MorningThought.findOne({
-      date: new Date(date)
-    });
+    if (!date) {
+      throw new Error('Date is required');
+    }
+
+    const thought = await MorningThought.findOne({ date });
+    console.log('Found thoughts:', thought); // Debug log
     
-    res.json(thoughts || { thoughts: [], date });
+    res.json(thought || { thoughts: [], date });
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Failed to fetch morning thoughts" });
+    console.error("Error loading thoughts:", error);
+    res.status(500).json({ error: error.message || "Failed to fetch morning thoughts" });
   }
 });
 
