@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -22,6 +22,52 @@ function MorningThoughts({ onBack }) {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const recognition = useRef(null);
   const toast = useToast();
+
+  // Load thoughts when date changes
+  useEffect(() => {
+    loadThoughts();
+  }, [date]);
+
+  const loadThoughts = async () => {
+    try {
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`);
+      const data = await response.json();
+      if (data && data.thoughts) {
+        setThoughts(data.thoughts);
+      }
+    } catch (error) {
+      console.error('Error loading thoughts:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load thoughts",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
+
+  const saveThoughts = async () => {
+    try {
+      await fetch('https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          thoughts,
+          date
+        }),
+      });
+    } catch (error) {
+      console.error('Error saving thoughts:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save thoughts",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
 
   // Initialize speech recognition
   const initializeSpeechRecognition = () => {
@@ -89,13 +135,19 @@ function MorningThoughts({ onBack }) {
 
   const addThought = () => {
     if (newThought.trim()) {
-      setThoughts(prev => [...prev, newThought.trim()]);
+      const updatedThoughts = [...thoughts, newThought.trim()];
+      setThoughts(updatedThoughts);
       setNewThought('');
+      // Save to backend
+      saveThoughts();
     }
   };
 
   const removeThought = (index) => {
-    setThoughts(prev => prev.filter((_, i) => i !== index));
+    const updatedThoughts = thoughts.filter((_, i) => i !== index);
+    setThoughts(updatedThoughts);
+    // Save to backend
+    saveThoughts();
   };
 
   const handleKeyPress = (e) => {
