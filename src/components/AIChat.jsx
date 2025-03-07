@@ -87,7 +87,7 @@ function AIChat({ onBack }) {
           isLoading={isLoading}
           w="100%"
         >
-          Send
+          Get AI Insights
         </Button>
       </VStack>
     </Container>
