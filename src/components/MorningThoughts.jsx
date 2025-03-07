@@ -12,7 +12,7 @@ import {
   useToast,
   IconButton
 } from '@chakra-ui/react';
-import { ArrowBackIcon, AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, AddIcon, DeleteIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { FaMicrophone, FaStop } from 'react-icons/fa';
 
 function MorningThoughts({ onBack }) {
@@ -186,29 +186,28 @@ function MorningThoughts({ onBack }) {
         </HStack>
 
         <HStack spacing={4} w="100%" justify="center">
-          <Input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            maxW="200px"
-            textAlign="center"
-            cursor="pointer"
-            _hover={{ borderColor: 'blue.500' }}
-            sx={{
-              '&::-webkit-calendar-picker-indicator': {
-                cursor: 'pointer',
-                opacity: 1,
-                position: 'absolute',
-                right: '10px',
-                color: 'gray.500',
-                fontSize: '1.2em',
-                '&:hover': {
-                  opacity: 0.7
-                }
-              },
-              paddingRight: '30px'  // Make space for the icon
-            }}
-          />
+          <Box position="relative" width="200px">
+            <Input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              maxW="200px"
+              textAlign="center"
+              cursor="pointer"
+              _hover={{ borderColor: 'blue.500' }}
+              pr="40px"  // Make space for the icon
+            />
+            <ChevronDownIcon
+              position="absolute"
+              right="10px"
+              top="50%"
+              transform="translateY(-50%)"
+              color="gray.500"
+              w={5}
+              h={5}
+              pointerEvents="none"
+            />
+          </Box>
         </HStack>
 
         <Box 
