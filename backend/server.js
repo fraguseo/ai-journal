@@ -721,11 +721,32 @@ app.post("/api/diary", authenticateToken, async (req, res) => {
   }
 });
 
-// Update the GET endpoint to filter by user
+// Update the GET endpoint to filter by user and date
 app.get('/api/diary', authenticateToken, async (req, res) => {
   try {
-    const entries = await DiaryEntry.find({ userId: req.user.userId })
-      .sort({ date: -1 });
+    const { date } = req.query;
+    let entries;
+
+    if (date) {
+      // Create start and end of the selected date
+      const startOfDay = new Date(date);
+      const endOfDay = new Date(date);
+      endOfDay.setDate(endOfDay.getDate() + 1);
+      
+      entries = await DiaryEntry.find({
+        userId: req.user.userId,
+        date: {
+          $gte: startOfDay,
+          $lt: endOfDay
+        }
+      }).sort({ date: -1 });
+    } else {
+      // If no date specified, get all entries for user
+      entries = await DiaryEntry.find({ 
+        userId: req.user.userId 
+      }).sort({ date: -1 });
+    }
+
     res.json(entries);
   } catch (error) {
     res.status(500).json({ message: error.message });
