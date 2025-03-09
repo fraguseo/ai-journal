@@ -71,7 +71,11 @@ function Diary({ onBack }) {
 
   const fetchEntries = async (selectedDate) => {
     try {
-      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/diary?date=${selectedDate}`);
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Authorization': `Bearer ${token}`
+      };
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/diary?date=${selectedDate}`, { headers });
       if (!response.ok) {
         throw new Error('Failed to fetch entries');
       }
@@ -89,8 +93,13 @@ function Diary({ onBack }) {
   const fetchMoodStats = async (period = statsPeriod) => {
     try {
       console.log('Fetching mood stats...');
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Authorization': `Bearer ${token}`
+      };
       const response = await fetch(
-        `https://ai-journal-backend-01bx.onrender.com/api/diary/stats?period=${period}&date=${date}`
+        `https://ai-journal-backend-01bx.onrender.com/api/diary/stats?period=${period}&date=${date}`,
+        { headers }
       );
       if (!response.ok) throw new Error('Failed to fetch stats');
       const data = await response.json();
@@ -109,7 +118,11 @@ function Diary({ onBack }) {
 
   const fetchMoodAnalysis = async () => {
     try {
-      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary/mood-analysis');
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Authorization': `Bearer ${token}`
+      };
+      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary/mood-analysis', { headers });
       if (!response.ok) throw new Error('Failed to fetch mood analysis');
       const data = await response.json();
       setMoodAnalysis(data);
@@ -120,8 +133,13 @@ function Diary({ onBack }) {
 
   const fetchMemories = async (selectedDate) => {
     try {
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Authorization': `Bearer ${token}`
+      };
       const response = await fetch(
-        `https://ai-journal-backend-01bx.onrender.com/api/diary/on-this-day?date=${selectedDate}`
+        `https://ai-journal-backend-01bx.onrender.com/api/diary/on-this-day?date=${selectedDate}`,
+        { headers }
       );
       if (!response.ok) throw new Error('Failed to fetch memories');
       const data = await response.json();
@@ -151,6 +169,10 @@ function Diary({ onBack }) {
 
     setIsLoading(true);
     try {
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Authorization': `Bearer ${token}`
+      };
       const payload = { 
         entry: entry.trim(), 
         date,
@@ -160,9 +182,7 @@ function Diary({ onBack }) {
 
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
         body: JSON.stringify(payload),
       });
 
