@@ -633,7 +633,7 @@ app.post("/api/analyze", async (req, res) => {
 });
 
 // Update the diary endpoint to include AI mood analysis
-app.post("/api/diary", async (req, res) => {
+app.post("/api/diary", authenticateToken, async (req, res) => {
   try {
     const { entry, date, journalType, prompts } = req.body;
     
@@ -677,11 +677,12 @@ app.post("/api/diary", async (req, res) => {
         mood: moodAnalysis.mood,
         moodIntensity: moodAnalysis.intensity,
         journalType,
-        prompts: prompts || []
+        prompts: prompts || [],
+        userId: req.user.userId
       });
 
       console.log('Saving diary entry:', diaryEntry);
-      await diaryEntry.save();
+      const newEntry = await diaryEntry.save();
       console.log('Entry saved successfully');
 
       res.json({ 
@@ -702,31 +703,14 @@ app.post("/api/diary", async (req, res) => {
   }
 });
 
-// Update the GET endpoint to accept a date query
-app.get("/api/diary", async (req, res) => {
+// Update the GET endpoint to filter by user
+app.get('/api/diary', authenticateToken, async (req, res) => {
   try {
-    const { date } = req.query;
-    let entries;
-    
-    if (date) {
-      const startOfDay = new Date(date);
-      const endOfDay = new Date(date);
-      endOfDay.setDate(endOfDay.getDate() + 1);
-      
-      entries = await DiaryEntry.find({
-        date: {
-          $gte: startOfDay,
-          $lt: endOfDay
-        }
-      }).sort({ date: -1 });
-    } else {
-      entries = await DiaryEntry.find().sort({ date: -1 });
-    }
-    
+    const entries = await DiaryEntry.find({ userId: req.user.userId })
+      .sort({ date: -1 });
     res.json(entries);
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Failed to fetch diary entries" });
+    res.status(500).json({ message: error.message });
   }
 });
 
