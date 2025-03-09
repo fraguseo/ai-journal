@@ -171,14 +171,19 @@ function Diary({ onBack }) {
     try {
       const token = localStorage.getItem('token');
       const headers = {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       };
+      
+      // Make sure we have a valid date
       const payload = { 
         entry: entry.trim(), 
-        date,
-        journalType
+        date: date || new Date().toISOString().split('T')[0], // Ensure we always have a date
+        journalType,
+        prompts: [] // Add empty prompts array if needed
       };
-      console.log('Sending to server:', payload);
+      
+      console.log('Sending to server:', payload); // Debug log
 
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/diary', {
         method: 'POST',
