@@ -60,6 +60,7 @@ function App() {
             onDreamClick={() => setCurrentView('dream')}
             onGoalsClick={() => setCurrentView('goals')}
             onMorningThoughtsClick={() => setCurrentView('morningThoughts')}
+            onLogout={handleLogout}
           />
         );
     }

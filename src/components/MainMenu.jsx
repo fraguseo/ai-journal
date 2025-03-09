@@ -5,6 +5,7 @@ import {
   Container,
   Text,
   Box,
+  Heading
 } from '@chakra-ui/react';
 import { 
   EditIcon, 
@@ -15,75 +16,48 @@ import {
   SunIcon
 } from '@chakra-ui/icons';
 
-function MainMenu({ onDiaryClick, onChatClick, onRecipesClick, onDreamClick, onGoalsClick, onMorningThoughtsClick }) {
+function MainMenu({ 
+  onDiaryClick, 
+  onChatClick, 
+  onRecipesClick, 
+  onDreamClick, 
+  onGoalsClick, 
+  onMorningThoughtsClick,
+  onLogout
+}) {
   return (
-    <Container maxW="container.md" py={8}>
+    <Container maxW="container.sm" py={8}>
       <VStack spacing={8}>
-        <Text fontSize="3xl" fontWeight="bold">
-          AI Journal
-        </Text>
-
-        <VStack spacing={4} w="100%">
-          <Button
-            leftIcon={<EditIcon />}
-            onClick={onDiaryClick}
-            size="lg"
-            w="100%"
-            colorScheme="green"
-          >
-            Daily Diary
-          </Button>
-
-          <Button
-            leftIcon={<ChatIcon />}
-            onClick={onChatClick}
-            size="lg"
-            w="100%"
-            colorScheme="blue"
-          >
-            AI Chat
-          </Button>
-
-          <Button
-            leftIcon={<SpinnerIcon />}
-            onClick={onRecipesClick}
-            size="lg"
-            w="100%"
-            colorScheme="yellow"
-          >
-            Mood Recipes
-          </Button>
-
-          <Button
-            leftIcon={<MoonIcon />}
-            onClick={onDreamClick}
-            size="lg"
-            w="100%"
-            colorScheme="teal"
-          >
-            Dream Journal
-          </Button>
-
-          <Button
-            leftIcon={<StarIcon />}
-            onClick={onGoalsClick}
-            size="lg"
-            w="100%"
-            colorScheme="purple"
-          >
-            Goal Tracker
-          </Button>
-
-          <Button
-            leftIcon={<SunIcon />}
-            onClick={onMorningThoughtsClick}
-            size="lg"
-            w="100%"
-            colorScheme="orange"
-          >
-            Morning Thoughts
-          </Button>
-        </VStack>
+        <Heading>AI Journal</Heading>
+        <Box w="100%">
+          <VStack spacing={4}>
+            <Button colorScheme="blue" width="100%" onClick={onDiaryClick}>
+              Diary
+            </Button>
+            <Button colorScheme="blue" width="100%" onClick={onChatClick}>
+              AI Chat
+            </Button>
+            <Button colorScheme="blue" width="100%" onClick={onRecipesClick}>
+              Mood Recipes
+            </Button>
+            <Button colorScheme="blue" width="100%" onClick={onDreamClick}>
+              Dream Journal
+            </Button>
+            <Button colorScheme="blue" width="100%" onClick={onGoalsClick}>
+              Goal Tracker
+            </Button>
+            <Button colorScheme="blue" width="100%" onClick={onMorningThoughtsClick}>
+              Morning Thoughts
+            </Button>
+            <Button
+              colorScheme="red"
+              width="100%"
+              onClick={onLogout}
+            >
+              Sign Out
+            </Button>
+          </VStack>
+        </Box>
       </VStack>
     </Container>
   );
