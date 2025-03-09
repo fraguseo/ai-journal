@@ -7,10 +7,35 @@ import MoodRecipes from './components/MoodRecipes';
 import Dream from './components/Dream';
 import GoalTracker from './components/GoalTracker';
 import MorningThoughts from './components/MorningThoughts';
+import Login from './components/Login';
 
 function App() {
   const [currentView, setCurrentView] = useState('main');
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('user');
+    if (token && savedUser) {
+      setIsAuthenticated(true);
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  const handleLogin = (data) => {
+    setIsAuthenticated(true);
+    setUser(data.user);
+    setCurrentView('main');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setIsAuthenticated(false);
+    setUser(null);
+  };
 
   const renderView = () => {
     switch (currentView) {
@@ -48,6 +73,14 @@ function App() {
     
     return () => clearInterval(keepAlive);
   }, []);
+
+  if (!isAuthenticated) {
+    return (
+      <ChakraProvider>
+        <Login onLogin={handleLogin} />
+      </ChakraProvider>
+    );
+  }
 
   return (
     <ChakraProvider>

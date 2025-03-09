@@ -16,9 +16,9 @@ import {
 function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const toast = useToast();
 
   const handleSubmit = async (e) => {
@@ -26,24 +26,28 @@ function Login({ onLogin }) {
     setIsLoading(true);
 
     try {
-      const endpoint = isSignUp ? '/api/signup' : '/api/login';
+      const endpoint = isRegistering ? '/api/register' : '/api/login';
+      const body = isRegistering 
+        ? { name, email, password }
+        : { email, password };
+
       const response = await fetch(`https://ai-journal-backend-01bx.onrender.com${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(isSignUp ? { email, password, name } : { email, password }),
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        localStorage.setItem('userId', data.userId);
-        onLogin(data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        onLogin(data);
         toast({
-          title: isSignUp ? "Account created." : "Login successful",
-          status: "success",
+          title: isRegistering ? 'Account created.' : 'Login successful',
+          status: 'success',
           duration: 3000,
         });
       } else {
@@ -51,9 +55,9 @@ function Login({ onLogin }) {
       }
     } catch (error) {
       toast({
-        title: "Error",
+        title: 'Error',
         description: error.message,
-        status: "error",
+        status: 'error',
         duration: 3000,
       });
     } finally {
@@ -65,10 +69,10 @@ function Login({ onLogin }) {
     <Container maxW="container.sm" py={8}>
       <VStack spacing={8}>
         <Heading>AI Journal</Heading>
-        <Box w="100%" p={8} borderWidth={1} borderRadius="lg">
+        <Box w="100%" p={8} borderWidth={1} borderRadius="lg" boxShadow="md">
           <form onSubmit={handleSubmit}>
             <VStack spacing={4}>
-              {isSignUp && (
+              {isRegistering && (
                 <FormControl isRequired>
                   <FormLabel>Name</FormLabel>
                   <Input
@@ -103,14 +107,17 @@ function Login({ onLogin }) {
                 width="100%"
                 isLoading={isLoading}
               >
-                {isSignUp ? 'Sign Up' : 'Login'}
+                {isRegistering ? 'Sign Up' : 'Login'}
               </Button>
             </VStack>
           </form>
           <Text mt={4} textAlign="center">
-            {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
-            <Link color="blue.500" onClick={() => setIsSignUp(!isSignUp)}>
-              {isSignUp ? 'Login' : 'Sign Up'}
+            {isRegistering ? 'Already have an account? ' : "Don't have an account? "}
+            <Link
+              color="blue.500"
+              onClick={() => setIsRegistering(!isRegistering)}
+            >
+              {isRegistering ? 'Login' : 'Sign Up'}
             </Link>
           </Text>
         </Box>
