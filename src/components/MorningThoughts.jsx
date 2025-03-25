@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Box,
   Button,
@@ -14,7 +14,26 @@ import {
 } from '@chakra-ui/react';
 import { ArrowBackIcon, AddIcon, DeleteIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { FaMicrophone, FaStop } from 'react-icons/fa';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useQuery, useMutation } from '@tanstack/react-query';
+
+// Create a new QueryClient instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+// Create a wrapper component
+function MorningThoughtsWithQuery({ onBack }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MorningThoughts onBack={onBack} />
+    </QueryClientProvider>
+  );
+}
 
 function MorningThoughts({ onBack }) {
   const [newThought, setNewThought] = useState('');
@@ -22,7 +41,6 @@ function MorningThoughts({ onBack }) {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const recognition = useRef(null);
   const toast = useToast();
-  const queryClient = useQueryClient();
 
   // Query for fetching thoughts
   const { data: thoughtsData, isLoading } = useQuery({
@@ -62,8 +80,6 @@ function MorningThoughts({ onBack }) {
       return response.json();
     },
     onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries(['thoughts', date]);
       toast({
         title: 'Thoughts saved!',
         status: 'success',
@@ -288,4 +304,5 @@ function MorningThoughts({ onBack }) {
   );
 }
 
-export default MorningThoughts; 
+// Export the wrapped component
+export default MorningThoughtsWithQuery; 
