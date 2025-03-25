@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { ArrowBackIcon, AddIcon, DeleteIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { FaMicrophone, FaStop } from 'react-icons/fa';
-import { QueryClient, QueryClientProvider, useQuery, useMutation } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 // Create a new QueryClient instance
 const queryClient = new QueryClient({
@@ -41,6 +41,7 @@ function MorningThoughts({ onBack }) {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const recognition = useRef(null);
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   // Query for fetching thoughts
   const { data: thoughtsData, isLoading } = useQuery({
@@ -77,11 +78,18 @@ function MorningThoughts({ onBack }) {
           date
         })
       });
+      if (!response.ok) {
+        throw new Error('Failed to save thoughts');
+      }
       return response.json();
     },
-    onSuccess: () => {
-      // Invalidate and refetch the query after successful save
-      queryClient.invalidateQueries({ queryKey: ['thoughts', date] });
+    onSuccess: async (data) => {
+      // Update the query cache immediately
+      queryClient.setQueryData(['thoughts', date], data);
+      
+      // Then invalidate to ensure fresh data
+      await queryClient.invalidateQueries({ queryKey: ['thoughts', date] });
+      
       toast({
         title: 'Thoughts saved!',
         status: 'success',
