@@ -16,57 +16,48 @@ import { ArrowBackIcon, AddIcon, DeleteIcon, ChevronDownIcon } from '@chakra-ui/
 import { FaMicrophone, FaStop } from 'react-icons/fa';
 
 function MorningThoughts({ onBack }) {
-  const [thoughts, setThoughts] = useState(() => {
-    // Initialize from localStorage if available
-    const savedDate = localStorage.getItem('currentDate');
-    const savedThoughts = localStorage.getItem('currentThoughts');
-    if (savedDate === new Date().toISOString().split('T')[0] && savedThoughts) {
-      return JSON.parse(savedThoughts);
-    }
-    return [];
-  });
+  const [thoughts, setThoughts] = useState([]);
   const [newThought, setNewThought] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [isLoading, setIsLoading] = useState(true);
   const recognition = useRef(null);
   const toast = useToast();
 
-  // Load thoughts when date changes
+  // Load thoughts when component mounts or date changes
   useEffect(() => {
-    loadThoughts();
-    // Clear localStorage when date changes
-    localStorage.setItem('currentDate', date);
-    localStorage.setItem('currentThoughts', '[]');
-  }, [date]);
+    const fetchThoughts = async () => {
+      setIsLoading(true);
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
-  const loadThoughts = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+        const data = await response.json();
+        console.log('Loaded thoughts:', data);
+
+        if (data && data.thoughts) {
+          setThoughts(data.thoughts);
         }
-      });
-
-      const data = await response.json();
-      console.log('Loaded thoughts:', data);
-      
-      if (data && Array.isArray(data.thoughts)) {
-        setThoughts(data.thoughts);
-        // Save to localStorage
-        localStorage.setItem('currentThoughts', JSON.stringify(data.thoughts));
+      } catch (error) {
+        console.error('Error loading thoughts:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load thoughts",
+          status: "error",
+          duration: 3000,
+        });
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Error loading thoughts:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load thoughts",
-        status: "error",
-        duration: 3000,
-      });
-    }
-  };
+    };
+
+    fetchThoughts();
+  }, [date, toast]); // Add toast to dependencies
 
   const handleSubmit = async () => {
     try {
@@ -78,17 +69,14 @@ function MorningThoughts({ onBack }) {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          thoughts: thoughts,
-          date: date
+          thoughts,
+          date
         })
       });
 
       if (!response.ok) {
         throw new Error('Failed to save thoughts');
       }
-
-      // Save to localStorage after successful server save
-      localStorage.setItem('currentThoughts', JSON.stringify(thoughts));
 
       toast({
         title: 'Thoughts saved!',
@@ -104,6 +92,21 @@ function MorningThoughts({ onBack }) {
         duration: 3000,
       });
     }
+  };
+
+  const addThought = () => {
+    if (newThought.trim()) {
+      const updatedThoughts = [...thoughts, newThought.trim()];
+      setThoughts(updatedThoughts);
+      setNewThought('');
+      handleSubmit();
+    }
+  };
+
+  const removeThought = (index) => {
+    const updatedThoughts = thoughts.filter((_, i) => i !== index);
+    setThoughts(updatedThoughts);
+    handleSubmit();
   };
 
   // Initialize speech recognition
@@ -168,25 +171,6 @@ function MorningThoughts({ onBack }) {
         addThought();
       }
     }
-  };
-
-  const addThought = () => {
-    if (newThought.trim()) {
-      const updatedThoughts = [...thoughts, newThought.trim()];
-      setThoughts(updatedThoughts);
-      setNewThought('');
-      // Save to localStorage immediately
-      localStorage.setItem('currentThoughts', JSON.stringify(updatedThoughts));
-      handleSubmit();
-    }
-  };
-
-  const removeThought = (index) => {
-    const updatedThoughts = thoughts.filter((_, i) => i !== index);
-    setThoughts(updatedThoughts);
-    // Save to localStorage immediately
-    localStorage.setItem('currentThoughts', JSON.stringify(updatedThoughts));
-    handleSubmit();
   };
 
   const handleKeyPress = (e) => {
