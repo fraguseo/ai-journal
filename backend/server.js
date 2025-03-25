@@ -10,7 +10,6 @@ const MorningThought = require('./models/MorningThought');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
-const nodemailer = require('nodemailer');
 
 dotenv.config();
 
@@ -1153,86 +1152,6 @@ app.post('/api/login', async (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Error logging in' });
-  }
-});
-
-// Add near your other endpoints
-app.post('/api/forgot-password', async (req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
-    
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // Generate reset token
-    const resetToken = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    // Save reset token to user
-    user.resetToken = resetToken;
-    user.resetTokenExpiry = Date.now() + 3600000; // 1 hour
-    await user.save();
-
-    // Create email transporter
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
-
-    // Send reset email
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Password Reset Request',
-      html: `
-        <p>You requested a password reset</p>
-        <p>Click this <a href="${process.env.FRONTEND_URL}/reset-password/${resetToken}">link</a> to reset your password</p>
-        <p>This link will expire in 1 hour</p>
-      `
-    });
-
-    res.json({ message: 'Reset email sent' });
-  } catch (error) {
-    console.error('Password reset error:', error);
-    res.status(500).json({ message: 'Error sending reset email' });
-  }
-});
-
-app.post('/api/reset-password', async (req, res) => {
-  try {
-    const { token, newPassword } = req.body;
-    
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findOne({ 
-      _id: decoded.userId,
-      resetToken: token,
-      resetTokenExpiry: { $gt: Date.now() }
-    });
-
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid or expired reset token' });
-    }
-
-    // Update password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
-    user.resetToken = undefined;
-    user.resetTokenExpiry = undefined;
-    await user.save();
-
-    res.json({ message: 'Password updated successfully' });
-  } catch (error) {
-    console.error('Password reset error:', error);
-    res.status(500).json({ message: 'Error resetting password' });
   }
 });
 
