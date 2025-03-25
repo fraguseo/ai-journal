@@ -13,7 +13,7 @@ import {
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import MorningThoughts from './MorningThoughts';
 
-function Journal({ onBack }) {
+function Journal({ onLogout }) {
   const [entry, setEntry] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -104,7 +104,7 @@ function Journal({ onBack }) {
               <HStack w="100%" justify="space-between">
                 <Button 
                   leftIcon={<ArrowBackIcon />} 
-                  onClick={onBack}
+                  onClick={onLogout}
                   variant="ghost"
                 >
                   Back
