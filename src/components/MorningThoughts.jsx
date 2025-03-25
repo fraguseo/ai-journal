@@ -15,11 +15,17 @@ import {
 import { ArrowBackIcon, AddIcon, DeleteIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { FaMicrophone, FaStop } from 'react-icons/fa';
 
+// Add this helper function at the top
+const formatDate = (date) => {
+  const d = new Date(date);
+  return d.toISOString().split('T')[0];
+};
+
 function MorningThoughts({ onBack }) {
   const [thoughts, setThoughts] = useState([]);
   const [newThought, setNewThought] = useState('');
   const [isRecording, setIsRecording] = useState(false);
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(formatDate(new Date()));
   const recognition = useRef(null);
   const toast = useToast();
 
@@ -32,9 +38,10 @@ function MorningThoughts({ onBack }) {
   const loadThoughts = async () => {
     try {
       const token = localStorage.getItem('token');
+      const formattedDate = formatDate(date); // Format date consistently
       console.log('Loading thoughts with token:', token); // Debug log
 
-      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${formattedDate}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -66,7 +73,8 @@ function MorningThoughts({ onBack }) {
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log('Submitting thoughts:', thoughts); // Debug log
+      const formattedDate = formatDate(date); // Format date consistently
+      console.log('Submitting thoughts:', thoughts);
 
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts', {
         method: 'POST',
@@ -75,8 +83,8 @@ function MorningThoughts({ onBack }) {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          thoughts: thoughts,  // This is an array of strings
-          date: date
+          thoughts: thoughts,
+          date: formattedDate
         })
       });
 
