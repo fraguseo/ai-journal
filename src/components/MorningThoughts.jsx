@@ -66,23 +66,24 @@ function MorningThoughts({ onBack }) {
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log('Submitting thoughts with token:', token); // Debug log
+      console.log('Submitting thoughts:', thoughts); // Debug log
 
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Add this
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          thoughts: thoughts,
+          thoughts: thoughts,  // This is an array of strings
           date: date
         })
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to save thoughts');
+        const errorData = await response.json();
+        console.error('Server error:', errorData); // Debug log
+        throw new Error(errorData.message || 'Failed to save thoughts');
       }
 
       const data = await response.json();
@@ -93,9 +94,6 @@ function MorningThoughts({ onBack }) {
         status: 'success',
         duration: 2000,
       });
-
-      // Clear form after successful save
-      setThoughts([]);
     } catch (error) {
       console.error('Error:', error);
       toast({
