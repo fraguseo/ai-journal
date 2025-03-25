@@ -30,6 +30,8 @@ function MorningThoughts({ onBack }) {
       setIsLoading(true);
       try {
         const token = localStorage.getItem('token');
+        console.log('Fetching thoughts for date:', date);
+
         const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -38,9 +40,10 @@ function MorningThoughts({ onBack }) {
         });
 
         const data = await response.json();
-        console.log('Loaded thoughts:', data);
+        console.log('Server response:', data);
 
         if (data && data.thoughts) {
+          console.log('Setting thoughts:', data.thoughts);
           setThoughts(data.thoughts);
         }
       } catch (error) {
@@ -57,11 +60,13 @@ function MorningThoughts({ onBack }) {
     };
 
     fetchThoughts();
-  }, [date, toast]); // Add toast to dependencies
+  }, [date, toast]);
 
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem('token');
+      console.log('Saving thoughts:', { thoughts, date });
+
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts', {
         method: 'POST',
         headers: {
@@ -74,9 +79,22 @@ function MorningThoughts({ onBack }) {
         })
       });
 
+      const data = await response.json();
+      console.log('Save response:', data);
+
       if (!response.ok) {
         throw new Error('Failed to save thoughts');
       }
+
+      // Verify saved data by reloading
+      const verifyResponse = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const verifyData = await verifyResponse.json();
+      console.log('Verify saved data:', verifyData);
 
       toast({
         title: 'Thoughts saved!',
