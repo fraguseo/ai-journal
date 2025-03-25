@@ -189,33 +189,6 @@ function MorningThoughts({ onBack }) {
     }
   };
 
-  const refreshThoughts = async () => {
-    setIsLoading(true);
-    try {
-      const token = localStorage.getItem('token');
-      console.log('Manually refreshing thoughts for date:', date);
-
-      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      const data = await response.json();
-      console.log('Manual refresh response:', data);
-
-      if (data && data.thoughts) {
-        console.log('Setting thoughts from refresh:', data.thoughts);
-        setThoughts(data.thoughts);
-      }
-    } catch (error) {
-      console.error('Error refreshing thoughts:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={6} align="stretch">
@@ -224,13 +197,7 @@ function MorningThoughts({ onBack }) {
             Back
           </Button>
           <Text fontSize="2xl" fontWeight="bold">Morning Thoughts</Text>
-          <Button 
-            onClick={refreshThoughts} 
-            isLoading={isLoading}
-            variant="ghost"
-          >
-            Refresh
-          </Button>
+          <Box w={20}></Box>
         </HStack>
 
         <HStack spacing={4} w="100%" justify="center">
