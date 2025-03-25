@@ -14,76 +14,40 @@ import {
 } from '@chakra-ui/react';
 import { ArrowBackIcon, AddIcon, DeleteIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { FaMicrophone, FaStop } from 'react-icons/fa';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 function MorningThoughts({ onBack }) {
-  const [thoughts, setThoughts] = useState([]);
   const [newThought, setNewThought] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [isLoading, setIsLoading] = useState(true);
   const recognition = useRef(null);
   const toast = useToast();
+  const queryClient = useQueryClient();
 
-  // Move fetchThoughts outside useEffect
-  const fetchThoughts = async () => {
-    setIsLoading(true);
-    try {
+  // Query for fetching thoughts
+  const { data: thoughtsData, isLoading } = useQuery({
+    queryKey: ['thoughts', date],
+    queryFn: async () => {
       const token = localStorage.getItem('token');
-      console.log('Fetching thoughts for date:', date);
-
       const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-
       const data = await response.json();
-      console.log('Server response:', data);
-
-      if (data && Array.isArray(data.thoughts)) {
-        console.log('Setting thoughts from response:', data.thoughts);
-        setThoughts(data.thoughts);
-      } else {
-        console.log('No valid thoughts found in response');
-        setThoughts([]); // Reset thoughts if response is invalid
-      }
-    } catch (error) {
-      console.error('Error loading thoughts:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load thoughts",
-        status: "error",
-        duration: 3000,
-      });
-      setThoughts([]); // Reset thoughts on error
-    } finally {
-      setIsLoading(false);
+      console.log('Fetched thoughts:', data);
+      return data;
     }
-  };
+  });
 
-  // Load thoughts when component mounts or date changes
-  useEffect(() => {
-    let mounted = true;
-    
-    const loadData = async () => {
-      if (mounted) {
-        await fetchThoughts();
-      }
-    };
+  // Get thoughts array from data
+  const thoughts = thoughtsData?.thoughts || [];
 
-    loadData();
-
-    return () => {
-      mounted = false;
-    };
-  }, [date]); // Remove toast from dependencies since fetchThoughts is outside
-
-  const handleSubmit = async () => {
-    try {
+  // Mutation for saving thoughts
+  const saveMutation = useMutation({
+    mutationFn: async (newThoughts) => {
       const token = localStorage.getItem('token');
-      console.log('Saving thoughts:', { thoughts, date });
-
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts', {
         method: 'POST',
         headers: {
@@ -91,28 +55,22 @@ function MorningThoughts({ onBack }) {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          thoughts,
+          thoughts: newThoughts,
           date
         })
       });
-
-      const data = await response.json();
-      console.log('Save response:', data);
-
-      if (!response.ok) {
-        throw new Error('Failed to save thoughts');
-      }
-
-      // Immediately verify the save
-      await fetchThoughts(); // Re-fetch thoughts after save
-
+      return response.json();
+    },
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries(['thoughts', date]);
       toast({
         title: 'Thoughts saved!',
         status: 'success',
         duration: 2000,
       });
-    } catch (error) {
-      console.error('Error:', error);
+    },
+    onError: (error) => {
       toast({
         title: 'Error saving thoughts',
         description: error.message,
@@ -120,21 +78,19 @@ function MorningThoughts({ onBack }) {
         duration: 3000,
       });
     }
-  };
+  });
 
   const addThought = () => {
     if (newThought.trim()) {
       const updatedThoughts = [...thoughts, newThought.trim()];
-      setThoughts(updatedThoughts);
+      saveMutation.mutate(updatedThoughts);
       setNewThought('');
-      handleSubmit();
     }
   };
 
   const removeThought = (index) => {
     const updatedThoughts = thoughts.filter((_, i) => i !== index);
-    setThoughts(updatedThoughts);
-    handleSubmit();
+    saveMutation.mutate(updatedThoughts);
   };
 
   // Initialize speech recognition
