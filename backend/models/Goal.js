@@ -12,6 +12,11 @@ const progressEntrySchema = new mongoose.Schema({
 });
 
 const goalSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   description: {
     type: String,
     required: true,
