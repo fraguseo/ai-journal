@@ -38,8 +38,8 @@ function MorningThoughts({ onBack }) {
   const loadThoughts = async () => {
     try {
       const token = localStorage.getItem('token');
-      const formattedDate = formatDate(date); // Format date consistently
-      console.log('Loading thoughts with token:', token); // Debug log
+      const formattedDate = formatDate(date);
+      console.log('Loading thoughts for date:', formattedDate);
 
       const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${formattedDate}`, {
         headers: {
@@ -54,7 +54,9 @@ function MorningThoughts({ onBack }) {
 
       const data = await response.json();
       console.log('Loaded thoughts:', data);
-      if (data && data.thoughts) {
+      
+      // Check if we have thoughts for this date
+      if (data && Array.isArray(data.thoughts)) {
         setThoughts(data.thoughts);
       } else {
         setThoughts([]); // Reset if no thoughts found
@@ -73,7 +75,7 @@ function MorningThoughts({ onBack }) {
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem('token');
-      const formattedDate = formatDate(date); // Format date consistently
+      const formattedDate = formatDate(date);
       console.log('Submitting thoughts:', thoughts);
 
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts', {
@@ -90,12 +92,15 @@ function MorningThoughts({ onBack }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Server error:', errorData); // Debug log
+        console.error('Server error:', errorData);
         throw new Error(errorData.message || 'Failed to save thoughts');
       }
 
       const data = await response.json();
-      console.log('Save response:', data); // Debug log
+      console.log('Save response:', data);
+
+      // Reload thoughts after saving
+      await loadThoughts();
 
       toast({
         title: 'Thoughts saved!',
