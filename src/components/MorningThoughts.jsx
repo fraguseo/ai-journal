@@ -25,23 +25,19 @@ function MorningThoughts({ onBack }) {
   const [thoughts, setThoughts] = useState([]);
   const [newThought, setNewThought] = useState('');
   const [isRecording, setIsRecording] = useState(false);
-  const [date, setDate] = useState(formatDate(new Date()));
-  const [isLoading, setIsLoading] = useState(true);
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const recognition = useRef(null);
   const toast = useToast();
 
-  // Load thoughts when component mounts or date changes
+  // Load thoughts when date changes
   useEffect(() => {
     loadThoughts();
-  }, [date]); // Only reload when date changes
+  }, [date]);
 
   const loadThoughts = async () => {
     try {
-      setIsLoading(true);
       const token = localStorage.getItem('token');
-      const formattedDate = formatDate(date);
-      
-      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${formattedDate}`, {
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -54,9 +50,7 @@ function MorningThoughts({ onBack }) {
 
       const data = await response.json();
       console.log('Loaded thoughts:', data);
-      
-      // Important: Check for both data and thoughts array
-      if (data && Array.isArray(data.thoughts)) {
+      if (data && data.thoughts) {
         setThoughts(data.thoughts);
       } else {
         setThoughts([]);
@@ -69,17 +63,12 @@ function MorningThoughts({ onBack }) {
         status: "error",
         duration: 3000,
       });
-      setThoughts([]); // Reset on error
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem('token');
-      const formattedDate = formatDate(date);
-
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts', {
         method: 'POST',
         headers: {
@@ -88,17 +77,13 @@ function MorningThoughts({ onBack }) {
         },
         body: JSON.stringify({
           thoughts: thoughts,
-          date: formattedDate
+          date: date
         })
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to save thoughts');
+        throw new Error('Failed to save thoughts');
       }
-
-      const data = await response.json();
-      console.log('Save response:', data);
 
       toast({
         title: 'Thoughts saved!',
@@ -180,27 +165,19 @@ function MorningThoughts({ onBack }) {
     }
   };
 
-  const addThought = async () => {
+  const addThought = () => {
     if (newThought.trim()) {
       const updatedThoughts = [...thoughts, newThought.trim()];
       setThoughts(updatedThoughts);
       setNewThought('');
-      
-      // Wait for state to update before saving
-      setTimeout(async () => {
-        await handleSubmit();
-      }, 0);
+      handleSubmit();
     }
   };
 
-  const removeThought = async (index) => {
+  const removeThought = (index) => {
     const updatedThoughts = thoughts.filter((_, i) => i !== index);
     setThoughts(updatedThoughts);
-    
-    // Wait for state to update before saving
-    setTimeout(async () => {
-      await handleSubmit();
-    }, 0);
+    handleSubmit();
   };
 
   const handleKeyPress = (e) => {
