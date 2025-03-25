@@ -11,10 +11,12 @@ const morningThoughtSchema = new mongoose.Schema({
     required: true
   }],
   date: {
-    type: String,  // Changed from Date to String for easier matching
-    required: true,
-    unique: true
+    type: String,
+    required: true
   }
 });
+
+// Remove the unique constraint from date
+morningThoughtSchema.index({ userId: 1, date: 1 });
 
 module.exports = mongoose.model('MorningThought', morningThoughtSchema); 

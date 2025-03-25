@@ -1036,14 +1036,30 @@ app.post("/api/chat", async (req, res) => {
 app.post('/api/morning-thoughts', authenticateToken, async (req, res) => {
   try {
     const { thoughts, date } = req.body;
-    const morningThought = new MorningThought({
-      thoughts,
+    console.log('Saving morning thoughts:', { thoughts, date }); // Debug log
+
+    // Find existing entry or create new one
+    let morningThought = await MorningThought.findOne({
       date,
       userId: req.user.userId
     });
-    await morningThought.save();
+
+    if (morningThought) {
+      morningThought.thoughts = thoughts;
+      await morningThought.save();
+    } else {
+      morningThought = new MorningThought({
+        thoughts,
+        date,
+        userId: req.user.userId
+      });
+      await morningThought.save();
+    }
+
+    console.log('Saved morning thought:', morningThought); // Debug log
     res.json(morningThought);
   } catch (error) {
+    console.error('Error saving thoughts:', error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -1051,12 +1067,17 @@ app.post('/api/morning-thoughts', authenticateToken, async (req, res) => {
 app.get('/api/morning-thoughts', authenticateToken, async (req, res) => {
   try {
     const { date } = req.query;
+    console.log('Fetching thoughts for date:', date); // Debug log
+
     const thoughts = await MorningThought.findOne({ 
       date,
       userId: req.user.userId
     });
+
+    console.log('Found thoughts:', thoughts); // Debug log
     res.json(thoughts || { thoughts: [] });
   } catch (error) {
+    console.error('Error fetching thoughts:', error);
     res.status(500).json({ message: error.message });
   }
 });
