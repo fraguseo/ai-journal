@@ -80,6 +80,8 @@ function MorningThoughts({ onBack }) {
       return response.json();
     },
     onSuccess: () => {
+      // Invalidate and refetch the query after successful save
+      queryClient.invalidateQueries({ queryKey: ['thoughts', date] });
       toast({
         title: 'Thoughts saved!',
         status: 'success',
