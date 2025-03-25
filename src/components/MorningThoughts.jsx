@@ -54,13 +54,8 @@ function MorningThoughts({ onBack }) {
       const data = await response.json();
       console.log('Server response:', data);
 
-      if (response.ok && data && Array.isArray(data.thoughts)) {
-        console.log('Setting thoughts:', data.thoughts);
-        setThoughts(data.thoughts);
-      } else {
-        console.log('No thoughts found, setting empty array');
-        setThoughts([]);
-      }
+      // Always expect an object with a thoughts array
+      setThoughts(data.thoughts || []);
     } catch (error) {
       console.error('Error loading thoughts:', error);
       toast({
@@ -69,7 +64,7 @@ function MorningThoughts({ onBack }) {
         status: "error",
         duration: 3000,
       });
-      setThoughts([]); // Reset on error
+      setThoughts([]);
     }
   };
 

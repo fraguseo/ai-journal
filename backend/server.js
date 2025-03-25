@@ -1087,10 +1087,16 @@ app.get('/api/morning-thoughts', authenticateToken, async (req, res) => {
     const thought = await MorningThought.findOne({
       date: date,
       userId: req.user.userId
-    });
+    }).lean(); // Add lean() to get plain JavaScript object
 
     console.log('Found thought:', thought);
-    res.json(thought || { thoughts: [] });
+    
+    // Always return an object with a thoughts array
+    const response = thought ? 
+      { thoughts: thought.thoughts, date: thought.date } : 
+      { thoughts: [], date };
+      
+    res.json(response);
   } catch (error) {
     console.error('Error fetching thoughts:', error);
     res.status(500).json({ message: error.message });
