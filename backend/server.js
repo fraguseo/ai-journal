@@ -618,6 +618,17 @@ mongoose.connection.on('disconnected', () => {
   console.log('MongoDB disconnected');
 });
 
+// Add this after your MongoDB connection setup
+mongoose.connection.once('open', async () => {
+  try {
+    // Drop the existing unique index on date
+    await MorningThought.collection.dropIndex('date_1');
+    console.log('Dropped old index on MorningThought');
+  } catch (error) {
+    console.log('No existing index to drop');
+  }
+});
+
 app.post("/api/analyze", async (req, res) => {
   try {
     if (!process.env.OPENAI_API_KEY) {
