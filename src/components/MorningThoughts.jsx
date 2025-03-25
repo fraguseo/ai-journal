@@ -76,8 +76,6 @@ function MorningThoughts({ onBack }) {
   };
 
   const handleSubmit = async () => {
-    if (thoughts.length === 0) return; // Don't save empty array
-    
     try {
       const token = localStorage.getItem('token');
       const formattedDate = formatDate(date);
@@ -107,9 +105,6 @@ function MorningThoughts({ onBack }) {
         status: 'success',
         duration: 2000,
       });
-
-      // Reload thoughts to ensure we have the latest data
-      await loadThoughts();
     } catch (error) {
       console.error('Error:', error);
       toast({
@@ -185,19 +180,27 @@ function MorningThoughts({ onBack }) {
     }
   };
 
-  const addThought = () => {
+  const addThought = async () => {
     if (newThought.trim()) {
       const updatedThoughts = [...thoughts, newThought.trim()];
       setThoughts(updatedThoughts);
       setNewThought('');
-      handleSubmit(); // Save after updating state
+      
+      // Wait for state to update before saving
+      setTimeout(async () => {
+        await handleSubmit();
+      }, 0);
     }
   };
 
-  const removeThought = (index) => {
+  const removeThought = async (index) => {
     const updatedThoughts = thoughts.filter((_, i) => i !== index);
     setThoughts(updatedThoughts);
-    handleSubmit(); // Save after updating state
+    
+    // Wait for state to update before saving
+    setTimeout(async () => {
+      await handleSubmit();
+    }, 0);
   };
 
   const handleKeyPress = (e) => {
