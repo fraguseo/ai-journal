@@ -15,12 +15,6 @@ import {
 import { ArrowBackIcon, AddIcon, DeleteIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { FaMicrophone, FaStop } from 'react-icons/fa';
 
-// Add this helper function at the top
-const formatDate = (date) => {
-  const d = new Date(date);
-  return d.toISOString().split('T')[0];
-};
-
 function MorningThoughts({ onBack }) {
   const [thoughts, setThoughts] = useState([]);
   const [newThought, setNewThought] = useState('');
@@ -29,14 +23,27 @@ function MorningThoughts({ onBack }) {
   const recognition = useRef(null);
   const toast = useToast();
 
-  // Load thoughts when date changes
+  // Load thoughts on mount and when date changes
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast({
+        title: "Error",
+        description: "Please log in again",
+        status: "error",
+        duration: 3000,
+      });
+      return;
+    }
+
     loadThoughts();
-  }, [date]);
+  }, [date]); // Only depend on date
 
   const loadThoughts = async () => {
     try {
       const token = localStorage.getItem('token');
+      console.log('Loading thoughts for date:', date);
+
       const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -44,15 +51,14 @@ function MorningThoughts({ onBack }) {
         }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to load thoughts');
-      }
-
       const data = await response.json();
-      console.log('Loaded thoughts:', data);
-      if (data && data.thoughts) {
+      console.log('Server response:', data);
+
+      if (response.ok && data && Array.isArray(data.thoughts)) {
+        console.log('Setting thoughts:', data.thoughts);
         setThoughts(data.thoughts);
       } else {
+        console.log('No thoughts found, setting empty array');
         setThoughts([]);
       }
     } catch (error) {
@@ -63,6 +69,7 @@ function MorningThoughts({ onBack }) {
         status: "error",
         duration: 3000,
       });
+      setThoughts([]); // Reset on error
     }
   };
 
