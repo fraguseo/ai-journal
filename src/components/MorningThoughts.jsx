@@ -24,43 +24,60 @@ function MorningThoughts({ onBack }) {
   const recognition = useRef(null);
   const toast = useToast();
 
+  // Move fetchThoughts outside useEffect
+  const fetchThoughts = async () => {
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      console.log('Fetching thoughts for date:', date);
+
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+      console.log('Server response:', data);
+
+      if (data && Array.isArray(data.thoughts)) {
+        console.log('Setting thoughts from response:', data.thoughts);
+        setThoughts(data.thoughts);
+      } else {
+        console.log('No valid thoughts found in response');
+        setThoughts([]); // Reset thoughts if response is invalid
+      }
+    } catch (error) {
+      console.error('Error loading thoughts:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load thoughts",
+        status: "error",
+        duration: 3000,
+      });
+      setThoughts([]); // Reset thoughts on error
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Load thoughts when component mounts or date changes
   useEffect(() => {
-    const fetchThoughts = async () => {
-      setIsLoading(true);
-      try {
-        const token = localStorage.getItem('token');
-        console.log('Fetching thoughts for date:', date);
-
-        const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        const data = await response.json();
-        console.log('Server response:', data);
-
-        if (data && data.thoughts) {
-          console.log('Setting thoughts:', data.thoughts);
-          setThoughts(data.thoughts);
-        }
-      } catch (error) {
-        console.error('Error loading thoughts:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load thoughts",
-          status: "error",
-          duration: 3000,
-        });
-      } finally {
-        setIsLoading(false);
+    let mounted = true;
+    
+    const loadData = async () => {
+      if (mounted) {
+        await fetchThoughts();
       }
     };
 
-    fetchThoughts();
-  }, [date, toast]);
+    loadData();
+
+    return () => {
+      mounted = false;
+    };
+  }, [date]); // Remove toast from dependencies since fetchThoughts is outside
 
   const handleSubmit = async () => {
     try {
@@ -86,15 +103,8 @@ function MorningThoughts({ onBack }) {
         throw new Error('Failed to save thoughts');
       }
 
-      // Verify saved data by reloading
-      const verifyResponse = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      const verifyData = await verifyResponse.json();
-      console.log('Verify saved data:', verifyData);
+      // Immediately verify the save
+      await fetchThoughts(); // Re-fetch thoughts after save
 
       toast({
         title: 'Thoughts saved!',
@@ -197,6 +207,33 @@ function MorningThoughts({ onBack }) {
     }
   };
 
+  const refreshThoughts = async () => {
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      console.log('Manually refreshing thoughts for date:', date);
+
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+      console.log('Manual refresh response:', data);
+
+      if (data && data.thoughts) {
+        console.log('Setting thoughts from refresh:', data.thoughts);
+        setThoughts(data.thoughts);
+      }
+    } catch (error) {
+      console.error('Error refreshing thoughts:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Container maxW="container.md" py={8}>
       <VStack spacing={6} align="stretch">
@@ -205,7 +242,13 @@ function MorningThoughts({ onBack }) {
             Back
           </Button>
           <Text fontSize="2xl" fontWeight="bold">Morning Thoughts</Text>
-          <Box w={20}></Box>
+          <Button 
+            onClick={refreshThoughts} 
+            isLoading={isLoading}
+            variant="ghost"
+          >
+            Refresh
+          </Button>
         </HStack>
 
         <HStack spacing={4} w="100%" justify="center">
