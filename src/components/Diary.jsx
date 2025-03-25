@@ -72,18 +72,27 @@ function Diary({ onBack }) {
   const fetchEntries = async (selectedDate) => {
     try {
       const token = localStorage.getItem('token');
-      const headers = {
-        'Authorization': `Bearer ${token}`
-      };
-      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/diary?date=${selectedDate}`, { headers });
+      console.log('Fetching entries with token:', token); // Debug log
+      
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/diary?date=${selectedDate}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
       if (!response.ok) {
         throw new Error('Failed to fetch entries');
       }
+
       const data = await response.json();
+      console.log('Fetched entries:', data); // Debug log
       setEntries(data);
     } catch (error) {
+      console.error('Error fetching entries:', error);
       toast({
         title: 'Error fetching entries',
+        description: error.message,
         status: 'error',
         duration: 3000,
       });
