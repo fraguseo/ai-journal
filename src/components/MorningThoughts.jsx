@@ -31,9 +31,22 @@ function MorningThoughts({ onBack }) {
 
   const loadThoughts = async () => {
     try {
-      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`);
+      const token = localStorage.getItem('token');
+      console.log('Loading thoughts with token:', token); // Debug log
+
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts?date=${date}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to load thoughts');
+      }
+
       const data = await response.json();
-      console.log('Loaded thoughts:', data); // Debug log
+      console.log('Loaded thoughts:', data);
       if (data && data.thoughts) {
         setThoughts(data.thoughts);
       } else {
@@ -50,40 +63,45 @@ function MorningThoughts({ onBack }) {
     }
   };
 
-  const saveThoughts = async (updatedThoughts) => {
+  const handleSubmit = async () => {
     try {
-      console.log('Saving thoughts:', { thoughts: updatedThoughts, date }); // Debug log
+      const token = localStorage.getItem('token');
+      console.log('Submitting thoughts with token:', token); // Debug log
+
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/morning-thoughts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Add this
         },
         body: JSON.stringify({
-          thoughts: updatedThoughts,
-          date
-        }),
+          thoughts: thoughts,
+          date: date
+        })
       });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to save thoughts');
+      }
+
       const data = await response.json();
       console.log('Save response:', data); // Debug log
-      
-      // Verify save was successful
-      if (!response.ok) {
-        throw new Error('Failed to save thoughts');
-      }
-      
-      // Show success toast
+
       toast({
-        title: "Saved",
-        description: "Your thoughts have been saved",
-        status: "success",
+        title: 'Thoughts saved!',
+        status: 'success',
         duration: 2000,
       });
+
+      // Clear form after successful save
+      setThoughts([]);
     } catch (error) {
-      console.error('Error saving thoughts:', error);
+      console.error('Error:', error);
       toast({
-        title: "Error",
-        description: "Failed to save thoughts",
-        status: "error",
+        title: 'Error saving thoughts',
+        description: error.message,
+        status: 'error',
         duration: 3000,
       });
     }
@@ -158,14 +176,14 @@ function MorningThoughts({ onBack }) {
       const updatedThoughts = [...thoughts, newThought.trim()];
       setThoughts(updatedThoughts);
       setNewThought('');
-      saveThoughts(updatedThoughts); // Save after updating state
+      handleSubmit(); // Save after updating state
     }
   };
 
   const removeThought = (index) => {
     const updatedThoughts = thoughts.filter((_, i) => i !== index);
     setThoughts(updatedThoughts);
-    saveThoughts(updatedThoughts); // Save after updating state
+    handleSubmit(); // Save after updating state
   };
 
   const handleKeyPress = (e) => {
