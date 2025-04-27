@@ -964,18 +964,20 @@ app.get("/api/diary/on-this-day", async (req, res) => {
 // Add these routes
 app.get('/api/goals', authenticateToken, async (req, res) => {
   try {
-    console.log('Auth header:', req.headers.authorization);
-    console.log('User from token:', req.user);
+    console.log('GET /api/goals - Headers:', req.headers);
+    console.log('GET /api/goals - User:', req.user);
 
     if (!req.user || !req.user.userId) {
+      console.log('No user ID found in token');
       return res.status(401).json({ message: 'Invalid user authentication' });
     }
 
     const goals = await Goal.find({ userId: req.user.userId });
-    console.log('Found goals for user:', req.user.userId, goals);
+    console.log('Found goals:', goals);
+    
     res.json(goals);
   } catch (error) {
-    console.error('Error fetching goals:', error);
+    console.error('Error in /api/goals:', error);
     res.status(500).json({ message: error.message });
   }
 });
