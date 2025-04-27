@@ -55,25 +55,29 @@ function Goals({ onBack }) {
   const fetchGoals = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log('Fetch using token:', token?.substring(0, 20) + '...');
+      console.log('Token exists:', !!token);
+      console.log('Token starts with:', token?.substring(0, 10));
 
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/goals', {
+        method: 'GET',
+        credentials: 'include',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
       });
 
-      console.log('Fetch response:', response.status);
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch goals');
+      if (response.status === 401) {
+        localStorage.clear();
+        navigate('/');
+        return;
       }
 
       const data = await response.json();
       setGoals(data || []);
     } catch (error) {
-      console.error('Error fetching goals:', error);
+      console.error('Error:', error);
       toast({
         title: "Error",
         description: "Failed to load goals",
