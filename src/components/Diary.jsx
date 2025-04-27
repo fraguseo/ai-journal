@@ -19,6 +19,17 @@ import MoodStats from './MoodStats';
 import MoodAnalysis from './MoodAnalysis';
 import MemoryJournal from './MemoryJournal';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Create a new QueryClient instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function Diary({ onBack }) {
   const [entry, setEntry] = useState('');
@@ -32,7 +43,6 @@ function Diary({ onBack }) {
   const [moodAnalysis, setMoodAnalysis] = useState(null);
   const [memories, setMemories] = useState(null);
   const [journalType, setJournalType] = useState('free');
-  const queryClient = useQueryClient();
 
   const { data: entriesData } = useQuery({
     queryKey: ['diary', date],
@@ -451,4 +461,14 @@ function Diary({ onBack }) {
   );
 }
 
-export default Diary; 
+// Create a wrapper component
+function DiaryWithQuery({ onBack }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Diary onBack={onBack} />
+    </QueryClientProvider>
+  );
+}
+
+// Export the wrapped component
+export default DiaryWithQuery; 
