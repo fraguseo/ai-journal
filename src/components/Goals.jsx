@@ -9,69 +9,31 @@ function Goals({ onBack }) {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const addGoal = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      console.log('Using token:', token?.substring(0, 20) + '...');
-
-      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/goals', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          description: newGoal,
-          category: 'Personal'
-        })
-      });
-
-      console.log('Add goal response:', response.status);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to add goal');
-      }
-
-      const data = await response.json();
-      setGoals([...goals, data]);
-      setNewGoal('');
-      toast({
-        title: "Goal added",
-        status: "success",
-        duration: 3000,
-      });
-    } catch (error) {
-      console.error('Error adding goal:', error);
-      toast({
-        title: "Error",
-        description: error.message,
-        status: "error",
-        duration: 3000,
-      });
-    }
-  };
-
   const fetchGoals = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log('Token exists:', !!token);
-      console.log('Token starts with:', token?.substring(0, 10));
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      if (!token || !user) {
+        toast({
+          title: "Authentication Error",
+          description: "Please log in again",
+          status: "error",
+          duration: 3000,
+        });
+        navigate('/');
+        return;
+      }
 
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/goals', {
-        method: 'GET',
-        credentials: 'include',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Content-Type': 'application/json'
         }
       });
 
-      if (response.status === 401) {
-        localStorage.clear();
-        navigate('/');
-        return;
+      if (!response.ok) {
+        throw new Error('Failed to fetch goals');
       }
 
       const data = await response.json();
@@ -86,6 +48,58 @@ function Goals({ onBack }) {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const addGoal = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      if (!token || !user) {
+        toast({
+          title: "Authentication Error",
+          description: "Please log in again",
+          status: "error",
+          duration: 3000,
+        });
+        navigate('/');
+        return;
+      }
+
+      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/goals', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          description: newGoal,
+          category: 'Personal',
+          userId: user.id
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add goal');
+      }
+
+      const data = await response.json();
+      setGoals([...goals, data]);
+      setNewGoal('');
+      toast({
+        title: "Goal added",
+        status: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add goal",
+        status: "error",
+        duration: 3000,
+      });
     }
   };
 
