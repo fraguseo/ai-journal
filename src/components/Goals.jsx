@@ -8,15 +8,12 @@ function Goals({ onBack }) {
   const fetchGoals = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log('Token:', token);
+      console.log('Token:', token?.substring(0, 20) + '...'); // Only log part of the token for security
 
       if (!token) {
-        toast({
-          title: "Authentication Error",
-          description: "Please log in to view goals",
-          status: "error",
-          duration: 3000,
-        });
+        // Clear any stale data
+        localStorage.clear();
+        window.location.reload(); // Force a refresh to trigger re-login
         return;
       }
 
@@ -31,7 +28,12 @@ function Goals({ onBack }) {
         }
       });
 
-      console.log('Response:', response);
+      if (response.status === 401 || response.status === 403) {
+        // Clear token and force re-login on auth errors
+        localStorage.clear();
+        window.location.reload();
+        return;
+      }
 
       if (!response.ok) {
         const errorData = await response.json();
