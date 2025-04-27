@@ -15,10 +15,10 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-  origin: '*',  // Be more specific in production
-  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],  // Added PATCH and DELETE
-  allowedHeaders: ['Content-Type', 'Authorization'],  // Added Authorization
-  credentials: true  // Allow credentials
+  origin: ['https://journalprototype.netlify.app', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 app.use(express.json());
 
