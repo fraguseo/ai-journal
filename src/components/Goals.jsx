@@ -12,44 +12,47 @@ function Goals({ onBack }) {
       console.log('Token exists:', !!token);
 
       if (!token) {
-        throw new Error('No authentication token found');
+        toast({
+          title: "Authentication Error",
+          description: "Please log in to view goals",
+          status: "error",
+          duration: 3000,
+        });
+        return;
       }
 
       const url = 'https://ai-journal-backend-01bx.onrender.com/api/goals';
       console.log('Fetching from URL:', url);
 
       const response = await fetch(url, {
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        }
+        },
+        credentials: 'include'
       });
 
       console.log('Response status:', response.status);
 
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        toast({
+          title: "Session Expired",
+          description: "Please log in again",
+          status: "error",
+          duration: 3000,
+        });
+        return;
+      }
+
       if (!response.ok) {
-        if (response.status === 403) {
-          toast({
-            title: "Authentication Error",
-            description: "Please log in again",
-            status: "error",
-            duration: 3000,
-          });
-          return;
-        }
         throw new Error(`Server responded with status: ${response.status}`);
       }
 
       const data = await response.json();
       console.log('Response data:', data);
-
-      if (!data || !Array.isArray(data)) {
-        console.log('Invalid data format received:', data);
-        setGoals([]);
-        return;
-      }
-
-      setGoals(data);
+      setGoals(data || []);
     } catch (error) {
       console.error('Detailed error in fetchGoals:', error);
       toast({
