@@ -993,10 +993,15 @@ app.post('/api/goals', authenticateToken, async (req, res) => {
   }
 });
 
-app.patch('/api/goals/:id', async (req, res) => {
+app.patch('/api/goals/:id', authenticateToken, async (req, res) => {
   try {
     const goal = await Goal.findById(req.params.id);
     if (!goal) return res.status(404).json({ message: 'Goal not found' });
+    
+    // Add user check
+    if (goal.userId !== req.user.userId) {
+      return res.status(403).json({ message: 'Not authorized to update this goal' });
+    }
     
     // Update all possible fields
     if (req.body.description !== undefined) goal.description = req.body.description;
@@ -1015,10 +1020,15 @@ app.patch('/api/goals/:id', async (req, res) => {
   }
 });
 
-app.delete('/api/goals/:id', async (req, res) => {
+app.delete('/api/goals/:id', authenticateToken, async (req, res) => {
   try {
     const goal = await Goal.findById(req.params.id);
     if (!goal) return res.status(404).json({ message: 'Goal not found' });
+    
+    // Add user check
+    if (goal.userId !== req.user.userId) {
+      return res.status(403).json({ message: 'Not authorized to delete this goal' });
+    }
     
     await Goal.deleteOne({ _id: req.params.id });
     res.json({ message: 'Goal deleted' });
