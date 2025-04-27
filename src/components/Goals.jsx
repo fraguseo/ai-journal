@@ -1,64 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
 
 function Goals({ onBack }) {
   const [goals, setGoals] = useState([]);
   const toast = useToast();
+  const queryClient = useQueryClient();
 
-  const fetchGoals = async () => {
-    try {
+  const { data, error } = useQuery({
+    queryKey: ['goals'],
+    queryFn: async () => {
       const token = localStorage.getItem('token');
-      console.log('Token:', token?.substring(0, 20) + '...'); // Only log part of the token for security
-
       if (!token) {
-        // Clear any stale data
-        localStorage.clear();
-        window.location.reload(); // Force a refresh to trigger re-login
-        return;
+        throw new Error('No authentication token found');
       }
 
-      const url = 'https://ai-journal-backend-01bx.onrender.com/api/goals';
-      console.log('Fetching from URL:', url);
-
-      const response = await fetch(url, {
-        method: 'GET',
+      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/goals', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
 
-      if (response.status === 401 || response.status === 403) {
-        // Clear token and force re-login on auth errors
-        localStorage.clear();
-        window.location.reload();
-        return;
-      }
-
       if (!response.ok) {
-        const errorData = await response.json();
-        console.log('Error data:', errorData);
-        throw new Error(errorData.message || `Server responded with status: ${response.status}`);
+        throw new Error('Failed to fetch goals');
       }
 
-      const data = await response.json();
-      console.log('Success data:', data);
-      setGoals(data || []);
-    } catch (error) {
-      console.error('Error details:', error);
+      return response.json();
+    },
+    onError: (error) => {
       toast({
         title: "Error",
-        description: error.message || "Failed to load goals",
+        description: error.message,
         status: "error",
         duration: 3000,
       });
-      setGoals([]);
     }
-  };
+  });
 
   useEffect(() => {
-    fetchGoals();
-  }, []);
+    if (data) {
+      setGoals(data);
+    }
+  }, [data]);
 
   // ... rest of the component
 }
