@@ -10,6 +10,7 @@ import {
   useToast,
   HStack,
   Select,
+  IconButton,
 } from '@chakra-ui/react';
 import DiaryCalendar from './DiaryCalendar';
 import { format } from 'date-fns';
@@ -17,6 +18,7 @@ import { ArrowBackIcon, SmileIcon, MehIcon } from '@chakra-ui/icons';
 import MoodStats from './MoodStats';
 import MoodAnalysis from './MoodAnalysis';
 import MemoryJournal from './MemoryJournal';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
 
 function Diary({ onBack }) {
   const [entry, setEntry] = useState('');
@@ -30,6 +32,24 @@ function Diary({ onBack }) {
   const [moodAnalysis, setMoodAnalysis] = useState(null);
   const [memories, setMemories] = useState(null);
   const [journalType, setJournalType] = useState('free');
+  const queryClient = useQueryClient();
+
+  const { data: entriesData } = useQuery({
+    queryKey: ['diary', date],
+    queryFn: async () => {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/diary?date=${date}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch entries');
+      }
+      return response.json();
+    }
+  });
 
   const journalTypes = {
     gratitude: [
@@ -67,47 +87,6 @@ function Diary({ onBack }) {
       "What would you like to create next?",
       "How did you think outside the box today?"
     ]
-  };
-
-  const fetchEntries = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      console.log('Fetching entries for date:', date);
-
-      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/diary?date=${date}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        if (response.status === 403) {
-          // Handle expired/invalid token
-          toast({
-            title: "Authentication Error",
-            description: "Please log in again",
-            status: "error",
-            duration: 3000,
-          });
-          // Optionally redirect to login
-          return;
-        }
-        throw new Error('Failed to fetch entries');
-      }
-
-      const data = await response.json();
-      console.log('Fetched entries:', data);
-      setEntries(data.entries || []);
-    } catch (error) {
-      console.error('Error fetching entries:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load diary entries",
-        status: "error",
-        duration: 3000,
-      });
-    }
   };
 
   const fetchMoodStats = async (period = statsPeriod) => {
@@ -170,11 +149,13 @@ function Diary({ onBack }) {
   };
 
   useEffect(() => {
-    fetchEntries();
+    if (entriesData) {
+      setEntries(entriesData);
+    }
     fetchMoodStats();
     fetchMoodAnalysis();
     fetchMemories(date);
-  }, [date]);
+  }, [date, entriesData]);
 
   const handleSubmit = async () => {
     if (!entry.trim()) {
@@ -228,7 +209,7 @@ function Diary({ onBack }) {
       setEntry('');
       setJournalType('free');
       
-      await fetchEntries();
+      await queryClient.invalidateQueries(['diary', date]);
       
     } catch (error) {
       console.error('Error saving entry:', error);
