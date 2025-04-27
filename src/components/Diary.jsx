@@ -69,12 +69,12 @@ function Diary({ onBack }) {
     ]
   };
 
-  const fetchEntries = async (selectedDate) => {
+  const fetchEntries = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log('Fetching entries with token:', token); // Debug log
-      
-      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/diary?date=${selectedDate}`, {
+      console.log('Fetching entries for date:', date);
+
+      const response = await fetch(`https://ai-journal-backend-01bx.onrender.com/api/diary?date=${date}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -82,18 +82,29 @@ function Diary({ onBack }) {
       });
 
       if (!response.ok) {
+        if (response.status === 403) {
+          // Handle expired/invalid token
+          toast({
+            title: "Authentication Error",
+            description: "Please log in again",
+            status: "error",
+            duration: 3000,
+          });
+          // Optionally redirect to login
+          return;
+        }
         throw new Error('Failed to fetch entries');
       }
 
       const data = await response.json();
-      console.log('Fetched entries:', data); // Debug log
-      setEntries(data);
+      console.log('Fetched entries:', data);
+      setEntries(data.entries || []);
     } catch (error) {
       console.error('Error fetching entries:', error);
       toast({
-        title: 'Error fetching entries',
-        description: error.message,
-        status: 'error',
+        title: "Error",
+        description: "Failed to load diary entries",
+        status: "error",
         duration: 3000,
       });
     }
@@ -159,8 +170,7 @@ function Diary({ onBack }) {
   };
 
   useEffect(() => {
-    console.log('Date changed:', date);
-    fetchEntries(date);
+    fetchEntries();
     fetchMoodStats();
     fetchMoodAnalysis();
     fetchMemories(date);
@@ -218,7 +228,7 @@ function Diary({ onBack }) {
       setEntry('');
       setJournalType('free');
       
-      await fetchEntries(date);
+      await fetchEntries();
       
     } catch (error) {
       console.error('Error saving entry:', error);
