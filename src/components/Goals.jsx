@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 function Goals({ onBack }) {
   const [goals, setGoals] = useState([]);
   const toast = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast({
+        title: "Please log in",
+        description: "You need to be logged in to view goals",
+        status: "warning",
+        duration: 3000,
+      });
+      navigate('/login');
+      return;
+    }
+  }, []);
 
   const fetchGoals = async () => {
     try {
@@ -18,13 +34,9 @@ function Goals({ onBack }) {
       });
 
       if (!response.ok) {
-        if (response.status === 403) {
-          toast({
-            title: "Authentication Error",
-            description: "Please log in again",
-            status: "error",
-            duration: 3000,
-          });
+        if (response.status === 401 || response.status === 403) {
+          localStorage.removeItem('token'); // Clear invalid token
+          navigate('/login');
           return;
         }
         throw new Error('Failed to fetch goals');
