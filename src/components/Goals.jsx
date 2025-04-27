@@ -1,24 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { useToast } from '@chakra-ui/react';
+import { useToast, Button, Input, VStack, Box, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Text, VStack } from '@chakra-ui/react';
 
 function Goals({ onBack }) {
   const [goals, setGoals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [newGoal, setNewGoal] = useState('');
   const toast = useToast();
   const navigate = useNavigate();
+
+  const addGoal = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      console.log('Using token:', token?.substring(0, 20) + '...');
+
+      const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/goals', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          description: newGoal,
+          category: 'Personal'
+        })
+      });
+
+      console.log('Add goal response:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to add goal');
+      }
+
+      const data = await response.json();
+      setGoals([...goals, data]);
+      setNewGoal('');
+      toast({
+        title: "Goal added",
+        status: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error('Error adding goal:', error);
+      toast({
+        title: "Error",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
 
   const fetchGoals = async () => {
     try {
       const token = localStorage.getItem('token');
-      
-      if (!token) {
-        console.log('No token found, redirecting to login');
-        localStorage.clear();
-        navigate('/');
-        return;
-      }
+      console.log('Fetch using token:', token?.substring(0, 20) + '...');
 
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/goals', {
         headers: {
@@ -26,6 +63,8 @@ function Goals({ onBack }) {
           'Content-Type': 'application/json'
         }
       });
+
+      console.log('Fetch response:', response.status);
 
       if (!response.ok) {
         throw new Error('Failed to fetch goals');
@@ -50,19 +89,30 @@ function Goals({ onBack }) {
     fetchGoals();
   }, []);
 
-  if (isLoading) {
-    return <Text>Loading goals...</Text>;
-  }
-
-  if (goals.length === 0) {
-    return (
-      <Box p={4}>
-        <Text>No goals yet. Create your first goal!</Text>
+  return (
+    <VStack spacing={4} p={4}>
+      <Box w="100%">
+        <Input
+          value={newGoal}
+          onChange={(e) => setNewGoal(e.target.value)}
+          placeholder="Enter new goal"
+        />
+        <Button onClick={addGoal} mt={2}>Add Goal</Button>
       </Box>
-    );
-  }
 
-  // ... rest of the component showing goals list
+      {isLoading ? (
+        <Text>Loading goals...</Text>
+      ) : goals.length === 0 ? (
+        <Text>No goals yet. Add your first goal!</Text>
+      ) : (
+        goals.map(goal => (
+          <Box key={goal._id} p={4} borderWidth={1} w="100%">
+            <Text>{goal.description}</Text>
+          </Box>
+        ))
+      )}
+    </VStack>
+  );
 }
 
 export default Goals; 
