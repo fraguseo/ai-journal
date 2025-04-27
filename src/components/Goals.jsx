@@ -8,8 +8,7 @@ function Goals({ onBack }) {
   const fetchGoals = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log('Starting fetchGoals...');
-      console.log('Token exists:', !!token);
+      console.log('Token:', token);
 
       if (!token) {
         toast({
@@ -29,35 +28,25 @@ function Goals({ onBack }) {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        },
-        credentials: 'include'
+        }
       });
 
-      console.log('Response status:', response.status);
-
-      if (response.status === 401) {
-        localStorage.removeItem('token');
-        toast({
-          title: "Session Expired",
-          description: "Please log in again",
-          status: "error",
-          duration: 3000,
-        });
-        return;
-      }
+      console.log('Response:', response);
 
       if (!response.ok) {
-        throw new Error(`Server responded with status: ${response.status}`);
+        const errorData = await response.json();
+        console.log('Error data:', errorData);
+        throw new Error(errorData.message || `Server responded with status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Response data:', data);
+      console.log('Success data:', data);
       setGoals(data || []);
     } catch (error) {
-      console.error('Detailed error in fetchGoals:', error);
+      console.error('Error details:', error);
       toast({
         title: "Error",
-        description: `Failed to load goals: ${error.message}`,
+        description: error.message || "Failed to load goals",
         status: "error",
         duration: 3000,
       });
