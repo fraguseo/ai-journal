@@ -42,6 +42,7 @@ function Login({ onLogin }) {
       const data = await response.json();
 
       if (response.ok) {
+        console.log('Login successful, token:', data.token.substring(0, 20) + '...');
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         onLogin(data);
@@ -54,8 +55,9 @@ function Login({ onLogin }) {
         throw new Error(data.message || 'Authentication failed');
       }
     } catch (error) {
+      console.error('Login error:', error);
       toast({
-        title: 'Error',
+        title: 'Login Error',
         description: error.message,
         status: 'error',
         duration: 3000,

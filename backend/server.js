@@ -1216,5 +1216,17 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// Add health check endpoint
+app.get('/api/health', authenticateToken, (req, res) => {
+  try {
+    console.log('Health check - Auth header:', req.headers.authorization);
+    console.log('Health check - User:', req.user);
+    res.json({ status: 'ok', user: req.user });
+  } catch (error) {
+    console.error('Health check error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
