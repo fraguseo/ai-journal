@@ -8,48 +8,35 @@ function Goals({ onBack }) {
   const fetchGoals = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log('Token exists:', !!token);
 
-      if (!token) {
-        toast({
-          title: "Authentication Error",
-          description: "Please log in to view goals",
-          status: "error",
-          duration: 3000,
-        });
-        return;
-      }
-
-      console.log('Fetching goals...');
+      // Use the same URL structure as diary
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/goals', {
-        method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
 
-      console.log('Response status:', response.status);
-
-      if (response.status === 401) {
-        localStorage.removeItem('token');
-        window.location.href = '/'; // Redirect to login
-        return;
-      }
-
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch goals');
+        if (response.status === 403) {
+          toast({
+            title: "Authentication Error",
+            description: "Please log in again",
+            status: "error",
+            duration: 3000,
+          });
+          return;
+        }
+        throw new Error('Failed to fetch goals');
       }
 
       const data = await response.json();
-      console.log('Goals data:', data);
       setGoals(data || []);
     } catch (error) {
       console.error('Error fetching goals:', error);
       toast({
         title: "Error",
-        description: error.message || "Failed to load goals",
+        description: "Failed to load goals",
         status: "error",
         duration: 3000,
       });
