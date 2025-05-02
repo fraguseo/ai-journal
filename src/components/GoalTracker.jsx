@@ -66,6 +66,12 @@ function GoalTracker({ onBack }) {
     }
   }, [goals, notifications]);
 
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js');
+    }
+  }, []);
+
   const fetchGoals = async () => {
     try {
       const response = await fetch('https://ai-journal-backend-01bx.onrender.com/api/goals');

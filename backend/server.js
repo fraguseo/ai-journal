@@ -5,7 +5,6 @@ const OpenAI = require("openai");
 const mongoose = require('mongoose');
 const DiaryEntry = require('./models/DiaryEntry');
 const Recipe = require('./models/Recipe');
-const Goal = require('./models/Goal');
 const MorningThought = require('./models/MorningThought');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -958,110 +957,6 @@ app.get("/api/diary/on-this-day", async (req, res) => {
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Failed to fetch memory journal data" });
-  }
-});
-
-// Update the goals endpoint to match diary endpoint pattern
-app.get('/api/goals', authenticateToken, async (req, res) => {
-  try {
-    const goals = await Goal.find({ 
-      userId: req.user.userId 
-    }).sort({ createdAt: -1 });
-
-    console.log('Found goals for user:', req.user.userId);
-    res.json(goals);
-  } catch (error) {
-    console.error('Error fetching goals:', error);
-    res.status(500).json({ message: error.message });
-  }
-});
-
-app.post('/api/goals', authenticateToken, async (req, res) => {
-  try {
-    const { description, category } = req.body;
-    
-    const goal = new Goal({
-      description,
-      category,
-      userId: req.user.userId,
-      createdAt: new Date()
-    });
-
-    const newGoal = await goal.save();
-    console.log('Created new goal:', newGoal);
-    res.status(201).json(newGoal);
-  } catch (error) {
-    console.error('Error creating goal:', error);
-    res.status(400).json({ message: error.message });
-  }
-});
-
-app.patch('/api/goals/:id', authenticateToken, async (req, res) => {
-  try {
-    const goal = await Goal.findById(req.params.id);
-    if (!goal) return res.status(404).json({ message: 'Goal not found' });
-    
-    // Add user check
-    if (goal.userId !== req.user.userId) {
-      return res.status(403).json({ message: 'Not authorized to update this goal' });
-    }
-    
-    // Update all possible fields
-    if (req.body.description !== undefined) goal.description = req.body.description;
-    if (req.body.category !== undefined) goal.category = req.body.category;
-    if (req.body.deadline !== undefined) goal.deadline = req.body.deadline;
-    if (req.body.progress !== undefined) goal.progress = req.body.progress;
-    if (req.body.completed !== undefined) goal.completed = req.body.completed;
-    if (req.body.subTasks !== undefined) goal.subTasks = req.body.subTasks;
-    if (req.body.progressHistory !== undefined) goal.progressHistory = req.body.progressHistory;
-    
-    const updatedGoal = await goal.save();
-    res.json(updatedGoal);
-  } catch (error) {
-    console.error('Goal update error:', error);
-    res.status(400).json({ message: error.message });
-  }
-});
-
-app.delete('/api/goals/:id', authenticateToken, async (req, res) => {
-  try {
-    const goal = await Goal.findById(req.params.id);
-    if (!goal) return res.status(404).json({ message: 'Goal not found' });
-    
-    // Add user check
-    if (goal.userId !== req.user.userId) {
-      return res.status(403).json({ message: 'Not authorized to delete this goal' });
-    }
-    
-    await Goal.deleteOne({ _id: req.params.id });
-    res.json({ message: 'Goal deleted' });
-  } catch (error) {
-    console.error('Goal delete error:', error);
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// Add AI chat endpoint
-app.post("/api/chat", async (req, res) => {
-  try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: "You are a helpful and empathetic AI assistant."
-        },
-        {
-          role: "user",
-          content: req.body.message
-        }
-      ],
-    });
-
-    res.json({ response: completion.choices[0].message.content });
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Failed to get AI response" });
   }
 });
 

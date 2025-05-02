@@ -21,20 +21,28 @@ import {
   OrderedList,
   Wrap,
   WrapItem,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { QuestionIcon, ArrowBackIcon } from '@chakra-ui/icons';
 
-function MoodRecipes({ onBack }) {
+function MoodRecipes({ onBack, mood }) {
   const [recipes, setRecipes] = useState([]);
   const [selectedMood, setSelectedMood] = useState(null);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const toast = useToast();
+  const bgColor = useColorModeValue('white', 'gray.800');
 
-  const fetchRecipes = async (mood) => {
+  useEffect(() => {
+    if (mood) {
+      fetchRecipes(mood);
+    }
+  }, [mood]);
+
+  const fetchRecipes = async (currentMood) => {
     try {
-      console.log('Fetching recipes for mood:', mood);
+      console.log('Fetching recipes for mood:', currentMood);
       const response = await fetch(
-        `https://ai-journal-backend-01bx.onrender.com/api/recipes${mood ? `?mood=${mood}` : ''}`
+        `https://ai-journal-backend-01bx.onrender.com/api/recipes?mood=${currentMood}`
       );
       if (!response.ok) throw new Error('Failed to fetch recipes');
       const data = await response.json();
@@ -92,10 +100,11 @@ function MoodRecipes({ onBack }) {
             {recipes.map((recipe) => (
               <Box
                 key={recipe._id}
+                p={4}
                 borderWidth={1}
                 borderRadius="lg"
-                overflow="hidden"
-                shadow="md"
+                bg={bgColor}
+                shadow="sm"
                 cursor="pointer"
                 onClick={() => setSelectedRecipe(recipe)}
                 transition="transform 0.2s"
@@ -110,14 +119,9 @@ function MoodRecipes({ onBack }) {
                 )}
                 <Box p={4}>
                   <Text fontSize="xl" fontWeight="bold">{recipe.name}</Text>
-                  <HStack spacing={2} mt={2}>
-                    <Badge colorScheme="blue">{recipe.mood}</Badge>
-                    {recipe.dietary && (
-                      <Badge colorScheme={recipe.dietary === 'vegan' ? 'green' : 'purple'}>
-                        {recipe.dietary}
-                      </Badge>
-                    )}
-                  </HStack>
+                  <Badge colorScheme={getMoodColor(recipe.mood)} mb={2}>
+                    {recipe.mood}
+                  </Badge>
                   <Text mt={2} noOfLines={2}>{recipe.description}</Text>
                   <Text mt={2} color="gray.600">Prep time: {recipe.prepTime} mins</Text>
                   <Button 
@@ -181,6 +185,18 @@ function MoodRecipes({ onBack }) {
       </VStack>
     </Container>
   );
+}
+
+function getMoodColor(mood) {
+  const colorMap = {
+    Happy: 'yellow',
+    Calm: 'blue',
+    Sad: 'gray',
+    Anxious: 'orange',
+    Energetic: 'green',
+    Tired: 'purple'
+  };
+  return colorMap[mood] || 'gray';
 }
 
 export default MoodRecipes; 
