@@ -4,8 +4,7 @@ import {
   Button,
   Container,
   Text,
-  Box,
-  Heading
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { 
   EditIcon, 
@@ -25,76 +24,19 @@ function MainMenu({
   onMorningThoughtsClick,
   onLogout
 }) {
+  const bgColor = useColorModeValue('gray.50', 'gray.800');
+
   return (
-    <Container maxW="container.sm" py={8}>
-      <VStack spacing={8}>
-        <Heading>AI Journal</Heading>
-        <Box w="100%">
-          <VStack spacing={4}>
-            <Button
-              leftIcon={<EditIcon />}
-              colorScheme="green"
-              width="100%"
-              onClick={onDiaryClick}
-              size="lg"
-            >
-              Daily Diary
-            </Button>
-            <Button
-              leftIcon={<ChatIcon />}
-              colorScheme="blue"
-              width="100%"
-              onClick={onChatClick}
-              size="lg"
-            >
-              AI Chat
-            </Button>
-            <Button
-              leftIcon={<SpinnerIcon />}
-              colorScheme="yellow"
-              width="100%"
-              onClick={onRecipesClick}
-              size="lg"
-            >
-              Mood Recipes
-            </Button>
-            <Button
-              leftIcon={<MoonIcon />}
-              colorScheme="teal"
-              width="100%"
-              onClick={onDreamClick}
-              size="lg"
-            >
-              Dream Journal
-            </Button>
-            <Button
-              leftIcon={<StarIcon />}
-              colorScheme="purple"
-              width="100%"
-              onClick={onGoalsClick}
-              size="lg"
-            >
-              Goal Tracker
-            </Button>
-            <Button
-              leftIcon={<SunIcon />}
-              colorScheme="orange"
-              width="100%"
-              onClick={onMorningThoughtsClick}
-              size="lg"
-            >
-              Morning Thoughts
-            </Button>
-            <Button
-              colorScheme="red"
-              width="100%"
-              onClick={onLogout}
-              size="lg"
-            >
-              Sign Out
-            </Button>
-          </VStack>
-        </Box>
+    <Container maxW="container.md" p={4}>
+      <VStack spacing={4} align="stretch" bg={bgColor} p={4} borderRadius="md">
+        <Text fontSize="2xl" textAlign="center">My Journal</Text>
+        <Button onClick={onDiaryClick}>Daily Diary</Button>
+        <Button onClick={onChatClick}>AI Chat</Button>
+        <Button onClick={onRecipesClick}>Mood Recipes</Button>
+        <Button onClick={onDreamClick}>Dream Journal</Button>
+        <Button onClick={onGoalsClick}>Goal Tracker</Button>
+        <Button onClick={onMorningThoughtsClick}>Morning Thoughts</Button>
+        <Button onClick={onLogout} colorScheme="red">Logout</Button>
       </VStack>
     </Container>
   );
