@@ -1247,5 +1247,40 @@ app.get('/api/test-auth', authenticateToken, (req, res) => {
   }
 });
 
+// Add debug endpoint
+app.get('/api/debug-token', async (req, res) => {
+  try {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    if (!token) {
+      return res.json({ 
+        status: 'error',
+        message: 'No token found'
+      });
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      return res.json({
+        status: 'success',
+        token: token.substring(0, 20) + '...',
+        decoded
+      });
+    } catch (err) {
+      return res.json({
+        status: 'error',
+        message: 'Invalid token',
+        error: err.message
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error',
+      message: error.message 
+    });
+  }
+});
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
