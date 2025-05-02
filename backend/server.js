@@ -961,36 +961,37 @@ app.get("/api/diary/on-this-day", async (req, res) => {
   }
 });
 
-// Add these routes
+// Update the goals endpoint to match diary endpoint pattern
 app.get('/api/goals', authenticateToken, async (req, res) => {
   try {
-    console.log('GET /api/goals - Headers:', req.headers);
-    console.log('GET /api/goals - User:', req.user);
+    const goals = await Goal.find({ 
+      userId: req.user.userId 
+    }).sort({ createdAt: -1 });
 
-    if (!req.user || !req.user.userId) {
-      console.log('No user ID found in token');
-      return res.status(401).json({ message: 'Invalid user authentication' });
-    }
-
-    const goals = await Goal.find({ userId: req.user.userId });
-    console.log('Found goals:', goals);
-    
+    console.log('Found goals for user:', req.user.userId);
     res.json(goals);
   } catch (error) {
-    console.error('Error in /api/goals:', error);
+    console.error('Error fetching goals:', error);
     res.status(500).json({ message: error.message });
   }
 });
 
 app.post('/api/goals', authenticateToken, async (req, res) => {
   try {
+    const { description, category } = req.body;
+    
     const goal = new Goal({
-      ...req.body,
-      userId: req.user.userId
+      description,
+      category,
+      userId: req.user.userId,
+      createdAt: new Date()
     });
+
     const newGoal = await goal.save();
+    console.log('Created new goal:', newGoal);
     res.status(201).json(newGoal);
   } catch (error) {
+    console.error('Error creating goal:', error);
     res.status(400).json({ message: error.message });
   }
 });
@@ -1226,6 +1227,22 @@ app.get('/api/health', authenticateToken, (req, res) => {
     res.json({ status: 'ok', user: req.user });
   } catch (error) {
     console.error('Health check error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Add a test endpoint
+app.get('/api/test-auth', authenticateToken, (req, res) => {
+  try {
+    console.log('Test auth - Headers:', req.headers);
+    console.log('Test auth - User:', req.user);
+    res.json({ 
+      message: 'Auth working',
+      user: req.user,
+      headers: req.headers.authorization
+    });
+  } catch (error) {
+    console.error('Test auth error:', error);
     res.status(500).json({ error: error.message });
   }
 });
