@@ -25,7 +25,7 @@ function Dashboard({ onLogout }) {
   return (
     <Container maxW="container.md" p={4}>
       <VStack spacing={4} align="stretch" bg={bgColor} p={4} borderRadius="md">
-        <Text fontSize="2xl" textAlign="center">Journal Dashboard</Text>
+        <Text fontSize="2xl" textAlign="center">My Journal Dashboard</Text>
         <Button onClick={() => setView('diary')}>Daily Diary</Button>
         <Button onClick={() => setView('morning')}>Morning Thoughts</Button>
         <Button onClick={() => setView('stats')}>Mood Stats</Button>
