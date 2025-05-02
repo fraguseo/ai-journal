@@ -1177,5 +1177,29 @@ app.get('/api/debug-token', async (req, res) => {
   }
 });
 
+// Add AI chat endpoint
+app.post("/api/chat", async (req, res) => {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful and empathetic AI assistant."
+        },
+        {
+          role: "user",
+          content: req.body.message
+        }
+      ],
+    });
+
+    res.json({ response: completion.choices[0].message.content });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to get AI response" });
+  }
+});
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
