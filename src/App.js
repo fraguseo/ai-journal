@@ -5,7 +5,6 @@ import Diary from './components/Diary';
 import AIChat from './components/AIChat';
 import MoodRecipes from './components/MoodRecipes';
 import Dream from './components/Dream';
-import GoalTracker from './components/GoalTracker';
 import MorningThoughts from './components/MorningThoughts';
 import Login from './components/Login';
 
@@ -47,8 +46,6 @@ function App() {
         return <MoodRecipes onBack={() => setCurrentView('main')} />;
       case 'dream':
         return <Dream onBack={() => setCurrentView('main')} />;
-      case 'goals':
-        return <GoalTracker onBack={() => setCurrentView('main')} />;
       case 'morningThoughts':
         return <MorningThoughts onBack={() => setCurrentView('main')} />;
       default:
@@ -58,7 +55,6 @@ function App() {
             onChatClick={() => setCurrentView('chat')}
             onRecipesClick={() => setCurrentView('recipes')}
             onDreamClick={() => setCurrentView('dream')}
-            onGoalsClick={() => setCurrentView('goals')}
             onMorningThoughtsClick={() => setCurrentView('morningThoughts')}
             onLogout={handleLogout}
           />
