@@ -1177,7 +1177,7 @@ app.get('/api/debug-token', async (req, res) => {
   }
 });
 
-// Add AI chat endpoint
+// Update the AI chat endpoint to be more friendly
 app.post("/api/chat", async (req, res) => {
   try {
     const completion = await openai.chat.completions.create({
@@ -1185,7 +1185,7 @@ app.post("/api/chat", async (req, res) => {
       messages: [
         {
           role: "system",
-          content: "You are a helpful and empathetic AI assistant."
+          content: "You are a friendly and casual AI companion. Talk like a supportive friend - warm, informal, and engaging. Use casual language, emojis, and show genuine interest in the conversation. Avoid formal or clinical language."
         },
         {
           role: "user",
