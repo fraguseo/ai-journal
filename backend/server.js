@@ -1201,5 +1201,51 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
+// Add therapy chat endpoint
+app.post("/api/therapy-chat", authenticateToken, async (req, res) => {
+  try {
+    const { message, sessionType, history } = req.body;
+
+    let systemPrompt = "You are an empathetic AI therapy assistant. ";
+    
+    switch (sessionType) {
+      case 'cbt':
+        systemPrompt += "Guide the user through CBT exercises, helping identify thought patterns and develop coping strategies.";
+        break;
+      case 'reflection':
+        systemPrompt += "Lead a guided reflection session, helping the user explore their thoughts and feelings deeply.";
+        break;
+      case 'anxiety':
+        systemPrompt += "Focus on anxiety management techniques and help the user work through anxious thoughts.";
+        break;
+      case 'stress':
+        systemPrompt += "Guide stress relief exercises and help develop stress management strategies.";
+        break;
+      default:
+        systemPrompt += "Provide supportive, therapeutic responses while maintaining appropriate boundaries.";
+    }
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: systemPrompt
+        },
+        ...history,
+        {
+          role: "user",
+          content: message
+        }
+      ],
+    });
+
+    res.json({ response: completion.choices[0].message.content });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Failed to get therapy response" });
+  }
+});
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

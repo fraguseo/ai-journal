@@ -6,6 +6,7 @@ import AIChat from './components/AIChat';
 import MoodRecipes from './components/MoodRecipes';
 import Dream from './components/Dream';
 import MorningThoughts from './components/MorningThoughts';
+import TherapyChat from './components/TherapyChat';
 import Login from './components/Login';
 
 function App() {
@@ -48,6 +49,8 @@ function App() {
         return <Dream onBack={() => setCurrentView('main')} />;
       case 'morningThoughts':
         return <MorningThoughts onBack={() => setCurrentView('main')} />;
+      case 'therapy':
+        return <TherapyChat onBack={() => setCurrentView('main')} />;
       default:
         return (
           <MainMenu 
@@ -56,6 +59,7 @@ function App() {
             onRecipesClick={() => setCurrentView('recipes')}
             onDreamClick={() => setCurrentView('dream')}
             onMorningThoughtsClick={() => setCurrentView('morningThoughts')}
+            onTherapyClick={() => setCurrentView('therapy')}
             onLogout={handleLogout}
           />
         );
