@@ -28,7 +28,10 @@ function AIChat({ onBack }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ 
+          message: input,
+          history: messages
+        }),
       });
 
       const data = await response.json();

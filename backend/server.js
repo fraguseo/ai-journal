@@ -1177,19 +1177,22 @@ app.get('/api/debug-token', async (req, res) => {
   }
 });
 
-// Update the AI chat endpoint to be more conversational
+// Update the AI chat endpoint to maintain conversation context
 app.post("/api/chat", async (req, res) => {
   try {
+    const { message, history = [] } = req.body;  // Add history parameter
+    
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "You are a friendly AI companion who's great at listening and having natural conversations. Keep your responses concise and relevant to what the user is saying. Don't ask multiple questions - focus on engaging with what they've shared. Use casual language and occasional emojis, but don't overdo it. If they share something personal, acknowledge it before moving the conversation forward. Be more like a friend having coffee together than an interviewer."
+          content: "You are a friendly AI companion who's great at listening and having natural conversations. Keep your responses concise and relevant to what the user is saying. Don't ask multiple questions - focus on engaging with what they've shared. Use casual language and occasional emojis, but don't overdo it. If they share something personal, acknowledge it before moving the conversation forward. Be more like a friend having coffee together than an interviewer. Remember previous messages to maintain conversation flow."
         },
+        ...history,  // Include previous messages
         {
           role: "user",
-          content: req.body.message
+          content: message
         }
       ],
     });
