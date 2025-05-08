@@ -11,7 +11,8 @@ import {
   ChatIcon, 
   SpinnerIcon,
   MoonIcon,
-  SunIcon
+  SunIcon,
+  HeartIcon
 } from '@chakra-ui/icons';
 
 function MainMenu({ 
@@ -20,6 +21,7 @@ function MainMenu({
   onRecipesClick, 
   onDreamClick, 
   onMorningThoughtsClick,
+  onTherapyClick,
   onLogout
 }) {
   const bgColor = useColorModeValue('gray.50', 'gray.800');
@@ -43,6 +45,14 @@ function MainMenu({
           size="lg"
         >
           AI Chat
+        </Button>
+        <Button
+          leftIcon={<ChatIcon />}
+          colorScheme="purple"
+          onClick={onTherapyClick}
+          size="lg"
+        >
+          Therapy Chat
         </Button>
         <Button
           leftIcon={<SpinnerIcon />}
