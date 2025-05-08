@@ -1177,7 +1177,7 @@ app.get('/api/debug-token', async (req, res) => {
   }
 });
 
-// Update the AI chat endpoint to be more friendly
+// Update the AI chat endpoint to be more conversational
 app.post("/api/chat", async (req, res) => {
   try {
     const completion = await openai.chat.completions.create({
@@ -1185,7 +1185,7 @@ app.post("/api/chat", async (req, res) => {
       messages: [
         {
           role: "system",
-          content: "You are a friendly and casual AI companion. Talk like a supportive friend - warm, informal, and engaging. Use casual language, emojis, and show genuine interest in the conversation. Avoid formal or clinical language."
+          content: "You are a friendly AI companion who's great at listening and having natural conversations. Keep your responses concise and relevant to what the user is saying. Don't ask multiple questions - focus on engaging with what they've shared. Use casual language and occasional emojis, but don't overdo it. If they share something personal, acknowledge it before moving the conversation forward. Be more like a friend having coffee together than an interviewer."
         },
         {
           role: "user",
